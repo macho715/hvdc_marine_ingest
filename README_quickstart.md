@@ -107,9 +107,51 @@ python scripts\cron_automation.py
 ✅ **향상된 ERI**: 10개 해양 변수 기반 환경 위험 지수
 ✅ **HTTP 안정화**: 429/503 자동 재시도 + robots.txt 준수
 ✅ **실제 데이터 검증**: 83.3% 성공률 달성 (NCM + Open-Meteo 연동)
-✅ **API 키 통합**: Stormglass ✅ + WorldTides ⚠️ (75% 실제 데이터 수집률)  
+✅ **API 키 통합**: Stormglass ✅ + WorldTides ⚠️ (75% 실제 데이터 수집률)
+- ✅ **운항 가능성 예측**: GO/CONDITIONAL/NO-GO 의사결정 지원
+- ✅ **ETA 예측**: 파고 영향 고려한 실제 운항시간 계산
+- ✅ **앙상블 기반 예측**: 30개 앙상블 멤버 기반 확률적 예측  
 
 자세한 내용은 `INTEGRATION_GUIDE.md` 참조
+
+## 🚢 운항 가능성 예측 (NEW!)
+
+### 통합 데모 실행
+```powershell
+# 통합된 운항 가능성 예측 시스템 실행
+python scripts/demo_operability_integration.py
+```
+
+### 주요 기능
+- **7일간 운항 가능성 예측**: GO/CONDITIONAL/NO-GO 분류
+- **시간대별 분석**: dawn/morning/afternoon/evening 구분
+- **ETA 예측**: 파고 영향 고려한 실제 운항시간 계산
+- **앙상블 기반**: 30개 앙상블 멤버의 확률적 예측
+- **리드타임 조정**: 예측 일수에 따른 임계값 보정
+
+### 출력 파일
+- `out/operability_forecasts.csv`: 운항 가능성 예측 결과
+- `out/eta_predictions.csv`: ETA 예측 결과
+- `out/operability_report.json`: 통합 보고서
+
+### 예시 결과
+```
+📊 운항 가능성 예측 결과 요약
+✅ GO: 24개, ⚠️ CONDITIONAL: 4개, ❌ NO-GO: 0개
+🎯 평균 신뢰도: 0.26
+
+🚢 ETA 예측:
+• Abu Dhabi to AGI or DAS: 6.5시간 (계획: 12.0kt → 실제: 11.3kt)
+• Dubai to Fujairah: 10.1시간 (계획: 10.0kt → 실제: 9.1kt)
+```
+
+## 🔧 최근 수정사항 (2025-01-07)
+
+### libcurl 오류 수정
+- **문제**: GitHub Actions에서 `CURLE_URL_MALFORMAT` 오류 발생
+- **원인**: Telegram API 호출 시 URL 인코딩 문제
+- **해결**: `--data-urlencode text@file` 방식으로 변경
+- **결과**: 특수문자/개행문자 안전 전송 보장
 
 ## 📊 시스템 아키텍처 문서
 

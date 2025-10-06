@@ -309,6 +309,67 @@ def main():
         # 요약 보고서 생성
         report = generate_summary_report(data, analysis, args.out)
         
+        # 운항 가능성 예측 실행
+        try:
+            print("\n🚢 운항 가능성 예측 실행 중...")
+            from src.marine_ops.operability.api import create_operability_report
+            
+            # 항로 정보 정의
+            routes = [
+                {
+                    "name": "Abu Dhabi to AGI or DAS",
+                    "distance_nm": 65.0,
+                    "planned_speed_kt": 12.0,
+                    "hs_forecast": 1.2
+                },
+                {
+                    "name": "Dubai to Fujairah", 
+                    "distance_nm": 85.0,
+                    "planned_speed_kt": 10.0,
+                    "hs_forecast": 1.5
+                }
+            ]
+            
+            # 운항 가능성 보고서 생성
+            operability_report = create_operability_report(data, routes, forecast_days=7)
+            
+            # 운항 가능성 결과를 메인 보고서에 추가
+            report['operability_summary'] = {
+                'total_forecasts': operability_report['summary']['total_forecasts'],
+                'go_count': operability_report['summary']['go_count'],
+                'conditional_count': operability_report['summary']['conditional_count'],
+                'nogo_count': operability_report['summary']['nogo_count'],
+                'average_confidence': operability_report['summary']['average_confidence']
+            }
+            
+            # 운항 가능성 CSV 저장
+            import pandas as pd
+            if operability_report['operability_forecasts']:
+                csv_data = []
+                for forecast in operability_report['operability_forecasts']:
+                    csv_data.append({
+                        'day': forecast.day,
+                        'daypart': forecast.daypart,
+                        'P_go': forecast.probabilities.P_go,
+                        'P_cond': forecast.probabilities.P_cond,
+                        'P_nogo': forecast.probabilities.P_nogo,
+                        'decision': forecast.decision,
+                        'confidence': forecast.confidence
+                    })
+                
+                df = pd.DataFrame(csv_data)
+                operability_csv = Path(args.out) / "operability_forecasts.csv"
+                df.to_csv(operability_csv, index=False)
+                print(f"  ✅ 운항 가능성 예측 저장: {operability_csv}")
+            
+            print(f"  ✅ 운항 가능성 예측 완료: GO {operability_report['summary']['go_count']}개, "
+                  f"CONDITIONAL {operability_report['summary']['conditional_count']}개, "
+                  f"NO-GO {operability_report['summary']['nogo_count']}개")
+                  
+        except Exception as e:
+            print(f"  ⚠️ 운항 가능성 예측 실패: {e}")
+            report['operability_summary'] = {'error': str(e)}
+        
         # 성공 메시지
         data_rate = report['summary_json']['collection_stats']['data_collection_rate']
         print(f"\n🎉 작업 완료!")
