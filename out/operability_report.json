@@ -1,0 +1,44 @@
+{
+  "operability_forecasts": [
+    "OperabilityForecast(day='D+1', daypart='dawn', probabilities=OperabilityProbabilities(P_go=0.5155555555555555, P_cond=0.28666666666666674, P_nogo=0.0), decision='GO', gate_used=OperabilityGate(hs_go=1.0, wind_go=20.0, hs_cond=1.2, wind_cond=22.0), confidence=0.36000000000000004)",
+    "OperabilityForecast(day='D+1', daypart='morning', probabilities=OperabilityProbabilities(P_go=0.4188888888888889, P_cond=0.25222222222222224, P_nogo=0.03333333333333344), decision='GO', gate_used=OperabilityGate(hs_go=1.0, wind_go=20.0, hs_cond=1.2, wind_cond=22.0), confidence=0.36000000000000004)",
+    "OperabilityForecast(day='D+1', daypart='afternoon', probabilities=OperabilityProbabilities(P_go=0.3866666666666667, P_cond=0.2844444444444445, P_nogo=0.1333333333333333), decision='GO', gate_used=OperabilityGate(hs_go=1.0, wind_go=20.0, hs_cond=1.2, wind_cond=22.0), confidence=0.36000000000000004)",
+    "OperabilityForecast(day='D+1', daypart='evening', probabilities=OperabilityProbabilities(P_go=0.4188888888888889, P_cond=0.35111111111111115, P_nogo=0.033333333333333326), decision='GO', gate_used=OperabilityGate(hs_go=1.0, wind_go=20.0, hs_cond=1.2, wind_cond=22.0), confidence=0.36000000000000004)",
+    "OperabilityForecast(day='D+2', daypart='dawn', probabilities=OperabilityProbabilities(P_go=0.4666666666666667, P_cond=0.2333333333333334, P_nogo=0.09999999999999998), decision='GO', gate_used=OperabilityGate(hs_go=1.0, wind_go=20.0, hs_cond=1.2, wind_cond=22.0), confidence=0.32000000000000006)",
+    "OperabilityForecast(day='D+2', daypart='morning', probabilities=OperabilityProbabilities(P_go=0.36666666666666664, P_cond=0.2666666666666667, P_nogo=0.06666666666666665), decision='GO', gate_used=OperabilityGate(hs_go=1.0, wind_go=20.0, hs_cond=1.2, wind_cond=22.0), confidence=0.32000000000000006)",
+    "OperabilityForecast(day='D+2', daypart='afternoon', probabilities=OperabilityProbabilities(P_go=0.4666666666666667, P_cond=0.2666666666666667, P_nogo=0.06666666666666665), decision='GO', gate_used=OperabilityGate(hs_go=1.0, wind_go=20.0, hs_cond=1.2, wind_cond=22.0), confidence=0.32000000000000006)",
+    "OperabilityForecast(day='D+2', daypart='evening', probabilities=OperabilityProbabilities(P_go=0.43333333333333335, P_cond=0.30000000000000004, P_nogo=0.06666666666666665), decision='GO', gate_used=OperabilityGate(hs_go=1.0, wind_go=20.0, hs_cond=1.2, wind_cond=22.0), confidence=0.32000000000000006)",
+    "OperabilityForecast(day='D+3', daypart='dawn', probabilities=OperabilityProbabilities(P_go=0.24, P_cond=0.41000000000000003, P_nogo=0.033333333333333326), decision='CONDITIONAL', gate_used=OperabilityGate(hs_go=1.0, wind_go=20.0, hs_cond=1.2, wind_cond=22.0), confidence=0.27999999999999997)",
+    "OperabilityForecast(day='D+3', daypart='morning', probabilities=OperabilityProbabilities(P_go=0.36000000000000004, P_cond=0.37333333333333324, P_nogo=0.033333333333333326), decision='CONDITIONAL', gate_used=OperabilityGate(hs_go=1.0, wind_go=20.0, hs_cond=1.2, wind_cond=22.0), confidence=0.27999999999999997)",
+    "OperabilityForecast(day='D+3', daypart='afternoon', probabilities=OperabilityProbabilities(P_go=0.3, P_cond=0.3633333333333334, P_nogo=0.06666666666666665), decision='CONDITIONAL', gate_used=OperabilityGate(hs_go=1.0, wind_go=20.0, hs_cond=1.2, wind_cond=22.0), confidence=0.27999999999999997)",
+    "OperabilityForecast(day='D+3', daypart='evening', probabilities=OperabilityProbabilities(P_go=0.3, P_cond=0.32000000000000006, P_nogo=0.16666666666666652), decision='CONDITIONAL', gate_used=OperabilityGate(hs_go=1.0, wind_go=20.0, hs_cond=1.2, wind_cond=22.0), confidence=0.27999999999999997)",
+    "OperabilityForecast(day='D+4', daypart='dawn', probabilities=OperabilityProbabilities(P_go=0.42000000000000004, P_cond=0.24, P_nogo=0.13), decision='GO', gate_used=OperabilityGate(hs_go=1.1, wind_go=19.0, hs_cond=1.3, wind_cond=21.0), confidence=0.24)",
+    "OperabilityForecast(day='D+4', daypart='morning', probabilities=OperabilityProbabilities(P_go=0.48, P_cond=0.23555555555555563, P_nogo=0.13), decision='GO', gate_used=OperabilityGate(hs_go=1.1, wind_go=19.0, hs_cond=1.3, wind_cond=21.0), confidence=0.24)",
+    "OperabilityForecast(day='D+4', daypart='afternoon', probabilities=OperabilityProbabilities(P_go=0.45, P_cond=0.20777777777777784, P_nogo=0.16222222222222216), decision='GO', gate_used=OperabilityGate(hs_go=1.1, wind_go=19.0, hs_cond=1.3, wind_cond=21.0), confidence=0.24)",
+    "OperabilityForecast(day='D+4', daypart='evening', probabilities=OperabilityProbabilities(P_go=0.51, P_cond=0.24, P_nogo=0.13), decision='GO', gate_used=OperabilityGate(hs_go=1.1, wind_go=19.0, hs_cond=1.3, wind_cond=21.0), confidence=0.24)",
+    "OperabilityForecast(day='D+5', daypart='dawn', probabilities=OperabilityProbabilities(P_go=0.43333333333333335, P_cond=0.23111111111111116, P_nogo=0.13), decision='GO', gate_used=OperabilityGate(hs_go=1.1, wind_go=19.0, hs_cond=1.3, wind_cond=21.0), confidence=0.2)",
+    "OperabilityForecast(day='D+5', daypart='morning', probabilities=OperabilityProbabilities(P_go=0.46222222222222226, P_cond=0.31111111111111117, P_nogo=0.13), decision='GO', gate_used=OperabilityGate(hs_go=1.1, wind_go=19.0, hs_cond=1.3, wind_cond=21.0), confidence=0.2)",
+    "OperabilityForecast(day='D+5', daypart='afternoon', probabilities=OperabilityProbabilities(P_go=0.43333333333333335, P_cond=0.2566666666666667, P_nogo=0.13), decision='GO', gate_used=OperabilityGate(hs_go=1.1, wind_go=19.0, hs_cond=1.3, wind_cond=21.0), confidence=0.2)",
+    "OperabilityForecast(day='D+5', daypart='evening', probabilities=OperabilityProbabilities(P_go=0.4911111111111111, P_cond=0.2822222222222223, P_nogo=0.13), decision='GO', gate_used=OperabilityGate(hs_go=1.1, wind_go=19.0, hs_cond=1.3, wind_cond=21.0), confidence=0.2)",
+    "OperabilityForecast(day='D+6', daypart='dawn', probabilities=OperabilityProbabilities(P_go=0.54, P_cond=0.17333333333333345, P_nogo=0.19444444444444442), decision='GO', gate_used=OperabilityGate(hs_go=1.2, wind_go=18.0, hs_cond=1.4, wind_cond=20.0), confidence=0.2)",
+    "OperabilityForecast(day='D+6', daypart='morning', probabilities=OperabilityProbabilities(P_go=0.48, P_cond=0.20333333333333348, P_nogo=0.19444444444444442), decision='GO', gate_used=OperabilityGate(hs_go=1.2, wind_go=18.0, hs_cond=1.4, wind_cond=20.0), confidence=0.2)",
+    "OperabilityForecast(day='D+6', daypart='afternoon', probabilities=OperabilityProbabilities(P_go=0.48, P_cond=0.17555555555555558, P_nogo=0.19444444444444442), decision='GO', gate_used=OperabilityGate(hs_go=1.2, wind_go=18.0, hs_cond=1.4, wind_cond=20.0), confidence=0.2)",
+    "OperabilityForecast(day='D+6', daypart='evening', probabilities=OperabilityProbabilities(P_go=0.45, P_cond=0.14555555555555566, P_nogo=0.19444444444444442), decision='GO', gate_used=OperabilityGate(hs_go=1.2, wind_go=18.0, hs_cond=1.4, wind_cond=20.0), confidence=0.2)",
+    "OperabilityForecast(day='D+7', daypart='dawn', probabilities=OperabilityProbabilities(P_go=0.7333333333333333, P_cond=0.16666666666666663, P_nogo=0.033333333333333326), decision='GO', gate_used=OperabilityGate(hs_go=1.2, wind_go=18.0, hs_cond=1.4, wind_cond=20.0), confidence=0.2)",
+    "OperabilityForecast(day='D+7', daypart='morning', probabilities=OperabilityProbabilities(P_go=0.7666666666666667, P_cond=0.09999999999999998, P_nogo=0.0), decision='GO', gate_used=OperabilityGate(hs_go=1.2, wind_go=18.0, hs_cond=1.4, wind_cond=20.0), confidence=0.2)",
+    "OperabilityForecast(day='D+7', daypart='afternoon', probabilities=OperabilityProbabilities(P_go=0.7666666666666667, P_cond=0.1333333333333333, P_nogo=0.0), decision='GO', gate_used=OperabilityGate(hs_go=1.2, wind_go=18.0, hs_cond=1.4, wind_cond=20.0), confidence=0.2)",
+    "OperabilityForecast(day='D+7', daypart='evening', probabilities=OperabilityProbabilities(P_go=0.7333333333333333, P_cond=0.06666666666666665, P_nogo=0.0), decision='GO', gate_used=OperabilityGate(hs_go=1.2, wind_go=18.0, hs_cond=1.4, wind_cond=20.0), confidence=0.2)"
+  ],
+  "eta_predictions": [
+    "ETAPrediction(route='Abu Dhabi to AGI or DAS', distance_nm=65.0, planned_speed_kt=12.0, effective_speed_kt=11.28, eta_hours=6.51, buffer_minutes=45, hs_impact=0.7200000000000006)"
+  ],
+  "summary": {
+    "total_forecasts": 28,
+    "go_count": 24,
+    "conditional_count": 4,
+    "nogo_count": 0,
+    "average_confidence": 0.2571428571428572
+  },
+  "generated_at": "2025-10-07T00:58:34.405725",
+  "forecast_days": 7
+}

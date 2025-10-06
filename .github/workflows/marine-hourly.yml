@@ -132,21 +132,61 @@ jobs:
         EOF
 
     - name: Send Telegram notification
-      if: ${{ env.NOTIFY_TELEGRAM == '1' && secrets.TELEGRAM_BOT_TOKEN != '' }}
+      if: ${{ env.NOTIFY_TELEGRAM == '1' }}
       run: |
         echo "📱 Telegram 알림 발송 중..."
+        echo "🔑 Telegram Bot Token 상태: $([ -n "${{ secrets.TELEGRAM_BOT_TOKEN }}" ] && echo "설정됨" || echo "없음")"
+        echo "🔑 Telegram Chat ID 상태: $([ -n "${{ secrets.TELEGRAM_CHAT_ID }}" ] && echo "설정됨" || echo "없음")"
+        
+        if [ -z "${{ secrets.TELEGRAM_BOT_TOKEN }}" ]; then
+          echo "❌ TELEGRAM_BOT_TOKEN이 설정되지 않았습니다"
+          exit 1
+        fi
+        
+        if [ -z "${{ secrets.TELEGRAM_CHAT_ID }}" ]; then
+          echo "❌ TELEGRAM_CHAT_ID가 설정되지 않았습니다"
+          exit 1
+        fi
+        
         if [ -f "out/summary.txt" ]; then
+          echo "📄 summary.txt 파일 크기: $(wc -c < out/summary.txt) bytes"
           curl -sS -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
             --data-urlencode "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
             --data-urlencode "parse_mode=HTML" \
             --data-urlencode "text@out/summary.txt"
           echo "✅ Telegram 알림 발송 완료"
         else
-          echo "⚠️ summary.txt 파일이 없습니다"
+          echo "⚠️ summary.txt 파일이 없습니다. 기본 메시지로 대체합니다"
+          curl -sS -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+            --data-urlencode "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
+            --data-urlencode "parse_mode=HTML" \
+            --data-urlencode "text=🌊 HVDC Marine Weather Report - $(date '+%Y-%m-%d %H:%M') - AGI 해역 데이터 수집 완료"
+          echo "✅ Telegram 기본 알림 발송 완료"
         fi
 
     - name: Send Email notification
-      if: ${{ env.NOTIFY_EMAIL == '1' && secrets.MAIL_USERNAME != '' }}
+      if: ${{ env.NOTIFY_EMAIL == '1' }}
+      run: |
+        echo "📧 Email 알림 발송 중..."
+        echo "🔑 Email 설정 상태:"
+        echo "  MAIL_USERNAME: $([ -n "${{ secrets.MAIL_USERNAME }}" ] && echo "설정됨" || echo "없음")"
+        echo "  MAIL_TO: $([ -n "${{ secrets.MAIL_TO }}" ] && echo "설정됨" || echo "없음")"
+        
+        if [ -z "${{ secrets.MAIL_USERNAME }}" ]; then
+          echo "❌ MAIL_USERNAME이 설정되지 않았습니다"
+          exit 1
+        fi
+        
+        if [ -z "${{ secrets.MAIL_TO }}" ]; then
+          echo "❌ MAIL_TO가 설정되지 않았습니다"
+          exit 1
+        fi
+        
+        echo "✅ Email 설정 확인 완료, 발송 진행"
+      continue-on-error: true
+      
+    - name: Send Email notification (action)
+      if: ${{ env.NOTIFY_EMAIL == '1' && secrets.MAIL_USERNAME != '' && secrets.MAIL_TO != '' }}
       uses: dawidd6/action-send-mail@v6
       with:
         server_address: smtp.gmail.com

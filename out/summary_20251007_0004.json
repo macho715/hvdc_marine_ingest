@@ -1,0 +1,51 @@
+{
+  "metadata": {
+    "generated_at": "2025-10-07T00:04:57.271311",
+    "location": "AGI",
+    "forecast_hours": 24,
+    "system_version": "v2.1"
+  },
+  "api_status": {
+    "STORMGLASS": {
+      "status": "❌ API 키 없음",
+      "confidence": 0.0
+    },
+    "OPEN_METEO": {
+      "status": "✅ 실제 데이터",
+      "confidence": 0.75
+    },
+    "NCM_SELENIUM": {
+      "status": "✅ 실제 데이터",
+      "confidence": 0.7
+    },
+    "WORLDTIDES": {
+      "status": "❌ API 키 없음",
+      "confidence": 0.0
+    }
+  },
+  "analysis": {
+    "total_data_points": 72,
+    "fused_forecasts": 72,
+    "decisions": {
+      "total": 72,
+      "GO": 24,
+      "CONDITIONAL": 3,
+      "NO-GO": 45
+    },
+    "averages": {
+      "eri": 0.2675,
+      "wind_speed_ms": 11.531944444444443,
+      "wave_height_m": 0.5833333333333334
+    },
+    "eri_points": 72,
+    "confidence_scores": [
+      0.75,
+      0.7
+    ]
+  },
+  "collection_stats": {
+    "total_timeseries": 2,
+    "total_data_points": 72,
+    "data_collection_rate": 50.0
+  }
+}
