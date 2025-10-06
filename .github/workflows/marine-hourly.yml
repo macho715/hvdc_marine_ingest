@@ -12,6 +12,12 @@ env:
 jobs:
   marine-weather:
     runs-on: ubuntu-latest
+    
+    # ✅ 워크플로우 권한 설정 (시크릿 접근 권한 명시)
+    permissions:
+      contents: read
+      actions: read
+      secrets: read
 
     steps:
     - uses: actions/checkout@v4
@@ -35,12 +41,23 @@ jobs:
       id: now
       run: echo "utc=$(date -u '+%Y-%m-%d %H:%M UTC')" >> "$GITHUB_OUTPUT"
 
-    # ✅ 게이트 스텝: secrets를 직접 if에서 비교하지 말고 출력으로 노출
+    # ✅ 게이트 스텝: secrets 보유 여부를 불린 출력으로 계산 (시크릿 직접 비교 문제 해결)
     - name: Compute gates
       id: gates
       run: |
-        echo "has_tg=${{ env.NOTIFY_TELEGRAM == '1' && secrets.TELEGRAM_BOT_TOKEN != '' && secrets.TELEGRAM_CHAT_ID != '' }}" >> "$GITHUB_OUTPUT"
-        echo "has_mail=${{ env.NOTIFY_EMAIL == '1' && secrets.MAIL_USERNAME != '' && secrets.MAIL_PASSWORD != '' && secrets.MAIL_TO != '' }}" >> "$GITHUB_OUTPUT"
+        echo "has_tg=${{ secrets.TELEGRAM_BOT_TOKEN != '' && secrets.TELEGRAM_CHAT_ID != '' }}" >> "$GITHUB_OUTPUT"
+        echo "has_mail=${{ secrets.MAIL_USERNAME != '' && secrets.MAIL_PASSWORD != '' && secrets.MAIL_TO != '' }}" >> "$GITHUB_OUTPUT"
+        echo "has_apis=${{ secrets.STORMGLASS_API_KEY != '' || secrets.WORLDTIDES_API_KEY != '' }}" >> "$GITHUB_OUTPUT"
+        
+        # 시크릿 상태 진단 출력 (*** 마스킹으로 보안 유지)
+        echo "🔍 시크릿 상태 진단:"
+        echo "  TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN != '' && '설정됨' || '없음' }}"
+        echo "  TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID != '' && '설정됨' || '없음' }}"
+        echo "  MAIL_USERNAME: ${{ secrets.MAIL_USERNAME != '' && '설정됨' || '없음' }}"
+        echo "  MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD != '' && '설정됨' || '없음' }}"
+        echo "  MAIL_TO: ${{ secrets.MAIL_TO != '' && '설정됨' || '없음' }}"
+        echo "  STORMGLASS_API_KEY: ${{ secrets.STORMGLASS_API_KEY != '' && '설정됨' || '없음' }}"
+        echo "  WORLDTIDES_API_KEY: ${{ secrets.WORLDTIDES_API_KEY != '' && '설정됨' || '없음' }}"
         
     - name: Run marine weather collection
       run: |
@@ -103,14 +120,27 @@ jobs:
         from: "HVDC Weather Bot <${{ secrets.MAIL_USERNAME }}>"
         html_body: file://out/summary.html
 
-    # 빠른 진단 스텝 (원하면 추가)
-    - name: TG ping
+    # ✅ 시크릿 진단 스텝 (시크릿 "사라짐" 문제 해결)
+    - name: Telegram ping (secrets validation)
       if: ${{ steps.gates.outputs.has_tg == 'true' }}
       run: |
-        curl -fsS "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/getMe"
+        echo "🔍 Telegram 시크릿 검증 시작..."
+        
+        # 1. Bot Token 유효성 확인
+        echo "📡 Bot Token 검증 중..."
+        BOT_INFO=$(curl -fsS "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/getMe")
+        echo "Bot Info: $BOT_INFO"
+        
+        # 2. Chat ID 권한 확인
+        echo "📱 Chat ID 검증 중..."
         curl -fsS -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
           --data-urlencode "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
-          --data-urlencode "text=ping ${{ steps.now.outputs.utc }}"
+          --data-urlencode "text=🔍 HVDC Marine Weather System - 시크릿 검증 성공 ${{ steps.now.outputs.utc }}" \
+          --data-urlencode "parse_mode=HTML" \
+          -o .tg_ping_response.json
+        
+        echo "✅ Telegram 시크릿 검증 완료"
+        echo "Response: $(cat .tg_ping_response.json)"
 
     - name: Upload artifacts (optional)
       uses: actions/upload-artifact@v4
