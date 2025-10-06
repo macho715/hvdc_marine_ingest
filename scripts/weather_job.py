@@ -179,7 +179,7 @@ def analyze_weather_data(data: dict) -> dict:
             'wave_height_m': avg_wave_height
         },
         'eri_points': len(all_eri_points),
-        'confidence_scores': [ts.confidence for ts in all_timeseries]
+        'confidence_scores': [getattr(ts, 'confidence', 0.5) for ts in all_timeseries]
     }
 
 def generate_summary_report(data: dict, analysis: dict, output_dir: str) -> dict:

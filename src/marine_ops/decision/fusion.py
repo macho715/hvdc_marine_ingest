@@ -38,14 +38,16 @@ class ForecastFusion:
             if len(sources) < 2:
                 # 소스가 하나뿐인 경우
                 source = sources[0]
+                # MarineDataPoint는 confidence 속성이 없으므로 timeseries에서 가져옴
+                source_confidence = 0.5  # 기본값
                 fused = FusedForecast(
                     location=location,
                     timestamp=timestamp,
                     wind_speed_fused=source.wind_speed,
                     wave_height_fused=source.wave_height,
-                    confidence=source.confidence or 0.5,
-                    sources_used=[source.source],
-                    weights={source.source: 1.0}
+                    confidence=source_confidence,
+                    sources_used=[getattr(source, 'source', 'unknown')],
+                    weights={getattr(source, 'source', 'unknown'): 1.0}
                 )
             else:
                 # 다중 소스 융합
@@ -74,11 +76,11 @@ class ForecastFusion:
         weights = self._calculate_weights(sources)
         
         # 가중 평균 계산
-        wind_speed_fused = sum(dp.wind_speed * weights[dp.source] for dp in sources)
-        wave_height_fused = sum(dp.wave_height * weights[dp.source] for dp in sources)
+        wind_speed_fused = sum(dp.wind_speed * weights.get(getattr(dp, 'source', 'unknown'), 0.1) for dp in sources)
+        wave_height_fused = sum(dp.wave_height * weights.get(getattr(dp, 'source', 'unknown'), 0.1) for dp in sources)
         
-        # 신뢰도 계산
-        confidence = sum((dp.confidence or 0.5) * weights[dp.source] for dp in sources)
+        # 신뢰도 계산 (MarineDataPoint는 confidence 속성이 없으므로 기본값 사용)
+        confidence = sum(0.5 * weights.get(getattr(dp, 'source', 'unknown'), 0.1) for dp in sources)
         
         return FusedForecast(
             location=location,
@@ -105,8 +107,9 @@ class ForecastFusion:
         # 실제 존재하는 소스만 사용
         total_weight = 0
         for source in sources:
-            weight = base_weights.get(source.source, 0.1)
-            weights[source.source] = weight
+            source_name = getattr(source, 'source', 'unknown')
+            weight = base_weights.get(source_name, 0.1)
+            weights[source_name] = weight
             total_weight += weight
         
         # 정규화

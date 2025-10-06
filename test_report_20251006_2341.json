@@ -1,0 +1,14 @@
+{
+  "test_timestamp": "20251006_2341",
+  "test_results": {
+    "config_files": true,
+    "workflow_files": true,
+    "dependencies": false,
+    "weather_job": false
+  },
+  "environment": {
+    "python_version": "3.12.4 (tags/v3.12.4:8e8a4ba, Jun  6 2024, 19:30:16) [MSC v.1940 64 bit (AMD64)]",
+    "platform": "nt",
+    "current_dir": "C:\\Users\\jichu\\Downloads\\hvdc_marine_ingest"
+  }
+}
