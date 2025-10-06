@@ -1,0 +1,27 @@
+*** Begin Patch
+*** Update File: src/marine_ops/connectors/open_meteo.py
+@@
+-BASE="https://marine-api.open-meteo.com/v1/marine"
+-HOURVARS=["wave_height","wave_direction","wave_period"]
++BASE = "https://marine-api.open-meteo.com/v1/marine"
++HOURVARS = [
++  "wave_height","wave_direction","wave_period",
++  "wind_wave_height","wind_wave_direction","wind_wave_period","wind_wave_peak_period",
++  "swell_wave_height","swell_wave_direction","swell_wave_period","swell_wave_peak_period",
++  "ocean_current_velocity","ocean_current_direction",
++  "sea_surface_temperature","sea_level_height_msl"
++]
+ 
+ def fetch_open_meteo_full(lat, lon, start_iso, end_iso, tz="Asia/Dubai", unit_wind="knots"):
+     params={
+         "latitude":lat,"longitude":lon,
+-        "hourly":",".join(HOURVARS),
++        "hourly": ",".join(HOURVARS),
+         "start_date":start_iso[:10],"end_date":end_iso[:10],
+-        "timezone":tz
++        "timezone":tz, "windspeed_unit": unit_wind, "forecast_days":7
+     }
+     r = httpx.get(BASE, params=params, timeout=20)
+     r.raise_for_status()
+     return r.json()
+*** End Patch

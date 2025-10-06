@@ -1,0 +1,6 @@
+# src/marine_ops/eri/compute.py (addendum example)
+# Extend ERI rules to include swell & wind-wave (illustrative snippet)
+# rules += [
+#   ERIRule(var="hs_swell", caution=1.5, danger=2.5, weight=0.25, direction="max"),
+#   ERIRule(var="hs_wind",  caution=1.5, danger=2.5, weight=0.15, direction="max"),
+# ]

@@ -1,0 +1,83 @@
+# KR: 시스템 설정
+# EN: System settings
+
+# Units
+units:
+  wind: "m/s"
+  wave: "m"
+  temperature: "celsius"
+
+# Fallback order for data sources
+fallback_order:
+  - "stormglass"
+  - "open_meteo"
+  - "worldtides"
+  - "ncm_web"
+
+# ERI Rules
+eri_rules_path: "config/eri_rules.yaml"
+
+# Fusion weights
+ncm_weight: 0.60
+system_weight: 0.40
+alpha: 0.7  # 축소 계수
+beta: 0.3   # 스무딩 계수
+
+# Operational gates
+gate:
+  go:
+    hs_m: 1.00
+    wind_kt: 20.0
+  conditional:
+    hs_m: 1.20
+    wind_kt: 22.0
+
+# Alert gamma thresholds
+alert_gamma:
+  "rough at times": 0.15
+  "High seas": 0.30
+
+# Locations
+locations:
+  AGI:
+    name: "Al Ghallan Island"
+    lat: 25.2111
+    lon: 54.1578
+  DAS:
+    name: "Das Island"
+    lat: 24.8667
+    lon: 53.7333
+
+# Forecast settings
+forecast_horizon_hours: 72
+forecast_interval_hours: 1
+
+# Cache settings
+cache_ttl_hours: 3
+cache_enabled: true
+
+# Notification settings
+notifications:
+  enabled: true
+  channels:
+    - "email"
+    - "telegram"
+  alerts:
+    - "NO-GO"
+    - "CONDITIONAL"
+  
+# Report settings
+reports:
+  formats:
+    - "json"
+    - "csv"
+    - "markdown"
+  include_metadata: true
+  include_charts: false
+
+# Logging
+logging:
+  level: "INFO"
+  file: "marine_ops.log"
+  max_size_mb: 10
+  backup_count: 5

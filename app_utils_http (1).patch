@@ -1,0 +1,27 @@
+*** Begin Patch
+*** Update File: app/main.py
+@@
+-    await page.goto(BASE_URL, timeout=TIMEOUT)
+-    # language switch (best-effort)
+-    try:
+-        await page.get_by_text(re.compile("English", re.I)).click(timeout=3000)
+-    except:
+-        pass
+-    await page.wait_for_timeout(1500)
+-    content = await page.content()
++    # Use signal-based waits instead of fixed sleeps/networkidle
++    await page.goto(BASE_URL, timeout=TIMEOUT, wait_until="domcontentloaded")
++    try:
++        await page.get_by_text(re.compile("English", re.I)).click(timeout=3000)
++        await page.wait_for_load_state("load")
++    except Exception:
++        pass
++    # Wait until target panel is visible (forecast/marine/sea state)
++    try:
++        await page.locator("text=/Forecast|Marine|Sea state/i").first.wait_for(
++            state="visible", timeout=8000
++        )
++    except Exception:
++        pass
++    content = await page.content()
+*** End Patch

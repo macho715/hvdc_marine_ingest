@@ -1,0 +1,55 @@
+# KR: ERI 계산 규칙
+# EN: ERI computation rules
+
+# Wind speed thresholds (m/s)
+wind:
+  thresholds: [10, 15, 20, 25]
+  weights: [0.2, 0.4, 0.7, 1.0]
+  description: "Wind speed risk assessment"
+
+# Wave height thresholds (m)
+wave:
+  thresholds: [1.0, 1.5, 2.0, 2.5]
+  weights: [0.2, 0.4, 0.7, 1.0]
+  description: "Wave height risk assessment"
+
+# Visibility thresholds (km)
+visibility:
+  thresholds: [10, 5, 2, 1]
+  weights: [0.1, 0.3, 0.6, 1.0]
+  description: "Visibility risk assessment"
+
+# Fog probability thresholds (0-1)
+fog:
+  thresholds: [0.1, 0.3, 0.5, 0.7]
+  weights: [0.2, 0.4, 0.7, 1.0]
+  description: "Fog probability risk assessment"
+
+# Overall ERI weights
+weights:
+  wind: 0.4
+  wave: 0.4
+  visibility: 0.1
+  fog: 0.1
+
+# ERI categories
+categories:
+  low: [0.0, 0.3]
+  moderate: [0.3, 0.6]
+  high: [0.6, 0.8]
+  extreme: [0.8, 1.0]
+
+# Special rules for different sources
+source_adjustments:
+  ncm_web:
+    discount_factor: 0.8
+    description: "NCM web scraping has lower confidence"
+  stormglass:
+    discount_factor: 1.0
+    description: "Stormglass is considered most reliable"
+  open_meteo:
+    discount_factor: 0.9
+    description: "Open-Meteo is generally reliable"
+  worldtides:
+    discount_factor: 0.85
+    description: "WorldTides has moderate reliability"

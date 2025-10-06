@@ -1,0 +1,10 @@
+PR-1: Scrape Stabilization — Playwright signal waits + robots/429 compliance
+----------------------------------------------------------------------------
+Scope:
+- Replace wait_for_timeout/networkidle with DOMContentLoaded/load + locator visibility waits
+- Add robots.txt Crawl-delay honor + identifiable User-Agent
+- Add HTTP 429/503 Retry-After handling
+Files:
+- app/main.py (scraper)
+- app/utils/http.py (new)
+- config/scrape.yaml (UA, min crawl-delay)

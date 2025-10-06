@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERI 계산 알고리즘 다이어그램</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #e74c3c;
+            padding-bottom: 15px;
+        }
+        .mermaid {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .formula-box {
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+        .threshold-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .threshold-table th,
+        .threshold-table td {
+            border: 1px solid #bdc3c7;
+            padding: 10px;
+            text-align: center;
+        }
+        .threshold-table th {
+            background-color: #34495e;
+            color: white;
+        }
+        .threshold-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚠️ ERI (Environmental Risk Index) 계산 알고리즘</h1>
+        
+        <div class="mermaid">
+            graph TD
+                A[해양 데이터 입력] --> B{데이터 유효성 검사}
+                B -->|유효| C[개별 위험도 계산]
+                B -->|무효| D[기본값 할당]
+                D --> C
+                
+                C --> E[풍속 위험도 계산<br/>30% 가중치]
+                C --> F[파고 위험도 계산<br/>25% 가중치]
+                C --> G[스웰 위험도 계산<br/>15% 가중치]
+                C --> H[바람파 위험도 계산<br/>10% 가중치]
+                C --> I[해류 위험도 계산<br/>5% 가중치]
+                C --> J[시정 위험도 계산<br/>10% 가중치]
+                C --> K[안개 위험도 계산<br/>5% 가중치]
+                
+                E --> L{풍속 임계값 확인}
+                L -->|0-10 m/s| M[위험도: 0.2]
+                L -->|10-15 m/s| N[위험도: 0.4]
+                L -->|15-20 m/s| O[위험도: 0.7]
+                L -->|20-25 m/s| P[위험도: 1.0]
+                L -->|25+ m/s| Q[위험도: 1.0]
+                
+                F --> R{파고 임계값 확인}
+                R -->|0-1.0 m| S[위험도: 0.2]
+                R -->|1.0-1.5 m| T[위험도: 0.4]
+                R -->|1.5-2.0 m| U[위험도: 0.7]
+                R -->|2.0-2.5 m| V[위험도: 1.0]
+                R -->|2.5+ m| W[위험도: 1.0]
+                
+                G --> X{스웰 임계값 확인}
+                X -->|0-0.5 m| Y[위험도: 0.1]
+                X -->|0.5-1.0 m| Z[위험도: 0.3]
+                X -->|1.0-1.5 m| AA[위험도: 0.6]
+                X -->|1.5-2.0 m| BB[위험도: 1.0]
+                X -->|2.0+ m| CC[위험도: 1.0]
+                
+                H --> DD{바람파 임계값 확인}
+                I --> EE{해류 임계값 확인}
+                J --> FF{시정 임계값 확인}
+                K --> GG{안개 임계값 확인}
+                
+                M --> HH[가중 평균 ERI 계산]
+                N --> HH
+                O --> HH
+                P --> HH
+                Q --> HH
+                S --> HH
+                T --> HH
+                U --> HH
+                V --> HH
+                W --> HH
+                Y --> HH
+                Z --> HH
+                AA --> HH
+                BB --> HH
+                CC --> HH
+                
+                HH --> II[ERI 결과 출력]
+                II --> JJ{ERI 분류}
+                JJ -->|0.0-0.3| KK[낮은 위험]
+                JJ -->|0.3-0.6| LL[보통 위험]
+                JJ -->|0.6-0.8| MM[높은 위험]
+                JJ -->|0.8-1.0| NN[극한 위험]
+                
+                %% 스타일링
+                classDef input fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
+                classDef process fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
+                classDef decision fill:#f39c12,stroke:#e67e22,stroke-width:2px,color:#fff
+                classDef output fill:#27ae60,stroke:#229954,stroke-width:2px,color:#fff
+                classDef lowRisk fill:#2ecc71,stroke:#27ae60,stroke-width:2px,color:#fff
+                classDef medRisk fill:#f1c40f,stroke:#f39c12,stroke-width:2px,color:#000
+                classDef highRisk fill:#e67e22,stroke:#d35400,stroke-width:2px,color:#fff
+                classDef extremeRisk fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
+                
+                class A input
+                class B,C,D,E,F,G,H,I,J,K,HH process
+                class L,R,X,DD,EE,FF,GG,JJ decision
+                class II output
+                class KK lowRisk
+                class LL medRisk
+                class MM highRisk
+                class NN extremeRisk
+        </div>
+        
+        <div class="formula-box">
+            <h3>🧮 ERI 계산 공식</h3>
+            <p><strong>ERI = (풍속 위험도 × 0.30) + (파고 위험도 × 0.25) + (스웰 위험도 × 0.15) + (바람파 위험도 × 0.10) + (해류 위험도 × 0.05) + (시정 위험도 × 0.10) + (안개 위험도 × 0.05)</strong></p>
+        </div>
+        
+        <table class="threshold-table">
+            <thead>
+                <tr>
+                    <th>구성 요소</th>
+                    <th>가중치</th>
+                    <th>임계값 1</th>
+                    <th>임계값 2</th>
+                    <th>임계값 3</th>
+                    <th>임계값 4</th>
+                    <th>위험도 범위</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>풍속</strong></td>
+                    <td>30%</td>
+                    <td>10 m/s</td>
+                    <td>15 m/s</td>
+                    <td>20 m/s</td>
+                    <td>25 m/s</td>
+                    <td>0.2 - 1.0</td>
+                </tr>
+                <tr>
+                    <td><strong>파고</strong></td>
+                    <td>25%</td>
+                    <td>1.0 m</td>
+                    <td>1.5 m</td>
+                    <td>2.0 m</td>
+                    <td>2.5 m</td>
+                    <td>0.2 - 1.0</td>
+                </tr>
+                <tr>
+                    <td><strong>스웰</strong></td>
+                    <td>15%</td>
+                    <td>0.5 m</td>
+                    <td>1.0 m</td>
+                    <td>1.5 m</td>
+                    <td>2.0 m</td>
+                    <td>0.1 - 1.0</td>
+                </tr>
+                <tr>
+                    <td><strong>바람파</strong></td>
+                    <td>10%</td>
+                    <td>0.5 m</td>
+                    <td>1.0 m</td>
+                    <td>1.5 m</td>
+                    <td>2.0 m</td>
+                    <td>0.1 - 1.0</td>
+                </tr>
+                <tr>
+                    <td><strong>해류</strong></td>
+                    <td>5%</td>
+                    <td>0.5 m/s</td>
+                    <td>1.0 m/s</td>
+                    <td>1.5 m/s</td>
+                    <td>2.0 m/s</td>
+                    <td>0.1 - 1.0</td>
+                </tr>
+                <tr>
+                    <td><strong>시정</strong></td>
+                    <td>10%</td>
+                    <td>10 km</td>
+                    <td>5 km</td>
+                    <td>2 km</td>
+                    <td>1 km</td>
+                    <td>0.1 - 1.0</td>
+                </tr>
+                <tr>
+                    <td><strong>안개</strong></td>
+                    <td>5%</td>
+                    <td>0.1</td>
+                    <td>0.3</td>
+                    <td>0.5</td>
+                    <td>0.7</td>
+                    <td>0.2 - 1.0</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="formula-box">
+            <h3>📊 ERI 분류 기준</h3>
+            <ul>
+                <li><strong>낮은 위험 (0.0 - 0.3)</strong>: 안전한 운항 조건</li>
+                <li><strong>보통 위험 (0.3 - 0.6)</strong>: 주의 깊은 운항 필요</li>
+                <li><strong>높은 위험 (0.6 - 0.8)</strong>: 조건부 운항 권장</li>
+                <li><strong>극한 위험 (0.8 - 1.0)</strong>: 운항 금지 권장</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true
+            }
+        });
+    </script>
+</body>
+</html>

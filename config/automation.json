@@ -1,0 +1,32 @@
+{
+  "schedule": {
+    "data_collection": "*/3 * * * *",
+    "weather_report": "0 6,18 * * *",
+    "health_check": "*/30 * * * *"
+  },
+  "locations": [
+    "AGI",
+    "DAS"
+  ],
+  "notifications": {
+    "enabled": false,
+    "telegram": {
+      "enabled": false,
+      "bot_token": "",
+      "chat_id": ""
+    },
+    "email": {
+      "enabled": false,
+      "smtp_server": "",
+      "smtp_port": 587,
+      "username": "",
+      "password": "",
+      "recipients": []
+    }
+  },
+  "alerts": {
+    "no_go_threshold": 0.3,
+    "wind_threshold": 20.0,
+    "wave_threshold": 2.0
+  }
+}

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>통합 해양 날씨 파이프라인 시스템 아키텍처</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        .diagram-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #e9ecef;
+        }
+        .info-section {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .tech-item {
+            background: #f1f8e9;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #4caf50;
+        }
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .kpi-item {
+            background: #fff3e0;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ff9800;
+            text-align: center;
+        }
+        .kpi-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #f57c00;
+        }
+        .module-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 10px;
+        }
+        .module-title {
+            color: #1976d2;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #1976d2;
+            padding-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚢 통합 해양 날씨 파이프라인 시스템 아키텍처</h1>
+        
+        <div class="info-section">
+            <h3>📋 시스템 개요</h3>
+            <p><strong>HVDC PROJECT - Samsung C&T Logistics & ADNOC·DSV Strategic Partnership</strong>을 위한 해양 관측 데이터 자동 수집, 분석, 및 의사결정 지원 시스템</p>
+        </div>
+
+        <div class="diagram-container">
+            <h3>🔄 데이터 플로우 아키텍처</h3>
+            <div class="mermaid">
+graph TD
+    subgraph "데이터 수집 계층"
+        A1[Stormglass API] --> B[데이터 정규화]
+        A2[Open-Meteo API] --> B
+        A3[WorldTides API] --> B
+        A4["NCM Al Bahar<br/>Selenium 크롤링"] --> B
+    end
+    
+    subgraph "데이터 처리 계층"
+        B --> C["단위 변환<br/>SI 표준화"]
+        C --> D["ERI 계산<br/>환경 위험 지수"]
+        D --> E["예보 융합<br/>다중 소스 통합"]
+        E --> F["운항 판정<br/>GO/COND/NO-GO"]
+    end
+    
+    subgraph "저장 계층"
+        F --> G["SQLite 벡터 DB<br/>marine_vec.db"]
+        G --> H["벡터 임베딩<br/>all-MiniLM-L6-v2"]
+        H --> I["메타데이터<br/>marine_raw"]
+    end
+    
+    subgraph "질의 응답 계층"
+        J[자연어 질의] --> K["벡터 검색<br/>KNN 유사도"]
+        K --> L["LLM 분석<br/>운항 조건 평가"]
+        L --> M["결과 반환<br/>JSON/CSV"]
+    end
+    
+    subgraph "자동화 계층"
+        N["크론 스케줄러<br/>3시간마다"] --> A4
+        N --> O["보고서 생성<br/>06:00/18:00"]
+        O --> P["알림 발송<br/>Telegram/Email"]
+    end
+    
+    G --> K
+    F --> O
+            </div>
+        </div>
+
+        <div class="module-section">
+            <div class="module-title">🧩 핵심 모듈 구조</div>
+            
+            <div class="tech-stack">
+                <div class="tech-item">
+                    <h4>🔍 데이터 수집</h4>
+                    <ul>
+                        <li>NCM Selenium 크롤링</li>
+                        <li>Stormglass API</li>
+                        <li>Open-Meteo API</li>
+                        <li>WorldTides API</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-item">
+                    <h4>⚙️ 데이터 처리</h4>
+                    <ul>
+                        <li>SI 단위 변환</li>
+                        <li>ERI 계산 (0-100)</li>
+                        <li>예보 융합</li>
+                        <li>운항 판정</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-item">
+                    <h4>💾 벡터 DB</h4>
+                    <ul>
+                        <li>SQLite-vec</li>
+                        <li>384차원 임베딩</li>
+                        <li>코사인 유사도</li>
+                        <li>메타데이터 관리</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-item">
+                    <h4>🤖 질의 응답</h4>
+                    <ul>
+                        <li>자연어 처리</li>
+                        <li>KNN 검색</li>
+                        <li>LLM 분석</li>
+                        <li>구조화된 답변</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="module-section">
+            <div class="module-title">🔧 기술 스택</div>
+            
+            <div class="tech-stack">
+                <div class="tech-item">
+                    <h4>백엔드</h4>
+                    <ul>
+                        <li>Python 3.12</li>
+                        <li>Selenium WebDriver</li>
+                        <li>SQLite 벡터 DB</li>
+                        <li>sentence-transformers</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-item">
+                    <h4>인프라</h4>
+                    <ul>
+                        <li>Windows 10/11</li>
+                        <li>PowerShell</li>
+                        <li>Task Scheduler</li>
+                        <li>Python venv</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-item">
+                    <h4>외부 서비스</h4>
+                    <ul>
+                        <li>NCM Al Bahar</li>
+                        <li>Stormglass API</li>
+                        <li>Open-Meteo</li>
+                        <li>WorldTides</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-item">
+                    <h4>알림 시스템</h4>
+                    <ul>
+                        <li>Telegram Bot</li>
+                        <li>Email SMTP</li>
+                        <li>실시간 알림</li>
+                        <li>일일 리포트</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="module-section">
+            <div class="module-title">📊 핵심 성공 지표 (KPI)</div>
+            
+            <div class="kpi-grid">
+                <div class="kpi-item">
+                    <div class="kpi-value">≥98%</div>
+                    <div>데이터 수집 성공률</div>
+                </div>
+                
+                <div class="kpi-item">
+                    <div class="kpi-value">≥92%</div>
+                    <div>벡터 검색 정확도</div>
+                </div>
+                
+                <div class="kpi-item">
+                    <div class="kpi-value">≥95%</div>
+                    <div>운항 판정 정확도</div>
+                </div>
+                
+                <div class="kpi-item">
+                    <div class="kpi-value">&lt;2초</div>
+                    <div>시스템 응답 시간</div>
+                </div>
+                
+                <div class="kpi-item">
+                    <div class="kpi-value">40%↓</div>
+                    <div>운항 지연 감소</div>
+                </div>
+                
+                <div class="kpi-item">
+                    <div class="kpi-value">15%↑</div>
+                    <div>연료 효율 향상</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h3>🚀 주요 기능</h3>
+            <ul>
+                <li><strong>실시간 데이터 수집</strong>: NCM Al Bahar 페이지 Selenium 크롤링</li>
+                <li><strong>벡터 기반 검색</strong>: "AGI high tide RORO window" 자연어 질의</li>
+                <li><strong>운항 판정</strong>: GO/CONDITIONAL/NO-GO 자동 분류</li>
+                <li><strong>자동화</strong>: 3시간마다 수집 + 알림 시스템</li>
+                <li><strong>통합 분석</strong>: 다중 소스 예보 융합 및 ERI 계산</li>
+            </ul>
+        </div>
+
+        <div class="info-section">
+            <h3>🎯 비즈니스 가치</h3>
+            <ul>
+                <li><strong>운영 효율성</strong>: 자동화된 데이터 수집 및 분석</li>
+                <li><strong>안전성 향상</strong>: 실시간 해양 조건 모니터링</li>
+                <li><strong>비용 절감</strong>: 연료 효율 최적화 및 지연 감소</li>
+                <li><strong>의사결정 지원</strong>: AI 기반 운항 조건 분석</li>
+                <li><strong>규정 준수</strong>: FANR/MOIAT 규정 자동 검증</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true
+            }
+        });
+    </script>
+</body>
+</html>

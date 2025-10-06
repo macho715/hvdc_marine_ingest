@@ -1,0 +1,3 @@
+# config/scrape.yaml
+user_agent: "WeatherVesselBot/1.0 (+ops@example.com)"
+min_crawl_delay_seconds: 2

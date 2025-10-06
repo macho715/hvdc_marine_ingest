@@ -1,0 +1,10 @@
+PR-2: Marine Extension — Open-Meteo full marine variables + WorldTides heights
+-------------------------------------------------------------------------------
+Scope:
+- Extend Open-Meteo Marine hourly variables (swell/wind-wave/peak periods/ocean current/SST/sea level msl)
+- Add WorldTides heights connector
+- Normalize units (m / kt / s) and extend ERI rules to include swell & wind-wave
+Files:
+- src/marine_ops/connectors/open_meteo.py (extended vars)
+- src/marine_ops/connectors/worldtides.py (new)
+- src/marine_ops/eri/compute.py (rules addendum example)

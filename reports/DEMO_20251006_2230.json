@@ -1,0 +1,1129 @@
+{
+  "report_id": "DEMO_20251006_2230",
+  "generated_at": "2025-10-06T22:30:22.877949",
+  "locations": [
+    "AGI",
+    "DAS"
+  ],
+  "forecast_horizon": 24,
+  "warnings": [
+    "데모 모드로 실행됨"
+  ],
+  "metadata": {
+    "demo_mode": true,
+    "sources_used": [
+      "demo_simulator"
+    ],
+    "api_keys_required": false
+  },
+  "decisions": [
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-06T22:30:22.873948",
+      "decision": "GO",
+      "reasoning": "풍속 및 파고 조건 양호",
+      "eta_impact": "No significant impact"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-06T23:30:22.873948",
+      "decision": "GO",
+      "reasoning": "풍속 및 파고 조건 양호",
+      "eta_impact": "No significant impact"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T00:30:22.873948",
+      "decision": "CONDITIONAL",
+      "reasoning": "조건부 운항 가능 - 주의 필요",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T01:30:22.873948",
+      "decision": "CONDITIONAL",
+      "reasoning": "조건부 운항 가능 - 주의 필요",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T02:30:22.873948",
+      "decision": "NO-GO",
+      "reasoning": "풍속 또는 파고 조건 불량",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T03:30:22.873948",
+      "decision": "NO-GO",
+      "reasoning": "풍속 또는 파고 조건 불량",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T04:30:22.873948",
+      "decision": "CONDITIONAL",
+      "reasoning": "조건부 운항 가능 - 주의 필요",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T05:30:22.873948",
+      "decision": "NO-GO",
+      "reasoning": "풍속 또는 파고 조건 불량",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T06:30:22.873948",
+      "decision": "CONDITIONAL",
+      "reasoning": "조건부 운항 가능 - 주의 필요",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T07:30:22.873948",
+      "decision": "CONDITIONAL",
+      "reasoning": "조건부 운항 가능 - 주의 필요",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T08:30:22.873948",
+      "decision": "NO-GO",
+      "reasoning": "풍속 또는 파고 조건 불량",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T09:30:22.873948",
+      "decision": "NO-GO",
+      "reasoning": "풍속 또는 파고 조건 불량",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T10:30:22.873948",
+      "decision": "CONDITIONAL",
+      "reasoning": "조건부 운항 가능 - 주의 필요",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T11:30:22.873948",
+      "decision": "CONDITIONAL",
+      "reasoning": "조건부 운항 가능 - 주의 필요",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T12:30:22.873948",
+      "decision": "CONDITIONAL",
+      "reasoning": "조건부 운항 가능 - 주의 필요",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T13:30:22.873948",
+      "decision": "NO-GO",
+      "reasoning": "풍속 또는 파고 조건 불량",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T14:30:22.873948",
+      "decision": "NO-GO",
+      "reasoning": "풍속 또는 파고 조건 불량",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T15:30:22.873948",
+      "decision": "NO-GO",
+      "reasoning": "풍속 또는 파고 조건 불량",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T16:30:22.873948",
+      "decision": "GO",
+      "reasoning": "풍속 및 파고 조건 양호",
+      "eta_impact": "No significant impact"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T17:30:22.873948",
+      "decision": "GO",
+      "reasoning": "풍속 및 파고 조건 양호",
+      "eta_impact": "No significant impact"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T18:30:22.873948",
+      "decision": "CONDITIONAL",
+      "reasoning": "조건부 운항 가능 - 주의 필요",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T19:30:22.873948",
+      "decision": "CONDITIONAL",
+      "reasoning": "조건부 운항 가능 - 주의 필요",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T20:30:22.873948",
+      "decision": "NO-GO",
+      "reasoning": "풍속 또는 파고 조건 불량",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T21:30:22.873948",
+      "decision": "NO-GO",
+      "reasoning": "풍속 또는 파고 조건 불량",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-06T22:30:22.874953",
+      "decision": "GO",
+      "reasoning": "풍속 및 파고 조건 양호",
+      "eta_impact": "No significant impact"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-06T23:30:22.874953",
+      "decision": "GO",
+      "reasoning": "풍속 및 파고 조건 양호",
+      "eta_impact": "No significant impact"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T00:30:22.874953",
+      "decision": "CONDITIONAL",
+      "reasoning": "조건부 운항 가능 - 주의 필요",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T01:30:22.874953",
+      "decision": "CONDITIONAL",
+      "reasoning": "조건부 운항 가능 - 주의 필요",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T02:30:22.874953",
+      "decision": "NO-GO",
+      "reasoning": "풍속 또는 파고 조건 불량",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T03:30:22.874953",
+      "decision": "NO-GO",
+      "reasoning": "풍속 또는 파고 조건 불량",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T04:30:22.874953",
+      "decision": "CONDITIONAL",
+      "reasoning": "조건부 운항 가능 - 주의 필요",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T05:30:22.874953",
+      "decision": "NO-GO",
+      "reasoning": "풍속 또는 파고 조건 불량",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T06:30:22.874953",
+      "decision": "CONDITIONAL",
+      "reasoning": "조건부 운항 가능 - 주의 필요",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T07:30:22.874953",
+      "decision": "CONDITIONAL",
+      "reasoning": "조건부 운항 가능 - 주의 필요",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T08:30:22.874953",
+      "decision": "NO-GO",
+      "reasoning": "풍속 또는 파고 조건 불량",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T09:30:22.874953",
+      "decision": "NO-GO",
+      "reasoning": "풍속 또는 파고 조건 불량",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T10:30:22.874953",
+      "decision": "CONDITIONAL",
+      "reasoning": "조건부 운항 가능 - 주의 필요",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T11:30:22.874953",
+      "decision": "CONDITIONAL",
+      "reasoning": "조건부 운항 가능 - 주의 필요",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T12:30:22.874953",
+      "decision": "CONDITIONAL",
+      "reasoning": "조건부 운항 가능 - 주의 필요",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T13:30:22.874953",
+      "decision": "NO-GO",
+      "reasoning": "풍속 또는 파고 조건 불량",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T14:30:22.874953",
+      "decision": "NO-GO",
+      "reasoning": "풍속 또는 파고 조건 불량",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T15:30:22.874953",
+      "decision": "NO-GO",
+      "reasoning": "풍속 또는 파고 조건 불량",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T16:30:22.874953",
+      "decision": "GO",
+      "reasoning": "풍속 및 파고 조건 양호",
+      "eta_impact": "No significant impact"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T17:30:22.874953",
+      "decision": "GO",
+      "reasoning": "풍속 및 파고 조건 양호",
+      "eta_impact": "No significant impact"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T18:30:22.874953",
+      "decision": "CONDITIONAL",
+      "reasoning": "조건부 운항 가능 - 주의 필요",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T19:30:22.874953",
+      "decision": "CONDITIONAL",
+      "reasoning": "조건부 운항 가능 - 주의 필요",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T20:30:22.874953",
+      "decision": "NO-GO",
+      "reasoning": "풍속 또는 파고 조건 불량",
+      "eta_impact": "Potential delay"
+    },
+    {
+      "location": "AGI",
+      "timestamp": "2025-10-07T21:30:22.874953",
+      "decision": "NO-GO",
+      "reasoning": "풍속 또는 파고 조건 불량",
+      "eta_impact": "Potential delay"
+    }
+  ],
+  "fused_forecasts": [
+    {
+      "location": "2025-10-06",
+      "timestamp": "2025-10-06T22:30:22.873948",
+      "wind_speed_fused": 8.0,
+      "wave_height_fused": 1.0,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-06",
+      "timestamp": "2025-10-06T23:30:22.873948",
+      "wind_speed_fused": 10.0,
+      "wave_height_fused": 1.3,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T00:30:22.873948",
+      "wind_speed_fused": 12.0,
+      "wave_height_fused": 1.6,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T01:30:22.873948",
+      "wind_speed_fused": 14.0,
+      "wave_height_fused": 1.9,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T02:30:22.873948",
+      "wind_speed_fused": 16.0,
+      "wave_height_fused": 2.2,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T03:30:22.873948",
+      "wind_speed_fused": 18.0,
+      "wave_height_fused": 2.5,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T04:30:22.873948",
+      "wind_speed_fused": 20.0,
+      "wave_height_fused": 1.0,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T05:30:22.873948",
+      "wind_speed_fused": 22.0,
+      "wave_height_fused": 1.3,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T06:30:22.873948",
+      "wind_speed_fused": 8.0,
+      "wave_height_fused": 1.6,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T07:30:22.873948",
+      "wind_speed_fused": 10.0,
+      "wave_height_fused": 1.9,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T08:30:22.873948",
+      "wind_speed_fused": 12.0,
+      "wave_height_fused": 2.2,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T09:30:22.873948",
+      "wind_speed_fused": 14.0,
+      "wave_height_fused": 2.5,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T10:30:22.873948",
+      "wind_speed_fused": 16.0,
+      "wave_height_fused": 1.0,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T11:30:22.873948",
+      "wind_speed_fused": 18.0,
+      "wave_height_fused": 1.3,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T12:30:22.873948",
+      "wind_speed_fused": 20.0,
+      "wave_height_fused": 1.6,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T13:30:22.873948",
+      "wind_speed_fused": 22.0,
+      "wave_height_fused": 1.9,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T14:30:22.873948",
+      "wind_speed_fused": 8.0,
+      "wave_height_fused": 2.2,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T15:30:22.873948",
+      "wind_speed_fused": 10.0,
+      "wave_height_fused": 2.5,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T16:30:22.873948",
+      "wind_speed_fused": 12.0,
+      "wave_height_fused": 1.0,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T17:30:22.873948",
+      "wind_speed_fused": 14.0,
+      "wave_height_fused": 1.3,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T18:30:22.873948",
+      "wind_speed_fused": 16.0,
+      "wave_height_fused": 1.6,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T19:30:22.873948",
+      "wind_speed_fused": 18.0,
+      "wave_height_fused": 1.9,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T20:30:22.873948",
+      "wind_speed_fused": 20.0,
+      "wave_height_fused": 2.2,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T21:30:22.873948",
+      "wind_speed_fused": 22.0,
+      "wave_height_fused": 2.5,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-06",
+      "timestamp": "2025-10-06T22:30:22.874953",
+      "wind_speed_fused": 8.0,
+      "wave_height_fused": 1.0,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-06",
+      "timestamp": "2025-10-06T23:30:22.874953",
+      "wind_speed_fused": 10.0,
+      "wave_height_fused": 1.3,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T00:30:22.874953",
+      "wind_speed_fused": 12.0,
+      "wave_height_fused": 1.6,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T01:30:22.874953",
+      "wind_speed_fused": 14.0,
+      "wave_height_fused": 1.9,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T02:30:22.874953",
+      "wind_speed_fused": 16.0,
+      "wave_height_fused": 2.2,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T03:30:22.874953",
+      "wind_speed_fused": 18.0,
+      "wave_height_fused": 2.5,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T04:30:22.874953",
+      "wind_speed_fused": 20.0,
+      "wave_height_fused": 1.0,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T05:30:22.874953",
+      "wind_speed_fused": 22.0,
+      "wave_height_fused": 1.3,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T06:30:22.874953",
+      "wind_speed_fused": 8.0,
+      "wave_height_fused": 1.6,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T07:30:22.874953",
+      "wind_speed_fused": 10.0,
+      "wave_height_fused": 1.9,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T08:30:22.874953",
+      "wind_speed_fused": 12.0,
+      "wave_height_fused": 2.2,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T09:30:22.874953",
+      "wind_speed_fused": 14.0,
+      "wave_height_fused": 2.5,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T10:30:22.874953",
+      "wind_speed_fused": 16.0,
+      "wave_height_fused": 1.0,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T11:30:22.874953",
+      "wind_speed_fused": 18.0,
+      "wave_height_fused": 1.3,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T12:30:22.874953",
+      "wind_speed_fused": 20.0,
+      "wave_height_fused": 1.6,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T13:30:22.874953",
+      "wind_speed_fused": 22.0,
+      "wave_height_fused": 1.9,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T14:30:22.874953",
+      "wind_speed_fused": 8.0,
+      "wave_height_fused": 2.2,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T15:30:22.874953",
+      "wind_speed_fused": 10.0,
+      "wave_height_fused": 2.5,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T16:30:22.874953",
+      "wind_speed_fused": 12.0,
+      "wave_height_fused": 1.0,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T17:30:22.874953",
+      "wind_speed_fused": 14.0,
+      "wave_height_fused": 1.3,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T18:30:22.874953",
+      "wind_speed_fused": 16.0,
+      "wave_height_fused": 1.6,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T19:30:22.874953",
+      "wind_speed_fused": 18.0,
+      "wave_height_fused": 1.9,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T20:30:22.874953",
+      "wind_speed_fused": 20.0,
+      "wave_height_fused": 2.2,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    },
+    {
+      "location": "2025-10-07",
+      "timestamp": "2025-10-07T21:30:22.874953",
+      "wind_speed_fused": 22.0,
+      "wave_height_fused": 2.5,
+      "confidence": 0.8,
+      "sources_used": [
+        "demo_simulator"
+      ]
+    }
+  ],
+  "eri_timeseries": [
+    {
+      "timestamp": "2025-10-06T22:30:22.873948",
+      "eri_value": 32.666666666666664,
+      "wind_contribution": 32.0,
+      "wave_contribution": 33.33333333333333
+    },
+    {
+      "timestamp": "2025-10-06T23:30:22.873948",
+      "eri_value": 41.66666666666667,
+      "wind_contribution": 40.0,
+      "wave_contribution": 43.333333333333336
+    },
+    {
+      "timestamp": "2025-10-07T00:30:22.873948",
+      "eri_value": 50.66666666666666,
+      "wind_contribution": 48.0,
+      "wave_contribution": 53.333333333333336
+    },
+    {
+      "timestamp": "2025-10-07T01:30:22.873948",
+      "eri_value": 59.66666666666667,
+      "wind_contribution": 56.00000000000001,
+      "wave_contribution": 63.33333333333333
+    },
+    {
+      "timestamp": "2025-10-07T02:30:22.873948",
+      "eri_value": 68.66666666666667,
+      "wind_contribution": 64.0,
+      "wave_contribution": 73.33333333333334
+    },
+    {
+      "timestamp": "2025-10-07T03:30:22.873948",
+      "eri_value": 77.66666666666666,
+      "wind_contribution": 72.0,
+      "wave_contribution": 83.33333333333334
+    },
+    {
+      "timestamp": "2025-10-07T04:30:22.873948",
+      "eri_value": 56.666666666666664,
+      "wind_contribution": 80.0,
+      "wave_contribution": 33.33333333333333
+    },
+    {
+      "timestamp": "2025-10-07T05:30:22.873948",
+      "eri_value": 65.66666666666667,
+      "wind_contribution": 88.0,
+      "wave_contribution": 43.333333333333336
+    },
+    {
+      "timestamp": "2025-10-07T06:30:22.873948",
+      "eri_value": 42.666666666666664,
+      "wind_contribution": 32.0,
+      "wave_contribution": 53.333333333333336
+    },
+    {
+      "timestamp": "2025-10-07T07:30:22.873948",
+      "eri_value": 51.66666666666666,
+      "wind_contribution": 40.0,
+      "wave_contribution": 63.33333333333333
+    },
+    {
+      "timestamp": "2025-10-07T08:30:22.873948",
+      "eri_value": 60.66666666666667,
+      "wind_contribution": 48.0,
+      "wave_contribution": 73.33333333333334
+    },
+    {
+      "timestamp": "2025-10-07T09:30:22.873948",
+      "eri_value": 69.66666666666667,
+      "wind_contribution": 56.00000000000001,
+      "wave_contribution": 83.33333333333334
+    },
+    {
+      "timestamp": "2025-10-07T10:30:22.873948",
+      "eri_value": 48.66666666666667,
+      "wind_contribution": 64.0,
+      "wave_contribution": 33.33333333333333
+    },
+    {
+      "timestamp": "2025-10-07T11:30:22.873948",
+      "eri_value": 57.666666666666664,
+      "wind_contribution": 72.0,
+      "wave_contribution": 43.333333333333336
+    },
+    {
+      "timestamp": "2025-10-07T12:30:22.873948",
+      "eri_value": 66.66666666666667,
+      "wind_contribution": 80.0,
+      "wave_contribution": 53.333333333333336
+    },
+    {
+      "timestamp": "2025-10-07T13:30:22.873948",
+      "eri_value": 75.66666666666666,
+      "wind_contribution": 88.0,
+      "wave_contribution": 63.33333333333333
+    },
+    {
+      "timestamp": "2025-10-07T14:30:22.873948",
+      "eri_value": 52.66666666666667,
+      "wind_contribution": 32.0,
+      "wave_contribution": 73.33333333333334
+    },
+    {
+      "timestamp": "2025-10-07T15:30:22.873948",
+      "eri_value": 61.66666666666667,
+      "wind_contribution": 40.0,
+      "wave_contribution": 83.33333333333334
+    },
+    {
+      "timestamp": "2025-10-07T16:30:22.873948",
+      "eri_value": 40.666666666666664,
+      "wind_contribution": 48.0,
+      "wave_contribution": 33.33333333333333
+    },
+    {
+      "timestamp": "2025-10-07T17:30:22.873948",
+      "eri_value": 49.66666666666667,
+      "wind_contribution": 56.00000000000001,
+      "wave_contribution": 43.333333333333336
+    },
+    {
+      "timestamp": "2025-10-07T18:30:22.873948",
+      "eri_value": 58.666666666666664,
+      "wind_contribution": 64.0,
+      "wave_contribution": 53.333333333333336
+    },
+    {
+      "timestamp": "2025-10-07T19:30:22.873948",
+      "eri_value": 67.66666666666666,
+      "wind_contribution": 72.0,
+      "wave_contribution": 63.33333333333333
+    },
+    {
+      "timestamp": "2025-10-07T20:30:22.873948",
+      "eri_value": 76.66666666666667,
+      "wind_contribution": 80.0,
+      "wave_contribution": 73.33333333333334
+    },
+    {
+      "timestamp": "2025-10-07T21:30:22.873948",
+      "eri_value": 85.66666666666667,
+      "wind_contribution": 88.0,
+      "wave_contribution": 83.33333333333334
+    },
+    {
+      "timestamp": "2025-10-06T22:30:22.874953",
+      "eri_value": 32.666666666666664,
+      "wind_contribution": 32.0,
+      "wave_contribution": 33.33333333333333
+    },
+    {
+      "timestamp": "2025-10-06T23:30:22.874953",
+      "eri_value": 41.66666666666667,
+      "wind_contribution": 40.0,
+      "wave_contribution": 43.333333333333336
+    },
+    {
+      "timestamp": "2025-10-07T00:30:22.874953",
+      "eri_value": 50.66666666666666,
+      "wind_contribution": 48.0,
+      "wave_contribution": 53.333333333333336
+    },
+    {
+      "timestamp": "2025-10-07T01:30:22.874953",
+      "eri_value": 59.66666666666667,
+      "wind_contribution": 56.00000000000001,
+      "wave_contribution": 63.33333333333333
+    },
+    {
+      "timestamp": "2025-10-07T02:30:22.874953",
+      "eri_value": 68.66666666666667,
+      "wind_contribution": 64.0,
+      "wave_contribution": 73.33333333333334
+    },
+    {
+      "timestamp": "2025-10-07T03:30:22.874953",
+      "eri_value": 77.66666666666666,
+      "wind_contribution": 72.0,
+      "wave_contribution": 83.33333333333334
+    },
+    {
+      "timestamp": "2025-10-07T04:30:22.874953",
+      "eri_value": 56.666666666666664,
+      "wind_contribution": 80.0,
+      "wave_contribution": 33.33333333333333
+    },
+    {
+      "timestamp": "2025-10-07T05:30:22.874953",
+      "eri_value": 65.66666666666667,
+      "wind_contribution": 88.0,
+      "wave_contribution": 43.333333333333336
+    },
+    {
+      "timestamp": "2025-10-07T06:30:22.874953",
+      "eri_value": 42.666666666666664,
+      "wind_contribution": 32.0,
+      "wave_contribution": 53.333333333333336
+    },
+    {
+      "timestamp": "2025-10-07T07:30:22.874953",
+      "eri_value": 51.66666666666666,
+      "wind_contribution": 40.0,
+      "wave_contribution": 63.33333333333333
+    },
+    {
+      "timestamp": "2025-10-07T08:30:22.874953",
+      "eri_value": 60.66666666666667,
+      "wind_contribution": 48.0,
+      "wave_contribution": 73.33333333333334
+    },
+    {
+      "timestamp": "2025-10-07T09:30:22.874953",
+      "eri_value": 69.66666666666667,
+      "wind_contribution": 56.00000000000001,
+      "wave_contribution": 83.33333333333334
+    },
+    {
+      "timestamp": "2025-10-07T10:30:22.874953",
+      "eri_value": 48.66666666666667,
+      "wind_contribution": 64.0,
+      "wave_contribution": 33.33333333333333
+    },
+    {
+      "timestamp": "2025-10-07T11:30:22.874953",
+      "eri_value": 57.666666666666664,
+      "wind_contribution": 72.0,
+      "wave_contribution": 43.333333333333336
+    },
+    {
+      "timestamp": "2025-10-07T12:30:22.874953",
+      "eri_value": 66.66666666666667,
+      "wind_contribution": 80.0,
+      "wave_contribution": 53.333333333333336
+    },
+    {
+      "timestamp": "2025-10-07T13:30:22.874953",
+      "eri_value": 75.66666666666666,
+      "wind_contribution": 88.0,
+      "wave_contribution": 63.33333333333333
+    },
+    {
+      "timestamp": "2025-10-07T14:30:22.874953",
+      "eri_value": 52.66666666666667,
+      "wind_contribution": 32.0,
+      "wave_contribution": 73.33333333333334
+    },
+    {
+      "timestamp": "2025-10-07T15:30:22.874953",
+      "eri_value": 61.66666666666667,
+      "wind_contribution": 40.0,
+      "wave_contribution": 83.33333333333334
+    },
+    {
+      "timestamp": "2025-10-07T16:30:22.874953",
+      "eri_value": 40.666666666666664,
+      "wind_contribution": 48.0,
+      "wave_contribution": 33.33333333333333
+    },
+    {
+      "timestamp": "2025-10-07T17:30:22.874953",
+      "eri_value": 49.66666666666667,
+      "wind_contribution": 56.00000000000001,
+      "wave_contribution": 43.333333333333336
+    },
+    {
+      "timestamp": "2025-10-07T18:30:22.874953",
+      "eri_value": 58.666666666666664,
+      "wind_contribution": 64.0,
+      "wave_contribution": 53.333333333333336
+    },
+    {
+      "timestamp": "2025-10-07T19:30:22.874953",
+      "eri_value": 67.66666666666666,
+      "wind_contribution": 72.0,
+      "wave_contribution": 63.33333333333333
+    },
+    {
+      "timestamp": "2025-10-07T20:30:22.874953",
+      "eri_value": 76.66666666666667,
+      "wind_contribution": 80.0,
+      "wave_contribution": 73.33333333333334
+    },
+    {
+      "timestamp": "2025-10-07T21:30:22.874953",
+      "eri_value": 85.66666666666667,
+      "wind_contribution": 88.0,
+      "wave_contribution": 83.33333333333334
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+# KR: 환경 변수 설정 템플릿
+# EN: Environment variables configuration template
+
+# API Keys
+STORMGLASS_API_KEY=your_stormglass_api_key_here
+WORLDTIDES_API_KEY=your_worldtides_api_key_here
+
+# NCM Configuration
+NCM_REGION=AGI,DAS
+NCM_BASE_URL=https://www.ncm.ae
+
+# Cache Settings
+CACHE_TTL_HOURS=3
+CACHE_DIR=cache
+
+# Output Settings
+OUTPUT_DIR=out
+REPORTS_DIR=reports
+
+# Timezone
+DEFAULT_TIMEZONE=Asia/Dubai
+
+# Logging
+LOG_LEVEL=INFO
+LOG_FILE=marine_ops.log
+
+# Email/Notification (Optional)
+SMTP_SERVER=smtp.gmail.com
+SMTP_PORT=587
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASSWORD=your_app_password
+NOTIFICATION_EMAIL=operations@company.com
+
+# Telegram (Optional)
+TELEGRAM_BOT_TOKEN=your_bot_token
+TELEGRAM_CHAT_ID=your_chat_id

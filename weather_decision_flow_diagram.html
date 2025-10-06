@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>해양 날씨 판정 로직 플로우</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+        .mermaid {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .legend {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+        }
+        .legend h3 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+        .legend-item {
+            display: inline-block;
+            margin: 10px 15px;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .data-source { background-color: #3498db; color: white; }
+        .processing { background-color: #e74c3c; color: white; }
+        .decision { background-color: #27ae60; color: white; }
+        .output { background-color: #f39c12; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌊 해양 날씨 판정 로직 플로우</h1>
+        
+        <div class="mermaid">
+            flowchart TD
+                %% 데이터 수집 단계
+                A[데이터 수집 시작] --> B[Stormglass API]
+                A --> C[Open-Meteo API]
+                A --> D[NCM Selenium]
+                A --> E[WorldTides API]
+                
+                %% 데이터 전처리
+                B --> F[SI 단위 정규화]
+                C --> F
+                D --> F
+                E --> F
+                
+                %% 데이터 품질 검증
+                F --> G{데이터 품질 검증}
+                G -->|신뢰도 ≥ 0.5| H[데이터 승인]
+                G -->|신뢰도 < 0.5| I[폴백 데이터 생성]
+                I --> H
+                
+                %% 다중 소스 융합
+                H --> J[시간별 그룹화]
+                J --> K[가중치 계산]
+                K --> L[가중 평균 융합]
+                
+                %% ERI 계산
+                L --> M[ERI 계산 시작]
+                M --> N[풍속 위험도 계산]
+                M --> O[파고 위험도 계산]
+                M --> P[시정 위험도 계산]
+                M --> Q[안개 위험도 계산]
+                M --> R[스웰/바람파/해류 계산]
+                
+                N --> S[가중 평균 ERI]
+                O --> S
+                P --> S
+                Q --> S
+                R --> S
+                
+                %% 운항 판정
+                S --> T{GO 게이트 확인}
+                T -->|풍속 ≤ 10.29m/s<br/>파고 ≤ 1.0m| U[GO 판정]
+                T -->|조건 불만족| V{CONDITIONAL 게이트 확인}
+                V -->|풍속 ≤ 11.32m/s<br/>파고 ≤ 1.2m| W[CONDITIONAL 판정]
+                V -->|조건 불만족| X[NO-GO 판정]
+                
+                %% ETA 영향 평가
+                U --> Y[ETA 영향 평가]
+                W --> Y
+                X --> Y
+                
+                %% Gamma 알림
+                Y --> Z{ERI 기반 Gamma 계산}
+                Z -->|ERI > 0.7| AA[High Seas Alert]
+                Z -->|ERI > 0.5| BB[Rough at Times Alert]
+                Z -->|ERI ≤ 0.5| CC[Normal Conditions]
+                
+                %% 최종 출력
+                AA --> DD[최종 운항 판정]
+                BB --> DD
+                CC --> DD
+                
+                %% 결과 저장
+                DD --> EE[JSON 보고서 생성]
+                DD --> FF[CSV 요약 생성]
+                DD --> GG[벡터 DB 저장]
+                
+                %% 스타일링
+                classDef dataSource fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
+                classDef processing fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
+                classDef decision fill:#27ae60,stroke:#229954,stroke-width:2px,color:#fff
+                classDef output fill:#f39c12,stroke:#e67e22,stroke-width:2px,color:#fff
+                
+                class B,C,D,E dataSource
+                class F,G,H,I,J,K,L,M,N,O,P,Q,R,S processing
+                class T,U,V,W,X,Y,Z,AA,BB,CC,DD decision
+                class EE,FF,GG output
+        </div>
+        
+        <div class="legend">
+            <h3>🎨 범례</h3>
+            <div class="legend-item data-source">데이터 소스</div>
+            <div class="legend-item processing">데이터 처리</div>
+            <div class="legend-item decision">판정 로직</div>
+            <div class="legend-item output">결과 출력</div>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true
+            }
+        });
+    </script>
+</body>
+</html>
