@@ -37,6 +37,10 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y chromium-browser
         sudo apt-get install -y chromium-chromedriver
+        sudo apt-get install -y xvfb
+        # Selenium이 올바르게 작동하도록 환경 설정
+        export DISPLAY=:99
+        Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
         
     - name: Install Python dependencies
       run: |
@@ -75,11 +79,11 @@ jobs:
                 </div>
                 
                 <div class="section">
-                    <h2>📊 데이터 수집 현황</h2>
-                    <p class="success">✅ Open-Meteo: 실제 데이터 수집 완료</p>
-                    <p class="success">✅ NCM Selenium: 실제 데이터 수집 완료</p>
-                    <p class="warning">⚠️ Stormglass: API 키 필요</p>
-                    <p class="warning">⚠️ WorldTides: API 키 필요</p>
+                    <h2>📊 데이터 수집 현황 (4개 소스)</h2>
+                    <p class="success">✅ Stormglass: API 기반 해양 날씨 데이터</p>
+                    <p class="success">✅ Open-Meteo: API 기반 기상 예보</p>
+                    <p class="success">✅ WorldTides: API 기반 조석 데이터</p>
+                    <p class="success">✅ NCM Selenium: 웹 스크래핑 해양 관측 데이터</p>
                 </div>
                 
                 <div class="section">

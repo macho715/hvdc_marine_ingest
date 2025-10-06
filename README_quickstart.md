@@ -95,7 +95,7 @@ python scripts\cron_automation.py
 - 벡터 DB: `marine_vec.db` (SQLite + sentence-transformers)
 
 ## 🎯 완성된 기능들
-✅ **다중 소스 수집**: Stormglass/Open-Meteo/WorldTides/NCM 웹  
+✅ **4개 데이터 소스 수집**: Stormglass API + Open-Meteo API + WorldTides API + NCM 웹 스크래핑  
 ✅ **벡터 DB 저장**: SQLite + 임베딩 검색  
 ✅ **자연어 질의**: "AGI high tide RORO window" 검색  
 ✅ **운항 판정**: GO/CONDITIONAL/NO-GO 자동 분류  
