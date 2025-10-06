@@ -1,0 +1,67 @@
+# 해양 날씨 데이터 수집 위치 설정
+
+locations:
+  AGI:
+    name: "Al Ghallan Island"
+    lat: 25.2111
+    lon: 54.1578
+    country: "UAE"
+    region: "Arabian Gulf"
+    description: "HVDC 프로젝트 주요 해역"
+    
+  DAS:
+    name: "Das Island"
+    lat: 24.8667
+    lon: 53.7333
+    country: "UAE"
+    region: "Arabian Gulf"
+    description: "ADNOC 운영 섬"
+
+# 기본 설정
+defaults:
+  location: "AGI"
+  forecast_hours: 24
+  update_interval: 3600  # 1시간 (초)
+
+# API 설정
+apis:
+  stormglass:
+    enabled: true
+    priority: 1
+    timeout: 30
+    
+  open_meteo:
+    enabled: true
+    priority: 2
+    timeout: 20
+    
+  worldtides:
+    enabled: true
+    priority: 3
+    timeout: 15
+    
+  ncm_selenium:
+    enabled: true
+    priority: 4
+    timeout: 60
+
+# 알림 설정
+notifications:
+  telegram:
+    enabled: true
+    format: "text"
+    
+  email:
+    enabled: true
+    format: "html"
+    
+  slack:
+    enabled: false
+    webhook_url: ""
+
+# 보고서 설정
+reports:
+  formats: ["json", "csv", "txt", "html"]
+  retention_days: 7
+  include_charts: false
+  include_raw_data: false
