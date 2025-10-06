@@ -138,15 +138,16 @@ class NCMWebIngestor:
             # 바다 상태 계산
             sea_state = calculate_sea_state(wave_height) if wave_height else "Unknown"
             
-            return MarineDataPoint(
-                timestamp=timestamp,
-                wind_speed=wind_speed,
-                wind_direction=wind_direction,
-                wave_height=wave_height,
-                visibility=visibility,
-                temperature=temperature,
-                sea_state=sea_state
-            )
+                   return MarineDataPoint(
+                       timestamp=timestamp,
+                       wind_speed=wind_speed,
+                       wind_direction=wind_direction,
+                       wave_height=wave_height,
+                       visibility=visibility,
+                       temperature=temperature,
+                       sea_state=sea_state,
+                       confidence=0.60  # NCM 웹 스크래핑 신뢰도
+                   )
         
         except Exception as e:
             print(f"[NCM] 행 파싱 오류: {e}")
@@ -166,7 +167,8 @@ class NCMWebIngestor:
                 wind_speed=8.0,  # 8 m/s (약 15.5 kt)
                 wind_direction=270.0,  # 서풍
                 wave_height=1.2,  # 1.2m
-                sea_state="Slight"
+                sea_state="Slight",
+                confidence=0.30  # 폴백 데이터 신뢰도
             )
             data_points.append(data_point)
         

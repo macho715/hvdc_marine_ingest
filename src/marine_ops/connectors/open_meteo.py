@@ -63,7 +63,8 @@ class OpenMeteoConnector:
                     wind_direction=normalized['wind_direction'],
                     wind_gust=normalized.get('wind_gust'),
                     wave_height=normalized['wave_height'],
-                    visibility=normalized.get('visibility')
+                    visibility=normalized.get('visibility'),
+                    confidence=0.75  # Open-Meteo 일반 API 신뢰도
                 )
                 data_points.append(data_point)
             

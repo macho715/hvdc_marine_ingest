@@ -64,7 +64,8 @@ class StormglassConnector:
                     wind_direction=normalized['wind_direction'],
                     wave_height=normalized['wave_height'],
                     wave_period=normalized.get('wave_period'),
-                    visibility=normalized.get('visibility')
+                    visibility=normalized.get('visibility'),
+                    confidence=0.85  # Stormglass NOAA 데이터 신뢰도
                 )
                 data_points.append(data_point)
             

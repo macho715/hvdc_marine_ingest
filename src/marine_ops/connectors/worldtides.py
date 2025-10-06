@@ -66,7 +66,8 @@ def create_marine_timeseries_from_worldtides(
                     wind_speed=0.0,  # WorldTides는 조석 데이터만 제공
                     wind_direction=0.0,
                     wave_height=0.0,
-                    sea_state="Unknown"  # 조석 데이터로는 파도 상태 추정 불가
+                    sea_state="Unknown",  # 조석 데이터로는 파도 상태 추정 불가
+                    confidence=0.8  # WorldTides 조석 데이터 신뢰도
                 )
                 data_points.append(data_point)
         
@@ -106,7 +107,8 @@ def _create_fallback_tide_data(location: str, forecast_hours: int) -> MarineTime
             wind_speed=0.0,
             wind_direction=0.0,
             wave_height=0.0,
-            sea_state="Unknown"
+            sea_state="Unknown",
+            confidence=0.3  # 폴백 데이터 신뢰도
         )
         data_points.append(data_point)
     

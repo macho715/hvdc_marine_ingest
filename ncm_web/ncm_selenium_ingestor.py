@@ -226,7 +226,8 @@ class NCMSeleniumIngestor:
                     wind_direction=0.0,
                     wave_height=wave_height,
                     visibility=visibility,
-                    sea_state=calculate_sea_state(wave_height) if wave_height > 0 else "Unknown"
+                    sea_state=calculate_sea_state(wave_height) if wave_height > 0 else "Unknown",
+                    confidence=0.70  # NCM Selenium 스크래핑 신뢰도
                 )
         
         except Exception as e:
@@ -285,7 +286,8 @@ class NCMSeleniumIngestor:
                 wind_direction=270.0 + (i * 15) % 360,  # 회전하는 풍향
                 wave_height=wave_height,
                 sea_state=calculate_sea_state(wave_height),
-                visibility=10.0
+                visibility=10.0,
+                confidence=0.30  # 폴백 데이터 신뢰도
             )
             data_points.append(data_point)
         

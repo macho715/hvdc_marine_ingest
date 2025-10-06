@@ -33,6 +33,7 @@ class MarineDataPoint:
     ocean_current_direction: Optional[float] = None  # degrees
     sea_surface_temperature: Optional[float] = None  # °C
     sea_level: Optional[float] = None  # m
+    confidence: Optional[float] = None  # 0-1, 데이터 신뢰도
 
 @dataclass
 class MarineTimeseries:
