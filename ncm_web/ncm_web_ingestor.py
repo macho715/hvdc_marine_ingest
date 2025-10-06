@@ -10,6 +10,7 @@ from typing import List, Dict, Any, Optional
 from zoneinfo import ZoneInfo
 import time
 import os
+from pathlib import Path  # ✅ fix F821 (undefined name 'Path')
 
 from src.marine_ops.core.schema import MarineTimeseries, MarineDataPoint
 from src.marine_ops.core.units import normalize_to_si, calculate_sea_state
@@ -138,7 +139,7 @@ class NCMWebIngestor:
             # 바다 상태 계산
             sea_state = calculate_sea_state(wave_height) if wave_height else "Unknown"
             
-                   return MarineDataPoint(
+            return MarineDataPoint(
                        timestamp=timestamp,
                        wind_speed=wind_speed,
                        wind_direction=wind_direction,
