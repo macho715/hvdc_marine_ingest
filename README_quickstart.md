@@ -142,7 +142,6 @@ python scripts/demo_operability_integration.py
 
 🚢 ETA 예측:
 • Abu Dhabi to AGI or DAS: 6.5시간 (계획: 12.0kt → 실제: 11.3kt)
-• Dubai to Fujairah: 10.1시간 (계획: 10.0kt → 실제: 9.1kt)
 ```
 
 ## 🔧 최근 수정사항 (2025-01-07)

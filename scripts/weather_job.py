@@ -321,12 +321,6 @@ def main():
                     "distance_nm": 65.0,
                     "planned_speed_kt": 12.0,
                     "hs_forecast": 1.2
-                },
-                {
-                    "name": "Dubai to Fujairah", 
-                    "distance_nm": 85.0,
-                    "planned_speed_kt": 10.0,
-                    "hs_forecast": 1.5
                 }
             ]
             

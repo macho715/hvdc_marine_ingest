@@ -150,18 +150,6 @@ def run_operability_prediction(weather_data: List[MarineTimeseries]) -> Dict[str
             "distance_nm": 65.0,
             "planned_speed_kt": 12.0,
             "hs_forecast": 1.2
-        },
-        {
-            "name": "Dubai to Fujairah",
-            "distance_nm": 85.0,
-            "planned_speed_kt": 10.0,
-            "hs_forecast": 1.5
-        },
-        {
-            "name": "Dubai to Ras Al Khaimah",
-            "distance_nm": 95.0,
-            "planned_speed_kt": 8.0,
-            "hs_forecast": 1.8
         }
     ]
     
