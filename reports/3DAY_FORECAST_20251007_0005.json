@@ -1,0 +1,79 @@
+{
+  "report_id": "3DAY_20251007_0005",
+  "generated_at": "2025-10-07T00:05:21.382964",
+  "weather_data": {
+    "stormglass": {
+      "source": "stormglass",
+      "location": "AGI",
+      "data_points_count": 73,
+      "confidence": 0.85,
+      "ingested_at": "2025-10-07T00:05:02.987762"
+    },
+    "open_meteo": {
+      "source": "open_meteo",
+      "location": "AGI",
+      "data_points_count": 96,
+      "confidence": 0.75,
+      "ingested_at": "2025-10-07T00:05:04.313058"
+    },
+    "ncm_selenium": {
+      "source": "ncm_selenium",
+      "location": "AGI",
+      "data_points_count": 24,
+      "confidence": 0.7,
+      "ingested_at": "2025-10-07T00:05:17.752604"
+    },
+    "worldtides": {
+      "source": "worldtides_fallback",
+      "location": "AGI",
+      "data_points_count": 72,
+      "confidence": 0.3,
+      "ingested_at": "2025-10-07T00:05:21.376980"
+    }
+  },
+  "analysis": {
+    "sources_available": [
+      "stormglass",
+      "open_meteo",
+      "ncm_selenium",
+      "worldtides"
+    ],
+    "data_quality": {
+      "stormglass": {
+        "confidence": 0.85,
+        "data_points": 73,
+        "source_type": "real"
+      },
+      "open_meteo": {
+        "confidence": 0.75,
+        "data_points": 96,
+        "source_type": "real"
+      },
+      "ncm_selenium": {
+        "confidence": 0.7,
+        "data_points": 24,
+        "source_type": "fallback"
+      },
+      "worldtides": {
+        "confidence": 0.3,
+        "data_points": 72,
+        "source_type": "fallback"
+      }
+    },
+    "trends": {
+      "wind_speed": {
+        "min": 0.88,
+        "max": 6.01,
+        "avg": 3.9034246575342464
+      },
+      "wave_height": {
+        "min": 0.12,
+        "max": 0.35,
+        "avg": 0.2493150684931507
+      }
+    },
+    "recommendations": [
+      "다중 소스 데이터로 신뢰성 높은 예보 제공"
+    ]
+  }
+}
