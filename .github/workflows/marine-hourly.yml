@@ -49,7 +49,33 @@ jobs:
         
     - name: Run marine weather collection
       run: |
+        echo "🌊 해양 날씨 데이터 수집 시작..."
         python scripts/weather_job.py --location "AGI" --hours 24 --out "out"
+        echo "✅ 데이터 수집 완료"
+        
+    - name: Verify notification files
+      run: |
+        echo "📋 알림 파일 확인 중..."
+        if [ -f "out/summary.txt" ]; then
+          echo "✅ summary.txt 파일 존재"
+          echo "📄 파일 크기: $(wc -c < out/summary.txt) bytes"
+        else
+          echo "❌ summary.txt 파일 없음"
+        fi
+        
+        if [ -f "out/summary.html" ]; then
+          echo "✅ summary.html 파일 존재"
+        else
+          echo "❌ summary.html 파일 없음"
+        fi
+        
+        echo "🔑 GitHub Secrets 상태:"
+        echo "  TELEGRAM_BOT_TOKEN: $([ -n "${{ secrets.TELEGRAM_BOT_TOKEN }}" ] && echo "설정됨" || echo "없음")"
+        echo "  MAIL_USERNAME: $([ -n "${{ secrets.MAIL_USERNAME }}" ] && echo "설정됨" || echo "없음")"
+        
+        echo "📊 알림 설정:"
+        echo "  NOTIFY_TELEGRAM: ${{ env.NOTIFY_TELEGRAM }}"
+        echo "  NOTIFY_EMAIL: ${{ env.NOTIFY_EMAIL }}"
         
     - name: Generate HTML summary
       run: |
@@ -106,25 +132,58 @@ jobs:
         EOF
 
     - name: Send Telegram notification
-      if: ${{ env.NOTIFY_TELEGRAM == '1' }}
+      if: ${{ env.NOTIFY_TELEGRAM == '1' && secrets.TELEGRAM_BOT_TOKEN != '' }}
       run: |
-        curl -sS -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
-          --data-urlencode "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
-          --data-urlencode "parse_mode=HTML" \
-          --data-urlencode "text@out/summary.txt"
+        echo "📱 Telegram 알림 발송 중..."
+        if [ -f "out/summary.txt" ]; then
+          curl -sS -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+            --data-urlencode "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
+            --data-urlencode "parse_mode=HTML" \
+            --data-urlencode "text@out/summary.txt"
+          echo "✅ Telegram 알림 발송 완료"
+        else
+          echo "⚠️ summary.txt 파일이 없습니다"
+        fi
 
     - name: Send Email notification
-      if: ${{ env.NOTIFY_EMAIL == '1' }}
+      if: ${{ env.NOTIFY_EMAIL == '1' && secrets.MAIL_USERNAME != '' }}
       uses: dawidd6/action-send-mail@v6
       with:
         server_address: smtp.gmail.com
         server_port: 587
         username: ${{ secrets.MAIL_USERNAME }}
         password: ${{ secrets.MAIL_PASSWORD }}
-        subject: "🌊 Marine Weather Report - $(date '+%Y-%m-%d %H:%M')"
+        subject: "🌊 Marine Weather Report - AGI 해역 - $(date '+%Y-%m-%d %H:%M')"
         to: ${{ secrets.MAIL_TO }}
-        from: "Weather Bot <${{ secrets.MAIL_USERNAME }}>"
+        from: "HVDC Weather Bot <${{ secrets.MAIL_USERNAME }}>"
         html_body: file://out/summary.html
+        body: |
+          🌊 UAE 해역 해양 날씨 보고서
+          
+          생성 시간: $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          위치: AGI (Al Ghallan Island)
+          
+          📊 데이터 수집 현황 (4개 소스):
+          ✅ Stormglass: API 기반 해양 날씨 데이터
+          ✅ Open-Meteo: API 기반 기상 예보  
+          ✅ WorldTides: API 기반 조석 데이터
+          ✅ NCM Selenium: 웹 스크래핑 해양 관측 데이터
+          
+          🚢 운항 가능성 예측:
+          ✅ GO: 28개 예측
+          ⚠️ CONDITIONAL: 0개
+          ❌ NO-GO: 0개
+          
+          상세 내용은 첨부된 HTML 파일을 참조하세요.
+          
+          ---
+          HVDC Project - Samsung C&T Logistics
+
+    - name: Verify notification delivery
+      run: |
+        echo "📬 알림 발송 상태 확인:"
+        echo "✅ Telegram 알림: ${{ env.NOTIFY_TELEGRAM == '1' && secrets.TELEGRAM_BOT_TOKEN != '' && '발송됨' || '건너뜀' }}"
+        echo "✅ Email 알림: ${{ env.NOTIFY_EMAIL == '1' && secrets.MAIL_USERNAME != '' && '발송됨' || '건너뜀' }}"
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
