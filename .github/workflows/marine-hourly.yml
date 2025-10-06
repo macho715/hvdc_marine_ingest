@@ -2,244 +2,120 @@ name: Marine Weather Hourly Collection
 
 on:
   schedule:
-    - cron: '0 * * * *'  # 매시간 실행
-  workflow_dispatch:  # 수동 실행 가능
+    - cron: '7 * * * *'          # UTC, 정각 혼잡 회피 (권장)
+  workflow_dispatch: {}
 
 env:
-  # GitHub Secrets에서 API 키 로드
-  STORMGLASS_API_KEY: ${{ secrets.STORMGLASS_API_KEY }}
-  WORLDTIDES_API_KEY: ${{ secrets.WORLDTIDES_API_KEY }}
-  TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-  TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-  MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
-  MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
-  MAIL_TO: ${{ secrets.MAIL_TO }}
-  
-  # 알림 설정
   NOTIFY_TELEGRAM: '1'
   NOTIFY_EMAIL: '1'
 
 jobs:
   marine-weather:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      
-    - name: Set up Python
-      uses: actions/setup-python@v4
+    - uses: actions/checkout@v4
+
+    - uses: actions/setup-python@v5
       with:
         python-version: '3.11'
-        
-    - name: Install system dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y chromium-browser
-        sudo apt-get install -y chromium-chromedriver
-        sudo apt-get install -y xvfb
-        # Selenium이 올바르게 작동하도록 환경 설정
-        export DISPLAY=:99
-        Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-        
-    - name: Install Python dependencies
+        cache: 'pip'
+
+    - name: Install deps
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+        # Selenium을 위한 시스템 의존성
+        sudo apt-get update
+        sudo apt-get install -y chromium-browser chromium-chromedriver xvfb
+        export DISPLAY=:99
+        Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+    - name: Compute timestamp (UTC)
+      id: now
+      run: echo "utc=$(date -u '+%Y-%m-%d %H:%M UTC')" >> "$GITHUB_OUTPUT"
+
+    # ✅ 게이트 스텝: secrets를 직접 if에서 비교하지 말고 출력으로 노출
+    - name: Compute gates
+      id: gates
+      run: |
+        echo "has_tg=${{ env.NOTIFY_TELEGRAM == '1' && secrets.TELEGRAM_BOT_TOKEN != '' && secrets.TELEGRAM_CHAT_ID != '' }}" >> "$GITHUB_OUTPUT"
+        echo "has_mail=${{ env.NOTIFY_EMAIL == '1' && secrets.MAIL_USERNAME != '' && secrets.MAIL_PASSWORD != '' && secrets.MAIL_TO != '' }}" >> "$GITHUB_OUTPUT"
         
     - name: Run marine weather collection
       run: |
-        echo "🌊 해양 날씨 데이터 수집 시작..."
-        python scripts/weather_job.py --location "AGI" --hours 24 --out "out"
-        echo "✅ 데이터 수집 완료"
-        
-    - name: Verify notification files
-      run: |
-        echo "📋 알림 파일 확인 중..."
-        if [ -f "out/summary.txt" ]; then
-          echo "✅ summary.txt 파일 존재"
-          echo "📄 파일 크기: $(wc -c < out/summary.txt) bytes"
-        else
-          echo "❌ summary.txt 파일 없음"
-        fi
-        
-        if [ -f "out/summary.html" ]; then
-          echo "✅ summary.html 파일 존재"
-        else
-          echo "❌ summary.html 파일 없음"
-        fi
-        
-        echo "🔑 GitHub Secrets 상태:"
-        echo "  TELEGRAM_BOT_TOKEN: $([ -n "${{ secrets.TELEGRAM_BOT_TOKEN }}" ] && echo "설정됨" || echo "없음")"
-        echo "  MAIL_USERNAME: $([ -n "${{ secrets.MAIL_USERNAME }}" ] && echo "설정됨" || echo "없음")"
-        
-        echo "📊 알림 설정:"
-        echo "  NOTIFY_TELEGRAM: ${{ env.NOTIFY_TELEGRAM }}"
-        echo "  NOTIFY_EMAIL: ${{ env.NOTIFY_EMAIL }}"
-        
-    - name: Generate HTML summary
-      run: |
-        cat > out/summary.html << 'EOF'
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>🌊 Marine Weather Report</title>
-            <meta charset="UTF-8">
-            <style>
-                body { font-family: Arial, sans-serif; margin: 20px; background-color: #f5f5f5; }
-                .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-                .header { text-align: center; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
-                .section { margin: 20px 0; padding: 15px; background: #ecf0f1; border-radius: 5px; }
-                .success { color: #27ae60; }
-                .warning { color: #f39c12; }
-                .error { color: #e74c3c; }
-                .metric { display: inline-block; margin: 10px; padding: 10px; background: #3498db; color: white; border-radius: 5px; }
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <div class="header">
-                    <h1>🌊 UAE 해역 해양 날씨 보고서</h1>
-                    <p>생성 시간: $(date -u '+%Y-%m-%d %H:%M:%S UTC')</p>
-                    <p>위치: AGI (Al Ghallan Island)</p>
-                </div>
-                
-                <div class="section">
-                    <h2>📊 데이터 수집 현황 (4개 소스)</h2>
-                    <p class="success">✅ Stormglass: API 기반 해양 날씨 데이터</p>
-                    <p class="success">✅ Open-Meteo: API 기반 기상 예보</p>
-                    <p class="success">✅ WorldTides: API 기반 조석 데이터</p>
-                    <p class="success">✅ NCM Selenium: 웹 스크래핑 해양 관측 데이터</p>
-                </div>
-                
-                <div class="section">
-                    <h2>🚢 운항 가능성 예측</h2>
-                    <p>✅ GO: 28개 예측</p>
-                    <p>⚠️ CONDITIONAL: 0개</p>
-                    <p>❌ NO-GO: 0개</p>
-                    <div class="metric">Abu Dhabi to AGI or DAS: 6.5시간</div>
-                </div>
-                
-                <div class="section">
-                    <h2>📈 시스템 상태</h2>
-                    <p class="success">✅ GitHub Actions: 정상 실행</p>
-                    <p class="success">✅ 운항 가능성 예측: 정상 작동</p>
-                    <p class="success">✅ libcurl 오류: 해결됨</p>
-                </div>
-            </div>
-        </body>
-        </html>
-        EOF
+        set -eo pipefail
+        mkdir -p out
+        python scripts/weather_job.py --location "AGI" --hours 24 --out out
 
-    - name: Send Telegram notification
-      if: ${{ env.NOTIFY_TELEGRAM == '1' }}
+    # ✅ TXT 없으면 HTML→TXT 폴백 생성
+    - name: Ensure summary.txt exists
       run: |
-        echo "📱 Telegram 알림 발송 중..."
-        echo "🔑 Telegram Bot Token 상태: $([ -n "${{ secrets.TELEGRAM_BOT_TOKEN }}" ] && echo "설정됨" || echo "없음")"
-        echo "🔑 Telegram Chat ID 상태: $([ -n "${{ secrets.TELEGRAM_CHAT_ID }}" ] && echo "설정됨" || echo "없음")"
-        
-        if [ -z "${{ secrets.TELEGRAM_BOT_TOKEN }}" ]; then
-          echo "❌ TELEGRAM_BOT_TOKEN이 설정되지 않았습니다"
-          exit 1
+        if [ ! -f out/summary.txt ] && [ -f out/summary.html ]; then
+          # 매우 단순 변환: 태그 제거
+          sed -E 's/<[^>]*>//g' out/summary.html | sed 's/&nbsp;/ /g' > out/summary.txt
         fi
+        ls -l out || true
         
-        if [ -z "${{ secrets.TELEGRAM_CHAT_ID }}" ]; then
-          echo "❌ TELEGRAM_CHAT_ID가 설정되지 않았습니다"
-          exit 1
-        fi
-        
-        if [ -f "out/summary.txt" ]; then
-          echo "📄 summary.txt 파일 크기: $(wc -c < out/summary.txt) bytes"
-          curl -sS -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
-            --data-urlencode "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
-            --data-urlencode "parse_mode=HTML" \
-            --data-urlencode "text@out/summary.txt"
-          echo "✅ Telegram 알림 발송 완료"
-        else
-          echo "⚠️ summary.txt 파일이 없습니다. 기본 메시지로 대체합니다"
-          curl -sS -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
-            --data-urlencode "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
-            --data-urlencode "parse_mode=HTML" \
-            --data-urlencode "text=🌊 HVDC Marine Weather Report - $(date '+%Y-%m-%d %H:%M') - AGI 해역 데이터 수집 완료"
-          echo "✅ Telegram 기본 알림 발송 완료"
+    # ✅ 텔레그램: 4096자 초과 시 sendDocument로 자동 전환, 실패시 로그 남김
+    - name: Telegram notify (text or document)
+      if: ${{ steps.gates.outputs.has_tg == 'true' }}
+      env:
+        TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        TG_CHAT:  ${{ secrets.TELEGRAM_CHAT_ID }}
+      run: |
+        set -eo pipefail
+        if [ ! -f out/summary.txt ] && [ ! -f out/summary.html ]; then
+          echo "::warning::No summary files; skip Telegram."
+          exit 0
         fi
 
-    - name: Send Email notification
-      if: ${{ env.NOTIFY_EMAIL == '1' }}
-      run: |
-        echo "📧 Email 알림 발송 중..."
-        echo "🔑 Email 설정 상태:"
-        echo "  MAIL_USERNAME: $([ -n "${{ secrets.MAIL_USERNAME }}" ] && echo "설정됨" || echo "없음")"
-        echo "  MAIL_TO: $([ -n "${{ secrets.MAIL_TO }}" ] && echo "설정됨" || echo "없음")"
-        
-        if [ -z "${{ secrets.MAIL_USERNAME }}" ]; then
-          echo "❌ MAIL_USERNAME이 설정되지 않았습니다"
-          exit 1
+        # 길이 확인(바이트 기준 러프체크)
+        BYTES=$( [ -f out/summary.txt ] && wc -c < out/summary.txt || echo 0 )
+        if [ "$BYTES" -gt 4000 ] && [ -f out/summary.html ]; then
+          echo "Message >4096 bytes → sendDocument"
+          curl -fsS -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendDocument" \
+            -F chat_id="${TG_CHAT}" \
+            -F caption="Marine Weather — ${{ steps.now.outputs.utc }}" \
+            -F document=@out/summary.html \
+            -o .tg_resp.json
+        else
+          curl -fsS -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
+            --data-urlencode "chat_id=${TG_CHAT}" \
+            --data-urlencode "disable_web_page_preview=true" \
+            --data-urlencode "parse_mode=HTML" \
+            --data-urlencode "text@out/summary.txt" \
+            -o .tg_resp.json
         fi
-        
-        if [ -z "${{ secrets.MAIL_TO }}" ]; then
-          echo "❌ MAIL_TO가 설정되지 않았습니다"
-          exit 1
-        fi
-        
-        echo "✅ Email 설정 확인 완료, 발송 진행"
-      continue-on-error: true
-      
-    - name: Send Email notification (action)
-      if: ${{ env.NOTIFY_EMAIL == '1' && secrets.MAIL_USERNAME != '' && secrets.MAIL_TO != '' }}
+        echo "Telegram response:"; cat .tg_resp.json
+        # 실패시 curl -f 덕분에 여기 못 옴
+
+    - name: Email notify (Gmail SMTP via action)
+      if: ${{ steps.gates.outputs.has_mail == 'true' }}
       uses: dawidd6/action-send-mail@v6
       with:
         server_address: smtp.gmail.com
         server_port: 587
-        username: ${{ secrets.MAIL_USERNAME }}
-        password: ${{ secrets.MAIL_PASSWORD }}
-        subject: "🌊 Marine Weather Report - AGI 해역 - $(date '+%Y-%m-%d %H:%M')"
+        username: ${{ secrets.MAIL_USERNAME }}     # Gmail 주소
+        password: ${{ secrets.MAIL_PASSWORD }}     # ✅ Google App Password 필요
+        subject: "🌊 Marine Weather Report - AGI - ${{ steps.now.outputs.utc }}"
         to: ${{ secrets.MAIL_TO }}
         from: "HVDC Weather Bot <${{ secrets.MAIL_USERNAME }}>"
         html_body: file://out/summary.html
-        body: |
-          🌊 UAE 해역 해양 날씨 보고서
-          
-          생성 시간: $(date -u '+%Y-%m-%d %H:%M:%S UTC')
-          위치: AGI (Al Ghallan Island)
-          
-          📊 데이터 수집 현황 (4개 소스):
-          ✅ Stormglass: API 기반 해양 날씨 데이터
-          ✅ Open-Meteo: API 기반 기상 예보  
-          ✅ WorldTides: API 기반 조석 데이터
-          ✅ NCM Selenium: 웹 스크래핑 해양 관측 데이터
-          
-          🚢 운항 가능성 예측:
-          ✅ GO: 28개 예측
-          ⚠️ CONDITIONAL: 0개
-          ❌ NO-GO: 0개
-          
-          상세 내용은 첨부된 HTML 파일을 참조하세요.
-          
-          ---
-          HVDC Project - Samsung C&T Logistics
 
-    - name: Verify notification delivery
+    # 빠른 진단 스텝 (원하면 추가)
+    - name: TG ping
+      if: ${{ steps.gates.outputs.has_tg == 'true' }}
       run: |
-        echo "📬 알림 발송 상태 확인:"
-        echo "✅ Telegram 알림: ${{ env.NOTIFY_TELEGRAM == '1' && secrets.TELEGRAM_BOT_TOKEN != '' && '발송됨' || '건너뜀' }}"
-        echo "✅ Email 알림: ${{ env.NOTIFY_EMAIL == '1' && secrets.MAIL_USERNAME != '' && '발송됨' || '건너뜀' }}"
+        curl -fsS "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/getMe"
+        curl -fsS -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+          --data-urlencode "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
+          --data-urlencode "text=ping ${{ steps.now.outputs.utc }}"
 
-    - name: Upload artifacts
+    - name: Upload artifacts (optional)
       uses: actions/upload-artifact@v4
       with:
-        name: marine-weather-report-${{ github.run_number }}
-        path: |
-          out/*
-          reports/*
-          data/*
+        name: marine-weather-${{ github.run_number }}
+        path: out/*
+        if-no-files-found: ignore
         retention-days: 7
-
-    - name: Commit and push results (optional)
-      if: github.ref == 'refs/heads/main'
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add reports/ data/ out/
-        git diff --staged --quiet || git commit -m "🤖 Auto-update: Marine weather report $(date '+%Y-%m-%d %H:%M')"
-        git push
