@@ -139,9 +139,9 @@ jobs:
         if: ${{ env.NOTIFY_TELEGRAM == '1' }}
         run: |
           curl -sS -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
-            -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
+            --data-urlencode "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
             --data-urlencode "parse_mode=HTML" \
-            --data-urlencode "text=$(cat out/summary.txt)"
+            --data-urlencode "text@out/summary.txt"
 
       - name: Send Email notification
         if: ${{ env.NOTIFY_EMAIL == '1' }}
