@@ -77,6 +77,42 @@ class OperationalDecision:
     gamma_alert: Optional[float] = None
 
 @dataclass
+class OperabilityGate:
+    """운항 가능성 게이트 임계값"""
+    hs_go: float = 1.00  # m
+    wind_go: float = 20.0  # knots
+    hs_cond: float = 1.20  # m
+    wind_cond: float = 22.0  # knots
+
+@dataclass
+class OperabilityProbabilities:
+    """운항 가능성 확률"""
+    P_go: float
+    P_cond: float
+    P_nogo: float
+
+@dataclass
+class OperabilityForecast:
+    """운항 가능성 예측"""
+    day: str
+    daypart: str  # dawn, morning, afternoon, evening
+    probabilities: OperabilityProbabilities
+    decision: str  # GO, CONDITIONAL, NO-GO
+    gate_used: OperabilityGate
+    confidence: Optional[float] = None
+
+@dataclass
+class ETAPrediction:
+    """ETA 예측"""
+    route: str
+    distance_nm: float
+    planned_speed_kt: float
+    effective_speed_kt: float
+    eta_hours: float
+    buffer_minutes: int = 45
+    hs_impact: Optional[float] = None
+
+@dataclass
 class MarineReport:
     """최종 해양 보고서"""
     report_id: str
@@ -86,5 +122,7 @@ class MarineReport:
     decisions: List[OperationalDecision]
     fused_forecasts: List[FusedForecast]
     eri_timeseries: List[ERIPoint]
+    operability_forecasts: List[OperabilityForecast]
+    eta_predictions: List[ETAPrediction]
     warnings: List[str]
     metadata: Dict[str, Any]
