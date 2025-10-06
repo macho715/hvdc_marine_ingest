@@ -212,6 +212,13 @@ config/api_keys.yaml
 .env.local
 .env.production
 
+# Security: Telegram and API tokens
+*_token.py
+test_*_token.py
+*_secret.py
+telegram_token.txt
+api_keys.txt
+
 # Test outputs
 test_outputs/
 debug_files/
