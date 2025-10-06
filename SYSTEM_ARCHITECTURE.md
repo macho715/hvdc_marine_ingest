@@ -12,6 +12,8 @@
 - **자연어 질의**: LLM 기반 해양 조건 분석
 - **운항 판정**: GO/CONDITIONAL/NO-GO 자동 분류
 - **실시간 알림**: Telegram/Email 통합
+- **GitHub Actions CI/CD**: 매시간 자동 데이터 수집 및 알림
+- **신뢰도 기반 데이터 품질 관리**: confidence 필드로 데이터 신뢰도 추적
 
 ## 🔄 데이터 플로우 아키텍처
 
@@ -44,9 +46,10 @@ graph TD
     end
     
     subgraph "자동화 계층"
-        N[크론 스케줄러<br/>3시간마다] --> A4
-        N --> O[보고서 생성<br/>06:00/18:00]
+        N[GitHub Actions<br/>매시간 자동 실행] --> A4
+        N --> O[보고서 생성<br/>JSON/Markdown/CSV]
         O --> P[알림 발송<br/>Telegram/Email]
+        N --> Q[CI/CD 파이프라인<br/>테스트/배포]
     end
     
     G --> K
@@ -81,9 +84,10 @@ class NCMSeleniumIngestor:
 #### 스키마 및 단위 표준화
 ```python
 # src/marine_ops/core/
-- schema.py: MarineDataPoint, MarineTimeseries
+- schema.py: MarineDataPoint, MarineTimeseries (confidence 필드 포함)
 - units.py: SI 단위 변환
 - cache.py: 3시간 TTL 캐시
+- vector_db.py: SQLite-vec 벡터 데이터베이스
 ```
 
 #### ERI 계산 엔진
@@ -92,6 +96,8 @@ class NCMSeleniumIngestor:
 - compute.py: 환경 위험 지수 (0-100)
 - 규칙: config/eri_rules.yaml
 - 임계값: 파고 1.5m, 풍속 20kt
+- 확장된 해양 변수: 스웰, 바람파, 해류, SST, 해수면 높이
+- 10개 해양 변수 기반 종합 위험도 계산
 ```
 
 #### 예보 융합 엔진
@@ -138,14 +144,19 @@ class MarineQueryEngine:
 
 ### 5. 자동화 시스템 (Automation)
 
-#### 스케줄러
+#### GitHub Actions 워크플로우
+```yaml
+# .github/workflows/
+- marine-hourly.yml: 매시간 해양 데이터 수집 및 알림
+- test.yml: 코드 품질 검사 및 테스트 자동화
+```
+
+#### 스케줄러 및 스크립트
 ```python
-# scripts/cron_automation.py
-class CronAutomation:
-    - 3시간마다 데이터 수집
-    - 06:00/18:00 보고서 생성
-    - 헬스체크 및 알림
-    - 에러 복구 메커니즘
+# scripts/
+- weather_job.py: GitHub Actions용 해양 날씨 작업
+- cron_automation.py: 로컬 스케줄링 (선택사항)
+- generate_3day_weather_report.py: 3일 예보 보고서 생성
 ```
 
 #### 알림 시스템
@@ -156,18 +167,20 @@ class CronAutomation:
 ## 🔧 기술 스택
 
 ### 백엔드
-- **Python 3.12**: 메인 개발 언어
-- **Selenium**: 웹 자동화
-- **SQLite**: 벡터 데이터베이스
-- **sentence-transformers**: 임베딩 모델
+- **Python 3.11**: 메인 개발 언어
+- **Selenium**: 웹 자동화 (NCM Al Bahar 페이지)
+- **SQLite + sqlite-vec**: 벡터 데이터베이스
+- **sentence-transformers**: 임베딩 모델 (all-MiniLM-L6-v2)
 - **pandas**: 데이터 처리
-- **requests**: API 통신
+- **requests/httpx**: API 통신
+- **pytest**: 테스트 프레임워크
 
 ### 인프라
-- **Windows 10/11**: 운영 환경
+- **Windows 10/11**: 개발 환경
+- **GitHub Actions**: CI/CD 파이프라인
 - **PowerShell**: 스크립트 자동화
-- **Task Scheduler**: 시스템 스케줄링
 - **venv**: 가상 환경 관리
+- **Git**: 버전 관리
 
 ### 외부 서비스
 - **Stormglass**: 상용 해양 API
@@ -178,10 +191,11 @@ class CronAutomation:
 ## 📊 성능 지표
 
 ### 데이터 수집
-- **수집 주기**: 3시간마다
+- **수집 주기**: 매시간 (GitHub Actions)
 - **응답 시간**: <30초 (Selenium)
-- **성공률**: ≥95%
+- **성공률**: 83.3% (실제 데이터 수집률)
 - **데이터 포인트**: 24-72시간 예보
+- **신뢰도 추적**: confidence 필드로 데이터 품질 관리
 
 ### 벡터 검색
 - **임베딩 차원**: 384
@@ -197,20 +211,29 @@ class CronAutomation:
 
 ## 🚀 배포 아키텍처
 
-### 개발 환경
+### 프로젝트 구조
 ```
 C:\Users\jichu\Downloads\hvdc_marine_ingest\
 ├── src\marine_ops\          # 핵심 모듈
+│   ├── connectors\          # API 커넥터
+│   ├── core\               # 스키마, 단위, 벡터 DB
+│   ├── eri\                # 환경 위험 지수 계산
+│   └── decision\           # 예보 융합 및 운항 판정
 ├── ncm_web\                 # NCM 수집기
 ├── scripts\                 # 자동화 스크립트
+├── .github\workflows\       # GitHub Actions 워크플로우
 ├── config\                  # 설정 파일
 ├── data\                    # 데이터 저장소
 ├── reports\                 # 보고서 출력
+├── out\                     # GitHub Actions 출력
+├── logs\                    # 실행 로그
 └── marine_vec.db           # 벡터 데이터베이스
 ```
 
 ### 운영 환경
-- **서버**: Windows Server 2019+
+- **GitHub Actions**: 클라우드 기반 CI/CD
+- **Ubuntu Latest**: GitHub Actions 러너 환경
+- **Chrome/Chromium**: Selenium 브라우저 자동화
 - **스토리지**: 100GB+ (벡터 DB + 로그)
 - **메모리**: 8GB+ (Selenium + 임베딩)
 - **네트워크**: 인터넷 연결 필수
@@ -219,9 +242,10 @@ C:\Users\jichu\Downloads\hvdc_marine_ingest\
 
 ### 데이터 보안
 - **암호화**: HTTPS/TLS 1.3
-- **접근 제어**: API 키 기반
+- **접근 제어**: API 키 기반 (GitHub Secrets)
 - **로그 보관**: 7년 (규정 준수)
-- **백업**: 일일 암호화 백업
+- **백업**: GitHub Actions 아티팩트 (7일 보관)
+- **보안 스캔**: GitHub Actions 통합 보안 검사
 
 ### 규정 준수
 - **FANR**: UAE 원자력 규제청
@@ -232,9 +256,11 @@ C:\Users\jichu\Downloads\hvdc_marine_ingest\
 ## 📈 확장성 계획
 
 ### 단기 (3개월)
+- [x] GitHub Actions CI/CD 파이프라인 구축
+- [x] 신뢰도 기반 데이터 품질 관리
+- [x] 다중 소스 API 통합 (4개 소스)
 - [ ] 다중 지역 지원 (DAS, FZJ)
 - [ ] 실시간 알림 강화
-- [ ] 모바일 앱 개발
 
 ### 중기 (6개월)
 - [ ] AI 예측 모델 통합
@@ -249,16 +275,39 @@ C:\Users\jichu\Downloads\hvdc_marine_ingest\
 ## 🎯 핵심 성공 지표 (KPI)
 
 ### 운영 효율성
-- **데이터 수집 성공률**: ≥98%
+- **데이터 수집 성공률**: 83.3% (실제 데이터)
 - **벡터 검색 정확도**: ≥92%
 - **운항 판정 정확도**: ≥95%
 - **시스템 응답 시간**: <2초
+- **CI/CD 파이프라인**: 매시간 자동 실행
 
 ### 비즈니스 가치
 - **운항 지연 감소**: 40%
 - **연료 효율 향상**: 15%
 - **안전 사고 감소**: 60%
 - **운영 비용 절감**: 25%
+
+## 🔄 최신 업데이트 (2025-01-07)
+
+### 주요 개선사항
+- **✅ MarineDataPoint 스키마 확장**: confidence 필드 추가로 데이터 신뢰도 추적
+- **✅ GitHub Actions 통합**: 매시간 자동 데이터 수집 및 알림 시스템
+- **✅ 다중 소스 API 통합**: Stormglass, Open-Meteo, WorldTides, NCM Al Bahar
+- **✅ 확장된 해양 변수**: 10개 해양 변수 기반 ERI 계산
+- **✅ HTTP 안정화**: 429/503 자동 재시도 + robots.txt 준수
+- **✅ AttributeError 수정**: 안전한 confidence 접근으로 런타임 오류 해결
+
+### 성능 개선
+- **데이터 수집률**: 83.3% (실제 데이터)
+- **API 통합**: 4개 소스 완전 통합
+- **신뢰도 관리**: 소스별 confidence 값 설정
+- **CI/CD 파이프라인**: 자동화된 테스트 및 배포
+
+### 문서화 강화
+- **시스템 아키텍처**: 실시간 업데이트
+- **컴포넌트 구조**: 상세 다이어그램
+- **데이터 검증 보고서**: 실제 수집 결과 문서화
+- **API 키 통합 가이드**: Stormglass/WorldTides 설정
 
 ---
 
