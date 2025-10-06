@@ -325,7 +325,9 @@ def main():
             ]
             
             # 운항 가능성 보고서 생성
-            operability_report = create_operability_report(data, routes, forecast_days=7)
+            # data는 딕셔너리이므로 MarineTimeseries 리스트 추출
+            weather_timeseries = data.get('timeseries', [])
+            operability_report = create_operability_report(weather_timeseries, routes, forecast_days=7)
             
             # 운항 가능성 결과를 메인 보고서에 추가
             report['operability_summary'] = {
