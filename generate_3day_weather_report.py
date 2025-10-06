@@ -101,10 +101,11 @@ def analyze_weather_trends(weather_data: Dict[str, Any]) -> Dict[str, Any]:
     for source, data in weather_data.items():
         if data and len(data.data_points) > 0:
             analysis['sources_available'].append(source)
+            confidence = getattr(data, 'confidence', 0.5)
             analysis['data_quality'][source] = {
-                'confidence': data.confidence,
+                'confidence': confidence,
                 'data_points': len(data.data_points),
-                'source_type': 'real' if data.confidence > 0.7 else 'fallback'
+                'source_type': 'real' if confidence > 0.7 else 'fallback'
             }
     
     # 트렌드 분석
@@ -292,7 +293,7 @@ def save_report(report: str, weather_data: Dict[str, Any], analysis: Dict[str, A
                 'source': data.source if data else None,
                 'location': data.location if data else None,
                 'data_points_count': len(data.data_points) if data else 0,
-                'confidence': data.confidence if data else 0,
+                'confidence': getattr(data, 'confidence', 0.5) if data else 0,
                 'ingested_at': data.ingested_at if data else None
             } for source, data in weather_data.items()
         },

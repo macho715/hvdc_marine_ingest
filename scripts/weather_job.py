@@ -58,7 +58,10 @@ def collect_weather_data(location_name: str = "AGI", forecast_hours: int = 24) -
             sg_connector = StormglassConnector(api_key=stormglass_key)
             sg_timeseries = sg_connector.get_marine_weather(lat, lon, now, end_date, location=location_name)
             all_timeseries.append(sg_timeseries)
-            api_status['STORMGLASS'] = {'status': '✅ 실제 데이터', 'confidence': sg_timeseries.confidence}
+            api_status['STORMGLASS'] = {
+                'status': '✅ 실제 데이터',
+                'confidence': getattr(sg_timeseries, 'confidence', 0.5)
+            }
             print(f"✅ Stormglass: {len(sg_timeseries.data_points)}개 데이터 포인트")
         else:
             api_status['STORMGLASS'] = {'status': '❌ API 키 없음', 'confidence': 0.0}
@@ -72,7 +75,10 @@ def collect_weather_data(location_name: str = "AGI", forecast_hours: int = 24) -
         om_connector = OpenMeteoConnector()
         om_timeseries = om_connector.get_marine_weather(lat, lon, now, end_date, location=location_name)
         all_timeseries.append(om_timeseries)
-        api_status['OPEN_METEO'] = {'status': '✅ 실제 데이터', 'confidence': om_timeseries.confidence}
+        api_status['OPEN_METEO'] = {
+            'status': '✅ 실제 데이터',
+            'confidence': getattr(om_timeseries, 'confidence', 0.5)
+        }
         print(f"✅ Open-Meteo: {len(om_timeseries.data_points)}개 데이터 포인트")
     except Exception as e:
         print(f"❌ Open-Meteo 수집 실패: {e}")
@@ -85,7 +91,7 @@ def collect_weather_data(location_name: str = "AGI", forecast_hours: int = 24) -
         all_timeseries.append(ncm_timeseries)
         api_status['NCM_SELENIUM'] = {
             'status': '✅ 실제 데이터' if "fallback" not in ncm_timeseries.source else '⚠️ 폴백 데이터', 
-            'confidence': ncm_timeseries.confidence
+            'confidence': getattr(ncm_timeseries, 'confidence', 0.5)
         }
         print(f"✅ NCM Selenium: {len(ncm_timeseries.data_points)}개 데이터 포인트")
     except Exception as e:
@@ -97,7 +103,10 @@ def collect_weather_data(location_name: str = "AGI", forecast_hours: int = 24) -
         try:
             wt_timeseries = create_marine_timeseries_from_worldtides(lat, lon, worldtides_key, forecast_hours, location_name)
             all_timeseries.append(wt_timeseries)
-            api_status['WORLDTIDES'] = {'status': '✅ 실제 데이터', 'confidence': wt_timeseries.confidence}
+            api_status['WORLDTIDES'] = {
+                'status': '✅ 실제 데이터',
+                'confidence': getattr(wt_timeseries, 'confidence', 0.5)
+            }
             print(f"✅ WorldTides: {len(wt_timeseries.data_points)}개 데이터 포인트")
         except Exception as e:
             print(f"⚠️ WorldTides 수집 실패: {e}")
@@ -237,7 +246,9 @@ def generate_summary_report(data: dict, analysis: dict, output_dir: str) -> dict
 """
     
     for api_name, status in data['api_status'].items():
-        txt_content += f"  {api_name}: {status['status']} (신뢰도: {status['confidence']:.2f})\n"
+        conf = status.get('confidence', None)
+        conf_txt = f"{conf:.2f}" if isinstance(conf, (int, float)) else "N/A"
+        txt_content += f"  {api_name}: {status['status']} (신뢰도: {conf_txt})\n"
     
     txt_content += f"""
 📈 분석 결과:
