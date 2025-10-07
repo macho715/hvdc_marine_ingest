@@ -32,7 +32,11 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        # Selenium을 위한 시스템 의존성
+        
+        # Playwright 브라우저 설치 (Chromium)
+        playwright install chromium
+        
+        # Selenium을 위한 시스템 의존성 (폴백용)
         sudo apt-get update
         sudo apt-get install -y chromium-browser chromium-chromedriver xvfb
         export DISPLAY=:99
