@@ -153,8 +153,30 @@ jobs:
         echo "Telegram response:"; cat .tg_resp.json
         # 실패시 curl -f 덕분에 여기 못 옴
 
+    # ✅ Email 전송 전에 파일 존재 확인
+    - name: Check summary files
+      id: check_files
+      run: |
+        if [ -f out/summary.html ]; then
+          echo "html_exists=true" >> "$GITHUB_OUTPUT"
+          echo "✅ summary.html 존재"
+        else
+          echo "html_exists=false" >> "$GITHUB_OUTPUT"
+          echo "::warning::summary.html 파일이 없습니다"
+        fi
+        
+        if [ -f out/summary.txt ]; then
+          echo "txt_exists=true" >> "$GITHUB_OUTPUT"
+          echo "✅ summary.txt 존재"
+        else
+          echo "txt_exists=false" >> "$GITHUB_OUTPUT"
+          echo "::warning::summary.txt 파일이 없습니다"
+        fi
+        
+        ls -lh out/ || true
+    
     - name: Email notify (Gmail SMTP via action)
-      if: ${{ steps.gates.outputs.has_mail == 'true' }}
+      if: ${{ steps.gates.outputs.has_mail == 'true' && steps.check_files.outputs.html_exists == 'true' }}
       continue-on-error: true
       uses: dawidd6/action-send-mail@v6
       with:

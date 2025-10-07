@@ -505,15 +505,108 @@ def generate_summary_report(data: dict, analysis: dict, output_dir: str) -> dict
     with open(txt_path, "w", encoding="utf-8") as f:
         f.write(txt_content)
 
+    # HTML 요약 (Email용)
+    html_content = f"""<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {{ font-family: Arial, sans-serif; margin: 20px; }}
+        h1 {{ color: #0066cc; }}
+        .section {{ margin: 20px 0; }}
+        .status {{ padding: 5px; margin: 2px 0; }}
+        .success {{ color: #00aa00; }}
+        .warning {{ color: #ff9900; }}
+        .error {{ color: #cc0000; }}
+        table {{ border-collapse: collapse; width: 100%; }}
+        th, td {{ border: 1px solid #ddd; padding: 8px; text-align: left; }}
+        th {{ background-color: #0066cc; color: white; }}
+    </style>
+</head>
+<body>
+    <h1>🌊 UAE 해역 해양 날씨 보고서</h1>
+    <div class="section">
+        <p><strong>생성 시간:</strong> {datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC')}</p>
+        <p><strong>위치:</strong> {data['location']} (Al Ghallan Island)</p>
+        <p><strong>예보 기간:</strong> {data['forecast_hours']}시간</p>
+        <p><strong>실행 모드:</strong> {execution_mode.upper()}</p>
+"""
+    
+    if data.get('offline_reasons'):
+        html_content += f"        <p><strong>오프라인 사유:</strong> {'; '.join(data['offline_reasons'])}</p>\n"
+    
+    html_content += """    </div>
+    
+    <div class="section">
+        <h2>📊 데이터 수집 현황</h2>
+        <table>
+            <tr><th>API</th><th>상태</th><th>신뢰도</th></tr>
+"""
+    
+    for api_name, status in data["api_status"].items():
+        conf = status.get("confidence", None)
+        conf_txt = f"{conf:.2f}" if isinstance(conf, (int, float)) else "N/A"
+        status_class = "success" if "✅" in status['status'] else "warning" if "⚠️" in status['status'] else "error"
+        html_content += f"            <tr class='{status_class}'><td>{api_name}</td><td>{status['status']}</td><td>{conf_txt}</td></tr>\n"
+    
+    html_content += f"""        </table>
+    </div>
+    
+    <div class="section">
+        <h2>📈 분석 결과</h2>
+        <ul>
+            <li>총 데이터 포인트: {analysis.get('total_data_points', 0):,}개</li>
+            <li>융합 예보: {analysis.get('fused_forecasts', 0)}개</li>
+            <li>평균 ERI: {analysis.get('averages', {}).get('eri', 0):.3f}</li>
+            <li>평균 풍속: {analysis.get('averages', {}).get('wind_speed_ms', 0):.1f} m/s</li>
+            <li>평균 파고: {analysis.get('averages', {}).get('wave_height_m', 0):.2f} m</li>
+        </ul>
+    </div>
+    
+    <div class="section">
+        <h2>🚢 운항 판정</h2>
+        <ul>
+            <li class="success">GO: {analysis.get('decisions', {}).get('GO', 0)}회</li>
+            <li class="warning">CONDITIONAL: {analysis.get('decisions', {}).get('CONDITIONAL', 0)}회</li>
+            <li class="error">NO-GO: {analysis.get('decisions', {}).get('NO-GO', 0)}회</li>
+        </ul>
+    </div>
+"""
+    
+    if resilience_notes:
+        html_content += """    <div class="section">
+        <h2>🛡️ 시스템 안정화 메모</h2>
+        <ul>
+"""
+        for note in resilience_notes:
+            html_content += f"            <li>{note}</li>\n"
+        html_content += """        </ul>
+    </div>
+"""
+    
+    html_content += f"""
+    <div class="section">
+        <p><em>상세 보고서: {json_path.name}</em></p>
+    </div>
+</body>
+</html>
+"""
+    
+    html_path = output_path / "summary.html"
+    with open(html_path, "w", encoding="utf-8") as f:
+        f.write(html_content)
+
     print(f"✅ 요약 보고서 생성 완료:")
     print(f"  - JSON: {json_path}")
     print(f"  - CSV: {csv_path}")
     print(f"  - TXT: {txt_path}")
+    print(f"  - HTML: {html_path}")
 
     return {
         "json_path": str(json_path),
         "csv_path": str(csv_path),
         "txt_path": str(txt_path),
+        "html_path": str(html_path),
         "summary_json": summary_json,
     }
 
