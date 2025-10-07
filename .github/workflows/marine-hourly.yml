@@ -4,6 +4,8 @@ on:
   schedule:
     - cron: '7 * * * *'          # UTC, 정각 혼잡 회피 (권장)
   workflow_dispatch: {}
+  push:
+    branches: [ main ]           # main 브랜치 push 시 자동 실행
 
 env:
   NOTIFY_TELEGRAM: '1'
