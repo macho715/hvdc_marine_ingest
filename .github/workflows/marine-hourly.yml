@@ -65,9 +65,10 @@ jobs:
         echo "  has_mail: ${{ secrets.MAIL_USERNAME != '' && secrets.MAIL_PASSWORD != '' && secrets.MAIL_TO != '' }}"
         echo "  has_apis: ${{ secrets.STORMGLASS_API_KEY != '' || secrets.WORLDTIDES_API_KEY != '' }}"
         
-    # ✅ 시크릿 검증 핑 (데이터 수집 전에 먼저 확인)
+    # ✅ 시크릿 검증 핑 (데이터 수집 전에 먼저 확인) - 실패해도 계속 진행
     - name: Telegram ping (secrets validation)
       if: ${{ steps.gates.outputs.has_tg == 'true' }}
+      continue-on-error: true
       run: |
         echo "🔍 Telegram 시크릿 검증 시작..."
         
@@ -79,7 +80,8 @@ jobs:
         if echo "$BOT_INFO" | grep -q '"ok":true'; then
           echo "✅ Bot Token 유효"
         else
-          echo "❌ Bot Token 무효 - 새로운 토큰 필요"
+          echo "::warning::❌ Bot Token 무효 - 새로운 토큰 필요"
+          echo "::warning::BotFather에서 새 토큰을 생성하고 GitHub Secrets를 업데이트하세요"
           exit 1
         fi
         
@@ -94,7 +96,7 @@ jobs:
           echo "✅ Telegram 시크릿 검증 완료"
           echo "Response: $PING_RESULT"
         else
-          echo "❌ Chat ID 권한 오류"
+          echo "::warning::❌ Chat ID 권한 오류"
           echo "Response: $PING_RESULT"
           exit 1
         fi
