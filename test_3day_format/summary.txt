@@ -1,0 +1,24 @@
+🌊 AGI Marine Ops — 3-Day GO/NO-GO
+
+🗓 Build: 2025-10-07 19:49 UTC  |  2025-10-07 23:49 (UTC+4)
+📍 Spot: AGI (Al Ghallan Island)
+
+🔎 3-Day Overview (UTC+4)
+D0 오늘:     🔴  창 없음 (대체 일정 탐색)
+D+1 내일:    🟢  운항 권장, 00:00–22:00
+D+2 모레:    〰️  데이터 대기
+
+🪟 Windows (UTC+4)
+• D0: —
+• D+1: 🟢 00:00–22:00
+• D+2: —
+
+Why (요약)
+• Hs/Wind (avg): 0.67 m / 18 kt
+• ERI(mean): 0.17  | Bias: GO>NO-GO (22/0)
+• Notes: Tides 크레딧 부족, 보수적 해석
+
+Confidence: MED (0.70)
+Data: OPEN-METEO ❌  NCM ❌  STORMGLASS ❌  TIDES ⚠️
+
+/actions  ➜  /plan TBD    /brief crew   /share mws

@@ -1,0 +1,39 @@
+{
+  "tiles": [
+    "https://tiles2.ncm.gov.ae/data/coastlines/{z}/{x}/{y}.pbf"
+  ],
+  "name": "NCM Coastlines",
+  "format": "pbf",
+  "basename": "ncm-coastlines-20231031.mbtiles",
+  "id": "coastlines",
+  "bounds": [
+    -180,
+    -85.05112878,
+    180,
+    83.66658597
+  ],
+  "minzoom": 0,
+  "maxzoom": 12,
+  "type": "overlay",
+  "profile": "mercator",
+  "center": [
+    17.8,
+    10.6,
+    1.25
+  ],
+  "version": "1.2",
+  "attribution": "Rendered by <a href=\"https://www.ncm.gov.ae\">National Center of Meteorology</a>",
+  "description": "coastlines vector polygons based on OpenStreetMapData [https://osmdata.openstreetmap.de] and imagico [https://imagico.de/services/generalized.php] generalized geodata products",
+  "vector_layers": [
+    {
+      "id": "coastlines",
+      "description": "coastlines vector polygons based on OpenStreetMapData [https://osmdata.openstreetmap.de] and imagico [https://imagico.de/services/generalized.php] generalized geodata products",
+      "minzoom": 0,
+      "maxzoom": 12,
+      "fields": {
+        "fid": "Number"
+      }
+    }
+  ],
+  "tilejson": "2.0.0"
+}

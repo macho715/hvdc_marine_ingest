@@ -1,0 +1,60 @@
+{
+  "metadata": {
+    "generated_at": "2025-10-07T23:49:37.386855",
+    "location": "AGI",
+    "forecast_hours": 24,
+    "system_version": "v2.1",
+    "execution_mode": "offline",
+    "resilience_mode": false,
+    "offline_reasons": [
+      "사용자 지정 오프라인 모드"
+    ]
+  },
+  "api_status": {
+    "STORMGLASS": {
+      "status": "⚠️ 오프라인 모드",
+      "confidence": 0.0
+    },
+    "OPEN_METEO": {
+      "status": "⚠️ 오프라인 모드",
+      "confidence": 0.0
+    },
+    "NCM_SELENIUM": {
+      "status": "⚠️ 오프라인 모드",
+      "confidence": 0.0
+    },
+    "WORLDTIDES": {
+      "status": "⚠️ 오프라인 모드",
+      "confidence": 0.0
+    },
+    "SYNTHETIC": {
+      "status": "✅ 오프라인 합성 데이터",
+      "confidence": 0.7
+    }
+  },
+  "analysis": {
+    "total_data_points": 24,
+    "fused_forecasts": 24,
+    "decisions": {
+      "total": 24,
+      "GO": 22,
+      "CONDITIONAL": 2,
+      "NO-GO": 0
+    },
+    "averages": {
+      "eri": 0.17250000000000001,
+      "wind_speed_ms": 9.270833333333334,
+      "wave_height_m": 0.66625
+    },
+    "eri_points": 24,
+    "confidence_scores": [
+      0.7
+    ]
+  },
+  "collection_stats": {
+    "total_timeseries": 1,
+    "total_data_points": 24,
+    "data_collection_rate": 20.0
+  },
+  "resilience_notes": []
+}

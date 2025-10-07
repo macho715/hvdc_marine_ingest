@@ -1,0 +1,50 @@
+{
+  "tiles": [
+    "https://tiles2.ncm.gov.ae/data/boundaries/{z}/{x}/{y}.pbf"
+  ],
+  "name": "NCM Boundaries",
+  "format": "pbf",
+  "basename": "ncm-boundaries-20240530.mbtiles",
+  "id": "boundaries",
+  "description": "NCM world boundaries 2024 generalized",
+  "version": "2",
+  "minzoom": 0,
+  "maxzoom": 14,
+  "center": [
+    17.8,
+    10.6,
+    1.25
+  ],
+  "bounds": [
+    -180,
+    -85.0511,
+    180,
+    85.0511
+  ],
+  "type": "overlay",
+  "vector_layers": [
+    {
+      "id": "boundary",
+      "description": "NCM world boundaries 2024 generalized",
+      "minzoom": 0,
+      "maxzoom": 14,
+      "fields": {
+        "NAME": "String"
+      }
+    }
+  ],
+  "tilestats": {
+    "layerCount": 1,
+    "layers": [
+      {
+        "layer": "boundary",
+        "count": 504,
+        "geometry": "LineString"
+      }
+    ]
+  },
+  "generated": "20240530",
+  "profile": "mercator",
+  "attribution": "world boundaries based on <a href=\"https://www.geoboundaries.org\">geoBoundaries.org</a> [https://www.geoboundaries.org] adm0 generalized data | Rendered by <a href=\"https://www.ncm.gov.ae\">National Center of Meteorology</a>",
+  "tilejson": "2.0.0"
+}

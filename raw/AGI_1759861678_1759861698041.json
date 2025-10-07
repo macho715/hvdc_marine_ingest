@@ -1,0 +1,1660 @@
+{
+  "status": 200,
+  "result": {
+    "type": "aws",
+    "id": 26,
+    "name_en": "Abu Dhabi corniche",
+    "name_ar": "كورنيش أبوظبي",
+    "lat": 24.476028,
+    "lng": 54.329027,
+    "latest_data_on": "",
+    "last_updated_on": "",
+    "observations": [
+      {
+        "air_pressure": "1006.33",
+        "air_temp": 31,
+        "measure_time": "2025-10-06T22:00:00+04:00",
+        "relative_humidity": "77",
+        "water_temp": "",
+        "wind_dir": "11",
+        "wind_speed": 17.64,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1006.33",
+        "air_temp": 30.9,
+        "measure_time": "2025-10-06T22:15:00+04:00",
+        "relative_humidity": "77",
+        "water_temp": "",
+        "wind_dir": "8",
+        "wind_speed": 15.84,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1006.23",
+        "air_temp": 30.9,
+        "measure_time": "2025-10-06T22:30:00+04:00",
+        "relative_humidity": "78",
+        "water_temp": "",
+        "wind_dir": "10",
+        "wind_speed": 17.28,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1006.33",
+        "air_temp": 30.8,
+        "measure_time": "2025-10-06T22:45:00+04:00",
+        "relative_humidity": "78",
+        "water_temp": "",
+        "wind_dir": "8",
+        "wind_speed": 15.12,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1006.24",
+        "air_temp": 30.7,
+        "measure_time": "2025-10-06T23:00:00+04:00",
+        "relative_humidity": "78",
+        "water_temp": "",
+        "wind_dir": "10",
+        "wind_speed": 16.92,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1006.13",
+        "air_temp": 30.8,
+        "measure_time": "2025-10-06T23:15:00+04:00",
+        "relative_humidity": "78",
+        "water_temp": "",
+        "wind_dir": "8",
+        "wind_speed": 19.44,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1006.03",
+        "air_temp": 30.9,
+        "measure_time": "2025-10-06T23:30:00+04:00",
+        "relative_humidity": "77",
+        "water_temp": "",
+        "wind_dir": "9",
+        "wind_speed": 19.8,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1006.04",
+        "air_temp": 30.7,
+        "measure_time": "2025-10-06T23:45:00+04:00",
+        "relative_humidity": "77",
+        "water_temp": "",
+        "wind_dir": "11",
+        "wind_speed": 18,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1006.03",
+        "air_temp": 30.8,
+        "measure_time": "2025-10-07T00:00:00+04:00",
+        "relative_humidity": "76",
+        "water_temp": "",
+        "wind_dir": "10",
+        "wind_speed": 16.2,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.94",
+        "air_temp": 30.7,
+        "measure_time": "2025-10-07T00:15:00+04:00",
+        "relative_humidity": "74",
+        "water_temp": "",
+        "wind_dir": "4",
+        "wind_speed": 16.92,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.84",
+        "air_temp": 30.7,
+        "measure_time": "2025-10-07T00:30:00+04:00",
+        "relative_humidity": "75",
+        "water_temp": "",
+        "wind_dir": "7",
+        "wind_speed": 16.56,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.84",
+        "air_temp": 30.6,
+        "measure_time": "2025-10-07T00:45:00+04:00",
+        "relative_humidity": "75",
+        "water_temp": "",
+        "wind_dir": "5",
+        "wind_speed": 12.96,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.74",
+        "air_temp": 30.5,
+        "measure_time": "2025-10-07T01:00:00+04:00",
+        "relative_humidity": "76",
+        "water_temp": "",
+        "wind_dir": "7",
+        "wind_speed": 11.52,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.64",
+        "air_temp": 30.3,
+        "measure_time": "2025-10-07T01:15:00+04:00",
+        "relative_humidity": "77",
+        "water_temp": "",
+        "wind_dir": "360",
+        "wind_speed": 11.52,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.64",
+        "air_temp": 30.2,
+        "measure_time": "2025-10-07T01:30:00+04:00",
+        "relative_humidity": "76",
+        "water_temp": "",
+        "wind_dir": "1",
+        "wind_speed": 10.8,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.44",
+        "air_temp": 30.3,
+        "measure_time": "2025-10-07T01:45:00+04:00",
+        "relative_humidity": "76",
+        "water_temp": "",
+        "wind_dir": "9",
+        "wind_speed": 9.36,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.44",
+        "air_temp": 30.4,
+        "measure_time": "2025-10-07T02:00:00+04:00",
+        "relative_humidity": "77",
+        "water_temp": "",
+        "wind_dir": "13",
+        "wind_speed": 7.92,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.44",
+        "air_temp": 30.4,
+        "measure_time": "2025-10-07T02:15:00+04:00",
+        "relative_humidity": "78",
+        "water_temp": "",
+        "wind_dir": "8",
+        "wind_speed": 9.72,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.44",
+        "air_temp": 30.3,
+        "measure_time": "2025-10-07T02:30:00+04:00",
+        "relative_humidity": "78",
+        "water_temp": "",
+        "wind_dir": "18",
+        "wind_speed": 10.8,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.54",
+        "air_temp": 30.4,
+        "measure_time": "2025-10-07T02:45:00+04:00",
+        "relative_humidity": "78",
+        "water_temp": "",
+        "wind_dir": "16",
+        "wind_speed": 9.72,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.54",
+        "air_temp": 30.3,
+        "measure_time": "2025-10-07T03:00:00+04:00",
+        "relative_humidity": "78",
+        "water_temp": "",
+        "wind_dir": "10",
+        "wind_speed": 8.64,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.64",
+        "air_temp": 30.4,
+        "measure_time": "2025-10-07T03:15:00+04:00",
+        "relative_humidity": "78",
+        "water_temp": "",
+        "wind_dir": "9",
+        "wind_speed": 9,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.64",
+        "air_temp": 30.2,
+        "measure_time": "2025-10-07T03:30:00+04:00",
+        "relative_humidity": "78",
+        "water_temp": "",
+        "wind_dir": "4",
+        "wind_speed": 9.36,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.74",
+        "air_temp": 30.2,
+        "measure_time": "2025-10-07T03:45:00+04:00",
+        "relative_humidity": "78",
+        "water_temp": "",
+        "wind_dir": "9",
+        "wind_speed": 6.84,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.94",
+        "air_temp": 30.1,
+        "measure_time": "2025-10-07T04:00:00+04:00",
+        "relative_humidity": "79",
+        "water_temp": "",
+        "wind_dir": "19",
+        "wind_speed": 5.4,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.94",
+        "air_temp": 29.9,
+        "measure_time": "2025-10-07T04:15:00+04:00",
+        "relative_humidity": "80",
+        "water_temp": "",
+        "wind_dir": "4",
+        "wind_speed": 4.68,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.94",
+        "air_temp": 29.8,
+        "measure_time": "2025-10-07T04:30:00+04:00",
+        "relative_humidity": "79",
+        "water_temp": "",
+        "wind_dir": "42",
+        "wind_speed": 3.6,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.94",
+        "air_temp": 29.9,
+        "measure_time": "2025-10-07T04:45:00+04:00",
+        "relative_humidity": "79",
+        "water_temp": "",
+        "wind_dir": "190",
+        "wind_speed": 3.24,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1006.04",
+        "air_temp": 29.9,
+        "measure_time": "2025-10-07T05:00:00+04:00",
+        "relative_humidity": "81",
+        "water_temp": "",
+        "wind_dir": "360",
+        "wind_speed": 5.76,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1006.14",
+        "air_temp": 29.8,
+        "measure_time": "2025-10-07T05:15:00+04:00",
+        "relative_humidity": "82",
+        "water_temp": "",
+        "wind_dir": "348",
+        "wind_speed": 2.52,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1006.24",
+        "air_temp": 29.7,
+        "measure_time": "2025-10-07T05:30:00+04:00",
+        "relative_humidity": "82",
+        "water_temp": "",
+        "wind_dir": "359",
+        "wind_speed": 5.76,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1006.44",
+        "air_temp": 29.6,
+        "measure_time": "2025-10-07T05:45:00+04:00",
+        "relative_humidity": "83",
+        "water_temp": "",
+        "wind_dir": "348",
+        "wind_speed": 5.76,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1006.34",
+        "air_temp": 29.6,
+        "measure_time": "2025-10-07T06:00:00+04:00",
+        "relative_humidity": "85",
+        "water_temp": "",
+        "wind_dir": "20",
+        "wind_speed": 11.16,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1006.64",
+        "air_temp": 29.2,
+        "measure_time": "2025-10-07T06:15:00+04:00",
+        "relative_humidity": "83",
+        "water_temp": "",
+        "wind_dir": "354",
+        "wind_speed": 5.04,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1006.74",
+        "air_temp": 29.3,
+        "measure_time": "2025-10-07T06:30:00+04:00",
+        "relative_humidity": "83",
+        "water_temp": "",
+        "wind_dir": "9",
+        "wind_speed": 9,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1006.94",
+        "air_temp": 29.1,
+        "measure_time": "2025-10-07T06:45:00+04:00",
+        "relative_humidity": "81",
+        "water_temp": "",
+        "wind_dir": "24",
+        "wind_speed": 5.76,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1007.14",
+        "air_temp": 29.3,
+        "measure_time": "2025-10-07T07:00:00+04:00",
+        "relative_humidity": "80",
+        "water_temp": "",
+        "wind_dir": "28",
+        "wind_speed": 3.6,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1007.24",
+        "air_temp": 29.6,
+        "measure_time": "2025-10-07T07:15:00+04:00",
+        "relative_humidity": "79",
+        "water_temp": "",
+        "wind_dir": "54",
+        "wind_speed": 4.32,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1007.94",
+        "air_temp": 30.1,
+        "measure_time": "2025-10-07T07:30:00+04:00",
+        "relative_humidity": "77",
+        "water_temp": "",
+        "wind_dir": "136",
+        "wind_speed": 24.48,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1008.14",
+        "air_temp": 28.7,
+        "measure_time": "2025-10-07T07:45:00+04:00",
+        "relative_humidity": "79",
+        "water_temp": "",
+        "wind_dir": "150",
+        "wind_speed": 32.04,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1008.24",
+        "air_temp": 28.5,
+        "measure_time": "2025-10-07T08:00:00+04:00",
+        "relative_humidity": "80",
+        "water_temp": "",
+        "wind_dir": "138",
+        "wind_speed": 27.36,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1008.44",
+        "air_temp": 28.4,
+        "measure_time": "2025-10-07T08:15:00+04:00",
+        "relative_humidity": "81",
+        "water_temp": "",
+        "wind_dir": "149",
+        "wind_speed": 21.96,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1008.54",
+        "air_temp": 29,
+        "measure_time": "2025-10-07T08:30:00+04:00",
+        "relative_humidity": "80",
+        "water_temp": "",
+        "wind_dir": "137",
+        "wind_speed": 19.08,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1008.44",
+        "air_temp": 29.2,
+        "measure_time": "2025-10-07T08:45:00+04:00",
+        "relative_humidity": "75",
+        "water_temp": "",
+        "wind_dir": "145",
+        "wind_speed": 9.72,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1008.54",
+        "air_temp": 29.9,
+        "measure_time": "2025-10-07T09:00:00+04:00",
+        "relative_humidity": "66",
+        "water_temp": "",
+        "wind_dir": "146",
+        "wind_speed": 11.16,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1008.54",
+        "air_temp": 30.5,
+        "measure_time": "2025-10-07T09:15:00+04:00",
+        "relative_humidity": "63",
+        "water_temp": "",
+        "wind_dir": "141",
+        "wind_speed": 11.88,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1008.54",
+        "air_temp": 31,
+        "measure_time": "2025-10-07T09:30:00+04:00",
+        "relative_humidity": "61",
+        "water_temp": "",
+        "wind_dir": "166",
+        "wind_speed": 12.24,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1008.54",
+        "air_temp": 31.6,
+        "measure_time": "2025-10-07T09:45:00+04:00",
+        "relative_humidity": "59",
+        "water_temp": "",
+        "wind_dir": "151",
+        "wind_speed": 9,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1008.54",
+        "air_temp": 32.1,
+        "measure_time": "2025-10-07T10:00:00+04:00",
+        "relative_humidity": "57",
+        "water_temp": "",
+        "wind_dir": "160",
+        "wind_speed": 13.68,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1008.53",
+        "air_temp": 32.6,
+        "measure_time": "2025-10-07T10:15:00+04:00",
+        "relative_humidity": "54",
+        "water_temp": "",
+        "wind_dir": "156",
+        "wind_speed": 10.08,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1008.53",
+        "air_temp": 32.7,
+        "measure_time": "2025-10-07T10:30:00+04:00",
+        "relative_humidity": "53",
+        "water_temp": "",
+        "wind_dir": "176",
+        "wind_speed": 7.92,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1008.33",
+        "air_temp": 33.4,
+        "measure_time": "2025-10-07T10:45:00+04:00",
+        "relative_humidity": "49",
+        "water_temp": "",
+        "wind_dir": "165",
+        "wind_speed": 11.16,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1008.33",
+        "air_temp": 34.1,
+        "measure_time": "2025-10-07T11:00:00+04:00",
+        "relative_humidity": "46",
+        "water_temp": "",
+        "wind_dir": "153",
+        "wind_speed": 12.6,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1008.13",
+        "air_temp": 34.2,
+        "measure_time": "2025-10-07T11:15:00+04:00",
+        "relative_humidity": "48",
+        "water_temp": "",
+        "wind_dir": "167",
+        "wind_speed": 12.96,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1007.93",
+        "air_temp": 34.6,
+        "measure_time": "2025-10-07T11:30:00+04:00",
+        "relative_humidity": "47",
+        "water_temp": "",
+        "wind_dir": "184",
+        "wind_speed": 10.44,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1007.73",
+        "air_temp": 35,
+        "measure_time": "2025-10-07T11:45:00+04:00",
+        "relative_humidity": "45",
+        "water_temp": "",
+        "wind_dir": "183",
+        "wind_speed": 12.96,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1007.53",
+        "air_temp": 35.4,
+        "measure_time": "2025-10-07T12:00:00+04:00",
+        "relative_humidity": "43",
+        "water_temp": "",
+        "wind_dir": "180",
+        "wind_speed": 7.92,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1007.33",
+        "air_temp": 36.3,
+        "measure_time": "2025-10-07T12:15:00+04:00",
+        "relative_humidity": "37",
+        "water_temp": "",
+        "wind_dir": "185",
+        "wind_speed": 11.88,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1007.03",
+        "air_temp": 36.4,
+        "measure_time": "2025-10-07T12:30:00+04:00",
+        "relative_humidity": "35",
+        "water_temp": "",
+        "wind_dir": "161",
+        "wind_speed": 10.44,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1006.93",
+        "air_temp": 37.3,
+        "measure_time": "2025-10-07T12:45:00+04:00",
+        "relative_humidity": "34",
+        "water_temp": "",
+        "wind_dir": "191",
+        "wind_speed": 8.28,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1006.63",
+        "air_temp": 35,
+        "measure_time": "2025-10-07T13:00:00+04:00",
+        "relative_humidity": "44",
+        "water_temp": "",
+        "wind_dir": "268",
+        "wind_speed": 14.04,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1006.63",
+        "air_temp": 34.7,
+        "measure_time": "2025-10-07T13:15:00+04:00",
+        "relative_humidity": "50",
+        "water_temp": "",
+        "wind_dir": "290",
+        "wind_speed": 10.8,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1006.43",
+        "air_temp": 33.4,
+        "measure_time": "2025-10-07T13:30:00+04:00",
+        "relative_humidity": "56",
+        "water_temp": "",
+        "wind_dir": "313",
+        "wind_speed": 18,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1006.33",
+        "air_temp": 33.6,
+        "measure_time": "2025-10-07T13:45:00+04:00",
+        "relative_humidity": "56",
+        "water_temp": "",
+        "wind_dir": "311",
+        "wind_speed": 14.4,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1006.13",
+        "air_temp": 33.1,
+        "measure_time": "2025-10-07T14:00:00+04:00",
+        "relative_humidity": "60",
+        "water_temp": "",
+        "wind_dir": "305",
+        "wind_speed": 19.44,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.93",
+        "air_temp": 32.7,
+        "measure_time": "2025-10-07T14:15:00+04:00",
+        "relative_humidity": "60",
+        "water_temp": "",
+        "wind_dir": "321",
+        "wind_speed": 21.6,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.83",
+        "air_temp": 32.9,
+        "measure_time": "2025-10-07T14:30:00+04:00",
+        "relative_humidity": "62",
+        "water_temp": "",
+        "wind_dir": "326",
+        "wind_speed": 22.32,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.63",
+        "air_temp": 32.7,
+        "measure_time": "2025-10-07T14:45:00+04:00",
+        "relative_humidity": "60",
+        "water_temp": "",
+        "wind_dir": "322",
+        "wind_speed": 21.24,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.63",
+        "air_temp": 32.9,
+        "measure_time": "2025-10-07T15:00:00+04:00",
+        "relative_humidity": "64",
+        "water_temp": "",
+        "wind_dir": "327",
+        "wind_speed": 20.16,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.63",
+        "air_temp": 33.2,
+        "measure_time": "2025-10-07T15:15:00+04:00",
+        "relative_humidity": "64",
+        "water_temp": "",
+        "wind_dir": "323",
+        "wind_speed": 17.28,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.53",
+        "air_temp": 32.9,
+        "measure_time": "2025-10-07T15:30:00+04:00",
+        "relative_humidity": "64",
+        "water_temp": "",
+        "wind_dir": "326",
+        "wind_speed": 19.8,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.43",
+        "air_temp": 32.7,
+        "measure_time": "2025-10-07T15:45:00+04:00",
+        "relative_humidity": "61",
+        "water_temp": "",
+        "wind_dir": "323",
+        "wind_speed": 21.6,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.43",
+        "air_temp": 32.9,
+        "measure_time": "2025-10-07T16:00:00+04:00",
+        "relative_humidity": "62",
+        "water_temp": "",
+        "wind_dir": "326",
+        "wind_speed": 23.4,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.33",
+        "air_temp": 32.7,
+        "measure_time": "2025-10-07T16:15:00+04:00",
+        "relative_humidity": "60",
+        "water_temp": "",
+        "wind_dir": "331",
+        "wind_speed": 24.84,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.33",
+        "air_temp": 32.7,
+        "measure_time": "2025-10-07T16:30:00+04:00",
+        "relative_humidity": "61",
+        "water_temp": "",
+        "wind_dir": "329",
+        "wind_speed": 25.92,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.33",
+        "air_temp": 33,
+        "measure_time": "2025-10-07T16:45:00+04:00",
+        "relative_humidity": "68",
+        "water_temp": "",
+        "wind_dir": "337",
+        "wind_speed": 24.48,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.43",
+        "air_temp": 33.1,
+        "measure_time": "2025-10-07T17:00:00+04:00",
+        "relative_humidity": "67",
+        "water_temp": "",
+        "wind_dir": "336",
+        "wind_speed": 20.88,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.43",
+        "air_temp": 32.9,
+        "measure_time": "2025-10-07T17:15:00+04:00",
+        "relative_humidity": "68",
+        "water_temp": "",
+        "wind_dir": "337",
+        "wind_speed": 21.96,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.43",
+        "air_temp": 32.9,
+        "measure_time": "2025-10-07T17:30:00+04:00",
+        "relative_humidity": "71",
+        "water_temp": "",
+        "wind_dir": "340",
+        "wind_speed": 19.8,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.63",
+        "air_temp": 32.8,
+        "measure_time": "2025-10-07T17:45:00+04:00",
+        "relative_humidity": "72",
+        "water_temp": "",
+        "wind_dir": "340",
+        "wind_speed": 18.36,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.73",
+        "air_temp": 32.4,
+        "measure_time": "2025-10-07T18:00:00+04:00",
+        "relative_humidity": "72",
+        "water_temp": "",
+        "wind_dir": "334",
+        "wind_speed": 20.52,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.83",
+        "air_temp": 32.3,
+        "measure_time": "2025-10-07T18:15:00+04:00",
+        "relative_humidity": "73",
+        "water_temp": "",
+        "wind_dir": "345",
+        "wind_speed": 20.52,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.83",
+        "air_temp": 32.1,
+        "measure_time": "2025-10-07T18:30:00+04:00",
+        "relative_humidity": "72",
+        "water_temp": "",
+        "wind_dir": "348",
+        "wind_speed": 18.36,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1005.93",
+        "air_temp": 32.3,
+        "measure_time": "2025-10-07T18:45:00+04:00",
+        "relative_humidity": "72",
+        "water_temp": "",
+        "wind_dir": "348",
+        "wind_speed": 18.36,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1006.33",
+        "air_temp": 32,
+        "measure_time": "2025-10-07T19:00:00+04:00",
+        "relative_humidity": "72",
+        "water_temp": "",
+        "wind_dir": "323",
+        "wind_speed": 23.4,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1006.43",
+        "air_temp": 31.9,
+        "measure_time": "2025-10-07T19:15:00+04:00",
+        "relative_humidity": "74",
+        "water_temp": "",
+        "wind_dir": "337",
+        "wind_speed": 23.04,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1006.53",
+        "air_temp": 32.1,
+        "measure_time": "2025-10-07T19:30:00+04:00",
+        "relative_humidity": "75",
+        "water_temp": "",
+        "wind_dir": "346",
+        "wind_speed": 21.24,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1006.73",
+        "air_temp": 31.8,
+        "measure_time": "2025-10-07T19:45:00+04:00",
+        "relative_humidity": "73",
+        "water_temp": "",
+        "wind_dir": "330",
+        "wind_speed": 20.52,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1006.73",
+        "air_temp": 32,
+        "measure_time": "2025-10-07T20:00:00+04:00",
+        "relative_humidity": "74",
+        "water_temp": "",
+        "wind_dir": "341",
+        "wind_speed": 19.8,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1006.93",
+        "air_temp": 31.9,
+        "measure_time": "2025-10-07T20:15:00+04:00",
+        "relative_humidity": "74",
+        "water_temp": "",
+        "wind_dir": "333",
+        "wind_speed": 20.88,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1006.93",
+        "air_temp": 31.9,
+        "measure_time": "2025-10-07T20:30:00+04:00",
+        "relative_humidity": "73",
+        "water_temp": "",
+        "wind_dir": "345",
+        "wind_speed": 20.88,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1007.03",
+        "air_temp": 31.7,
+        "measure_time": "2025-10-07T20:45:00+04:00",
+        "relative_humidity": "73",
+        "water_temp": "",
+        "wind_dir": "349",
+        "wind_speed": 21.6,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1007.23",
+        "air_temp": 31.9,
+        "measure_time": "2025-10-07T21:00:00+04:00",
+        "relative_humidity": "73",
+        "water_temp": "",
+        "wind_dir": "336",
+        "wind_speed": 19.44,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1007.23",
+        "air_temp": 31.8,
+        "measure_time": "2025-10-07T21:15:00+04:00",
+        "relative_humidity": "72",
+        "water_temp": "",
+        "wind_dir": "346",
+        "wind_speed": 16.92,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1007.23",
+        "air_temp": 31.5,
+        "measure_time": "2025-10-07T21:30:00+04:00",
+        "relative_humidity": "70",
+        "water_temp": "",
+        "wind_dir": "354",
+        "wind_speed": 16.56,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1007.13",
+        "air_temp": 31.8,
+        "measure_time": "2025-10-07T21:45:00+04:00",
+        "relative_humidity": "72",
+        "water_temp": "",
+        "wind_dir": "344",
+        "wind_speed": 20.52,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1007.13",
+        "air_temp": 31.4,
+        "measure_time": "2025-10-07T22:00:00+04:00",
+        "relative_humidity": "73",
+        "water_temp": "",
+        "wind_dir": "353",
+        "wind_speed": 20.88,
+        "radar_sea_level": "",
+        "sea_level": ""
+      },
+      {
+        "air_pressure": "1007.14",
+        "air_temp": 31.1,
+        "measure_time": "2025-10-07T22:15:00+04:00",
+        "relative_humidity": "73",
+        "water_temp": "",
+        "wind_dir": "359",
+        "wind_speed": 17.64,
+        "radar_sea_level": "",
+        "sea_level": ""
+      }
+    ],
+    "has_tides": true,
+    "sun_moon_monthly": [
+      {
+        "date": "01/10/2025",
+        "sunrise": "2025-10-02T02:13:00+00:00",
+        "sunset": "2025-10-01T14:08:00+00:00",
+        "moonrise": "2025-10-02T10:21:00+00:00",
+        "moonset": "2025-09-30T20:07:00+00:00"
+      },
+      {
+        "date": "02/10/2025",
+        "sunrise": "2025-10-03T02:14:00+00:00",
+        "sunset": "2025-10-02T14:07:00+00:00",
+        "moonrise": "2025-10-03T11:04:00+00:00",
+        "moonset": "2025-10-01T21:06:00+00:00"
+      },
+      {
+        "date": "03/10/2025",
+        "sunrise": "2025-10-04T02:14:00+00:00",
+        "sunset": "2025-10-03T14:06:00+00:00",
+        "moonrise": "2025-10-04T11:43:00+00:00",
+        "moonset": "2025-10-02T22:07:00+00:00"
+      },
+      {
+        "date": "04/10/2025",
+        "sunrise": "2025-10-05T02:15:00+00:00",
+        "sunset": "2025-10-04T14:05:00+00:00",
+        "moonrise": "2025-10-05T12:20:00+00:00",
+        "moonset": "2025-10-03T23:08:00+00:00"
+      },
+      {
+        "date": "05/10/2025",
+        "sunrise": "2025-10-06T02:15:00+00:00",
+        "sunset": "2025-10-05T14:04:00+00:00",
+        "moonrise": "2025-10-06T12:56:00+00:00",
+        "moonset": "2025-10-05T00:09:00+00:00"
+      },
+      {
+        "date": "06/10/2025",
+        "sunrise": "2025-10-07T02:15:00+00:00",
+        "sunset": "2025-10-06T14:03:00+00:00",
+        "moonrise": "2025-10-07T13:31:00+00:00",
+        "moonset": "2025-10-06T01:11:00+00:00"
+      },
+      {
+        "date": "07/10/2025",
+        "sunrise": "2025-10-08T02:16:00+00:00",
+        "sunset": "2025-10-07T14:02:00+00:00",
+        "moonrise": "2025-10-08T14:08:00+00:00",
+        "moonset": "2025-10-07T02:15:00+00:00"
+      },
+      {
+        "date": "08/10/2025",
+        "sunrise": "2025-10-09T02:16:00+00:00",
+        "sunset": "2025-10-08T14:01:00+00:00",
+        "moonrise": "2025-10-09T14:49:00+00:00",
+        "moonset": "2025-10-08T03:21:00+00:00"
+      },
+      {
+        "date": "09/10/2025",
+        "sunrise": "2025-10-10T02:17:00+00:00",
+        "sunset": "2025-10-09T14:00:00+00:00",
+        "moonrise": "2025-10-10T15:35:00+00:00",
+        "moonset": "2025-10-09T04:31:00+00:00"
+      },
+      {
+        "date": "10/10/2025",
+        "sunrise": "2025-10-11T02:17:00+00:00",
+        "sunset": "2025-10-10T13:59:00+00:00",
+        "moonrise": "2025-10-11T16:28:00+00:00",
+        "moonset": "2025-10-10T05:41:00+00:00"
+      },
+      {
+        "date": "11/10/2025",
+        "sunrise": "2025-10-12T02:17:00+00:00",
+        "sunset": "2025-10-11T13:58:00+00:00",
+        "moonrise": "2025-10-12T17:27:00+00:00",
+        "moonset": "2025-10-11T06:51:00+00:00"
+      },
+      {
+        "date": "12/10/2025",
+        "sunrise": "2025-10-13T02:18:00+00:00",
+        "sunset": "2025-10-12T13:58:00+00:00",
+        "moonrise": "2025-10-13T18:31:00+00:00",
+        "moonset": "2025-10-12T07:57:00+00:00"
+      },
+      {
+        "date": "13/10/2025",
+        "sunrise": "2025-10-14T02:18:00+00:00",
+        "sunset": "2025-10-13T13:57:00+00:00",
+        "moonrise": "2025-10-14T19:35:00+00:00",
+        "moonset": "2025-10-13T08:55:00+00:00"
+      },
+      {
+        "date": "14/10/2025",
+        "sunrise": "2025-10-15T02:19:00+00:00",
+        "sunset": "2025-10-14T13:56:00+00:00",
+        "moonrise": null,
+        "moonset": "2025-10-14T09:45:00+00:00"
+      },
+      {
+        "date": "15/10/2025",
+        "sunrise": "2025-10-16T02:19:00+00:00",
+        "sunset": "2025-10-15T13:55:00+00:00",
+        "moonrise": "2025-10-15T20:39:00+00:00",
+        "moonset": "2025-10-15T10:28:00+00:00"
+      },
+      {
+        "date": "16/10/2025",
+        "sunrise": "2025-10-17T02:20:00+00:00",
+        "sunset": "2025-10-16T13:54:00+00:00",
+        "moonrise": "2025-10-16T21:39:00+00:00",
+        "moonset": "2025-10-16T11:04:00+00:00"
+      },
+      {
+        "date": "17/10/2025",
+        "sunrise": "2025-10-18T02:20:00+00:00",
+        "sunset": "2025-10-17T13:53:00+00:00",
+        "moonrise": "2025-10-17T22:36:00+00:00",
+        "moonset": "2025-10-17T11:37:00+00:00"
+      },
+      {
+        "date": "18/10/2025",
+        "sunrise": "2025-10-19T02:21:00+00:00",
+        "sunset": "2025-10-18T13:52:00+00:00",
+        "moonrise": "2025-10-18T23:30:00+00:00",
+        "moonset": "2025-10-18T12:07:00+00:00"
+      },
+      {
+        "date": "19/10/2025",
+        "sunrise": "2025-10-20T02:21:00+00:00",
+        "sunset": "2025-10-19T13:51:00+00:00",
+        "moonrise": "2025-10-20T00:23:00+00:00",
+        "moonset": "2025-10-19T12:36:00+00:00"
+      },
+      {
+        "date": "20/10/2025",
+        "sunrise": "2025-10-21T02:22:00+00:00",
+        "sunset": "2025-10-20T13:50:00+00:00",
+        "moonrise": "2025-10-21T01:14:00+00:00",
+        "moonset": "2025-10-20T13:05:00+00:00"
+      },
+      {
+        "date": "21/10/2025",
+        "sunrise": "2025-10-22T02:22:00+00:00",
+        "sunset": "2025-10-21T13:49:00+00:00",
+        "moonrise": "2025-10-22T02:06:00+00:00",
+        "moonset": "2025-10-21T13:36:00+00:00"
+      },
+      {
+        "date": "22/10/2025",
+        "sunrise": "2025-10-23T02:23:00+00:00",
+        "sunset": "2025-10-22T13:49:00+00:00",
+        "moonrise": "2025-10-23T02:58:00+00:00",
+        "moonset": "2025-10-22T14:09:00+00:00"
+      },
+      {
+        "date": "23/10/2025",
+        "sunrise": "2025-10-24T02:23:00+00:00",
+        "sunset": "2025-10-23T13:48:00+00:00",
+        "moonrise": "2025-10-24T03:52:00+00:00",
+        "moonset": "2025-10-23T14:45:00+00:00"
+      },
+      {
+        "date": "24/10/2025",
+        "sunrise": "2025-10-25T02:24:00+00:00",
+        "sunset": "2025-10-24T13:47:00+00:00",
+        "moonrise": "2025-10-25T04:47:00+00:00",
+        "moonset": "2025-10-24T15:26:00+00:00"
+      },
+      {
+        "date": "25/10/2025",
+        "sunrise": "2025-10-26T02:24:00+00:00",
+        "sunset": "2025-10-25T13:46:00+00:00",
+        "moonrise": "2025-10-26T05:43:00+00:00",
+        "moonset": "2025-10-25T16:12:00+00:00"
+      },
+      {
+        "date": "26/10/2025",
+        "sunrise": "2025-10-27T02:25:00+00:00",
+        "sunset": "2025-10-26T13:46:00+00:00",
+        "moonrise": "2025-10-27T06:37:00+00:00",
+        "moonset": "2025-10-26T17:03:00+00:00"
+      },
+      {
+        "date": "27/10/2025",
+        "sunrise": "2025-10-28T02:25:00+00:00",
+        "sunset": "2025-10-27T13:45:00+00:00",
+        "moonrise": "2025-10-28T07:28:00+00:00",
+        "moonset": "2025-10-27T17:57:00+00:00"
+      },
+      {
+        "date": "28/10/2025",
+        "sunrise": "2025-10-29T02:26:00+00:00",
+        "sunset": "2025-10-28T13:44:00+00:00",
+        "moonrise": "2025-10-29T08:15:00+00:00",
+        "moonset": "2025-10-28T18:54:00+00:00"
+      },
+      {
+        "date": "29/10/2025",
+        "sunrise": "2025-10-30T02:27:00+00:00",
+        "sunset": "2025-10-29T13:43:00+00:00",
+        "moonrise": "2025-10-30T08:58:00+00:00",
+        "moonset": "2025-10-29T19:53:00+00:00"
+      },
+      {
+        "date": "30/10/2025",
+        "sunrise": "2025-10-31T02:27:00+00:00",
+        "sunset": "2025-10-30T13:43:00+00:00",
+        "moonrise": "2025-10-31T09:38:00+00:00",
+        "moonset": null
+      },
+      {
+        "date": "31/10/2025",
+        "sunrise": "2025-11-01T02:28:00+00:00",
+        "sunset": "2025-10-31T13:42:00+00:00",
+        "moonrise": "2025-11-01T10:14:00+00:00",
+        "moonset": "2025-10-30T20:51:00+00:00"
+      }
+    ],
+    "tides_monthly": [
+      {
+        "tide_date": "01/10/2025",
+        "high_time_1": null,
+        "high_value_1": null,
+        "low_time_1": "02:07",
+        "low_value_1": 0.8,
+        "high_time_2": "17:47",
+        "high_value_2": 1.9,
+        "low_time_2": null,
+        "low_value_2": null
+      },
+      {
+        "tide_date": "02/10/2025",
+        "high_time_1": null,
+        "high_value_1": null,
+        "low_time_1": "03:35",
+        "low_value_1": 0.7,
+        "high_time_2": "20:04",
+        "high_value_2": 1.9,
+        "low_time_2": null,
+        "low_value_2": null
+      },
+      {
+        "tide_date": "03/10/2025",
+        "high_time_1": null,
+        "high_value_1": null,
+        "low_time_1": "04:31",
+        "low_value_1": 0.6,
+        "high_time_2": "21:43",
+        "high_value_2": 1.9,
+        "low_time_2": null,
+        "low_value_2": null
+      },
+      {
+        "tide_date": "04/10/2025",
+        "high_time_1": null,
+        "high_value_1": null,
+        "low_time_1": "05:10",
+        "low_value_1": 0.6,
+        "high_time_2": "22:50",
+        "high_value_2": 2,
+        "low_time_2": null,
+        "low_value_2": null
+      },
+      {
+        "tide_date": "05/10/2025",
+        "high_time_1": null,
+        "high_value_1": null,
+        "low_time_1": "05:43",
+        "low_value_1": 0.6,
+        "high_time_2": "23:44",
+        "high_value_2": 2.1,
+        "low_time_2": null,
+        "low_value_2": null
+      },
+      {
+        "tide_date": "06/10/2025",
+        "high_time_1": null,
+        "high_value_1": null,
+        "low_time_1": "06:15",
+        "low_value_1": 0.6,
+        "high_time_2": "12:52",
+        "high_value_2": 2,
+        "low_time_2": "18:24",
+        "low_value_2": 1
+      },
+      {
+        "tide_date": "07/10/2025",
+        "high_time_1": "00:31",
+        "high_value_1": 2.1,
+        "low_time_1": "06:46",
+        "low_value_1": 0.6,
+        "high_time_2": "13:12",
+        "high_value_2": 2.2,
+        "low_time_2": "19:07",
+        "low_value_2": 0.8
+      },
+      {
+        "tide_date": "08/10/2025",
+        "high_time_1": "01:17",
+        "high_value_1": 2.1,
+        "low_time_1": "07:16",
+        "low_value_1": 0.7,
+        "high_time_2": "13:37",
+        "high_value_2": 2.3,
+        "low_time_2": "19:50",
+        "low_value_2": 0.6
+      },
+      {
+        "tide_date": "09/10/2025",
+        "high_time_1": "02:04",
+        "high_value_1": 2,
+        "low_time_1": "07:45",
+        "low_value_1": 0.8,
+        "high_time_2": "14:05",
+        "high_value_2": 2.4,
+        "low_time_2": "20:36",
+        "low_value_2": 0.5
+      },
+      {
+        "tide_date": "10/10/2025",
+        "high_time_1": "02:54",
+        "high_value_1": 1.9,
+        "low_time_1": "08:14",
+        "low_value_1": 0.9,
+        "high_time_2": "14:38",
+        "high_value_2": 2.4,
+        "low_time_2": "21:25",
+        "low_value_2": 0.5
+      },
+      {
+        "tide_date": "11/10/2025",
+        "high_time_1": "03:50",
+        "high_value_1": 1.8,
+        "low_time_1": "08:43",
+        "low_value_1": 1.1,
+        "high_time_2": "15:13",
+        "high_value_2": 2.4,
+        "low_time_2": "22:18",
+        "low_value_2": 0.5
+      },
+      {
+        "tide_date": "12/10/2025",
+        "high_time_1": "04:54",
+        "high_value_1": 1.6,
+        "low_time_1": "09:14",
+        "low_value_1": 1.2,
+        "high_time_2": "15:52",
+        "high_value_2": 2.3,
+        "low_time_2": "23:18",
+        "low_value_2": 0.5
+      },
+      {
+        "tide_date": "13/10/2025",
+        "high_time_1": "06:14",
+        "high_value_1": 1.5,
+        "low_time_1": "09:44",
+        "low_value_1": 1.3,
+        "high_time_2": "16:37",
+        "high_value_2": 2.2,
+        "low_time_2": null,
+        "low_value_2": null
+      },
+      {
+        "tide_date": "14/10/2025",
+        "high_time_1": null,
+        "high_value_1": null,
+        "low_time_1": "00:29",
+        "low_value_1": 0.6,
+        "high_time_2": "17:37",
+        "high_value_2": 2.1,
+        "low_time_2": null,
+        "low_value_2": null
+      },
+      {
+        "tide_date": "15/10/2025",
+        "high_time_1": null,
+        "high_value_1": null,
+        "low_time_1": "01:56",
+        "low_value_1": 0.7,
+        "high_time_2": "19:08",
+        "high_value_2": 1.9,
+        "low_time_2": null,
+        "low_value_2": null
+      },
+      {
+        "tide_date": "16/10/2025",
+        "high_time_1": "11:19",
+        "high_value_1": 1.7,
+        "low_time_1": "03:18",
+        "low_value_1": 0.7,
+        "high_time_2": "20:45",
+        "high_value_2": 1.9,
+        "low_time_2": "15:30",
+        "low_value_2": 1.6
+      },
+      {
+        "tide_date": "17/10/2025",
+        "high_time_1": "11:41",
+        "high_value_1": 1.8,
+        "low_time_1": "04:18",
+        "low_value_1": 0.7,
+        "high_time_2": "22:10",
+        "high_value_2": 1.9,
+        "low_time_2": "17:01",
+        "low_value_2": 1.4
+      },
+      {
+        "tide_date": "18/10/2025",
+        "high_time_1": null,
+        "high_value_1": null,
+        "low_time_1": "05:01",
+        "low_value_1": 0.7,
+        "high_time_2": "12:03",
+        "high_value_2": 2,
+        "low_time_2": null,
+        "low_value_2": null
+      },
+      {
+        "tide_date": "19/10/2025",
+        "high_time_1": null,
+        "high_value_1": null,
+        "low_time_1": "05:34",
+        "low_value_1": 0.8,
+        "high_time_2": "12:23",
+        "high_value_2": 2,
+        "low_time_2": "18:17",
+        "low_value_2": 1.1
+      },
+      {
+        "tide_date": "20/10/2025",
+        "high_time_1": "00:05",
+        "high_value_1": 1.9,
+        "low_time_1": "06:04",
+        "low_value_1": 0.8,
+        "high_time_2": "12:43",
+        "high_value_2": 2.1,
+        "low_time_2": "18:48",
+        "low_value_2": 0.9
+      },
+      {
+        "tide_date": "21/10/2025",
+        "high_time_1": "00:46",
+        "high_value_1": 1.9,
+        "low_time_1": "06:31",
+        "low_value_1": 0.9,
+        "high_time_2": "13:02",
+        "high_value_2": 2.2,
+        "low_time_2": "19:19",
+        "low_value_2": 0.8
+      },
+      {
+        "tide_date": "22/10/2025",
+        "high_time_1": "01:24",
+        "high_value_1": 1.9,
+        "low_time_1": "06:55",
+        "low_value_1": 1,
+        "high_time_2": "13:19",
+        "high_value_2": 2.2,
+        "low_time_2": "19:49",
+        "low_value_2": 0.7
+      },
+      {
+        "tide_date": "23/10/2025",
+        "high_time_1": "02:02",
+        "high_value_1": 1.8,
+        "low_time_1": "07:16",
+        "low_value_1": 1,
+        "high_time_2": "13:36",
+        "high_value_2": 2.3,
+        "low_time_2": "20:19",
+        "low_value_2": 0.7
+      },
+      {
+        "tide_date": "24/10/2025",
+        "high_time_1": "02:40",
+        "high_value_1": 1.8,
+        "low_time_1": "07:34",
+        "low_value_1": 1.1,
+        "high_time_2": "13:55",
+        "high_value_2": 2.3,
+        "low_time_2": "20:51",
+        "low_value_2": 0.6
+      },
+      {
+        "tide_date": "25/10/2025",
+        "high_time_1": "03:19",
+        "high_value_1": 1.7,
+        "low_time_1": "07:51",
+        "low_value_1": 1.2,
+        "high_time_2": "14:16",
+        "high_value_2": 2.3,
+        "low_time_2": "21:24",
+        "low_value_2": 0.6
+      },
+      {
+        "tide_date": "26/10/2025",
+        "high_time_1": "04:00",
+        "high_value_1": 1.6,
+        "low_time_1": "08:10",
+        "low_value_1": 1.2,
+        "high_time_2": "14:38",
+        "high_value_2": 2.3,
+        "low_time_2": "22:02",
+        "low_value_2": 0.6
+      },
+      {
+        "tide_date": "27/10/2025",
+        "high_time_1": "04:48",
+        "high_value_1": 1.5,
+        "low_time_1": "08:31",
+        "low_value_1": 1.3,
+        "high_time_2": "15:01",
+        "high_value_2": 2.2,
+        "low_time_2": "22:46",
+        "low_value_2": 0.6
+      },
+      {
+        "tide_date": "28/10/2025",
+        "high_time_1": "05:50",
+        "high_value_1": 1.4,
+        "low_time_1": "08:51",
+        "low_value_1": 1.3,
+        "high_time_2": "15:29",
+        "high_value_2": 2.2,
+        "low_time_2": "23:41",
+        "low_value_2": 0.7
+      },
+      {
+        "tide_date": "29/10/2025",
+        "high_time_1": "07:32",
+        "high_value_1": 1.4,
+        "low_time_1": "09:01",
+        "low_value_1": 1.4,
+        "high_time_2": "16:04",
+        "high_value_2": 2.1,
+        "low_time_2": null,
+        "low_value_2": null
+      },
+      {
+        "tide_date": "30/10/2025",
+        "high_time_1": null,
+        "high_value_1": null,
+        "low_time_1": "00:47",
+        "low_value_1": 0.7,
+        "high_time_2": "16:54",
+        "high_value_2": 2,
+        "low_time_2": null,
+        "low_value_2": null
+      },
+      {
+        "tide_date": "31/10/2025",
+        "high_time_1": null,
+        "high_value_1": null,
+        "low_time_1": "01:59",
+        "low_value_1": 0.7,
+        "high_time_2": "18:40",
+        "high_value_2": 1.8,
+        "low_time_2": null,
+        "low_value_2": null
+      }
+    ],
+    "location_name_ar": "أبوظبي ",
+    "location_name_en": "Abu Dhabi",
+    "location_lat": 24.472414,
+    "location_lng": 54.36704
+  }
+}

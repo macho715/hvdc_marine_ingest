@@ -1,0 +1,39 @@
+{
+  "tiles": [
+    "https://tiles2.ncm.gov.ae/data/land/{z}/{x}/{y}.pbf"
+  ],
+  "name": "NCM Land",
+  "format": "pbf",
+  "basename": "ncm-land-20231031.mbtiles",
+  "id": "land",
+  "bounds": [
+    -180,
+    -85.05112878,
+    180,
+    83.66658597
+  ],
+  "minzoom": 0,
+  "maxzoom": 12,
+  "type": "baselayer",
+  "profile": "mercator",
+  "center": [
+    17.8,
+    10.6,
+    1.25
+  ],
+  "version": "1.2",
+  "attribution": "Rendered by <a href=\"https://www.ncm.gov.ae\">National Center of Meteorology</a>",
+  "description": "land vector polygons based on OpenStreetMapData [https://osmdata.openstreetmap.de] and imagico [https://imagico.de/services/generalized.php] generalized geodata products",
+  "vector_layers": [
+    {
+      "id": "land",
+      "description": "land vector polygons based on OpenStreetMapData [https://osmdata.openstreetmap.de] and imagico [https://imagico.de/services/generalized.php] generalized geodata products",
+      "minzoom": 0,
+      "maxzoom": 12,
+      "fields": {
+        "fid": "Number"
+      }
+    }
+  ],
+  "tilejson": "2.0.0"
+}

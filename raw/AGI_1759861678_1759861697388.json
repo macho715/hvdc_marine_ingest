@@ -1,0 +1,307 @@
+{
+  "status": 200,
+  "result": {
+    "default_tide_station": 32,
+    "default_buoys_station": 46,
+    "default_aws_station": 26,
+    "default_station": 26,
+    "aStations": [
+      {
+        "ID": "32",
+        "NAME_EN": "Abu Al Abyadh",
+        "NAME_AR": "أبو الأبيض",
+        "TYPE": "TIDE",
+        "LATITUDE": "24.259783",
+        "LONGITUDE": "53.818889"
+      },
+      {
+        "ID": "33",
+        "NAME_EN": "Abu Dhabi",
+        "NAME_AR": "أبوظبي",
+        "TYPE": "TIDE",
+        "LATITUDE": "24.535653",
+        "LONGITUDE": "54.359131"
+      },
+      {
+        "ID": "34",
+        "NAME_EN": "Ghantoot",
+        "NAME_AR": "غنتوت",
+        "TYPE": "TIDE",
+        "LATITUDE": "24.88995",
+        "LONGITUDE": "54.8523861"
+      },
+      {
+        "ID": "35",
+        "NAME_EN": "Jabal Dhana",
+        "NAME_AR": "جبل الظنة",
+        "TYPE": "TIDE",
+        "LATITUDE": "24.182089",
+        "LONGITUDE": "52.567306"
+      },
+      {
+        "ID": "52",
+        "NAME_EN": "Khalifa Port",
+        "NAME_AR": "ميناء خليفة",
+        "TYPE": "TIDE",
+        "LATITUDE": "24.808153",
+        "LONGITUDE": "54.652415"
+      },
+      {
+        "ID": "36",
+        "NAME_EN": "Mirfa",
+        "NAME_AR": "المرفأ",
+        "TYPE": "TIDE",
+        "LATITUDE": "24.100181",
+        "LONGITUDE": "53.491936"
+      },
+      {
+        "ID": "37",
+        "NAME_EN": "Mussafah",
+        "NAME_AR": "مصفح",
+        "TYPE": "TIDE",
+        "LATITUDE": "24.382233",
+        "LONGITUDE": "54.468322"
+      },
+      {
+        "ID": "38",
+        "NAME_EN": "Rahba",
+        "NAME_AR": "الرحبة",
+        "TYPE": "TIDE",
+        "LATITUDE": "24.7012",
+        "LONGITUDE": "54.659044"
+      },
+      {
+        "ID": "39",
+        "NAME_EN": "Ras Ghumais",
+        "NAME_AR": "رأس غميس",
+        "TYPE": "TIDE",
+        "LATITUDE": "24.384442",
+        "LONGITUDE": "51.579442"
+      },
+      {
+        "ID": "40",
+        "NAME_EN": "Shahama",
+        "NAME_AR": "الشهامة",
+        "TYPE": "TIDE",
+        "LATITUDE": "24.510197",
+        "LONGITUDE": "54.631667"
+      },
+      {
+        "ID": "41",
+        "NAME_EN": "Sila",
+        "NAME_AR": "السلع",
+        "TYPE": "TIDE",
+        "LATITUDE": "24.071194",
+        "LONGITUDE": "51.792575"
+      },
+      {
+        "ID": "46",
+        "NAME_EN": "Abu Al Abyad Buoy",
+        "NAME_AR": "عوامة أبو الأبيض",
+        "TYPE": "BUOY",
+        "LATITUDE": "24.2997",
+        "LONGITUDE": "53.6805"
+      },
+      {
+        "ID": "51",
+        "NAME_EN": "Aryla Buoy",
+        "NAME_AR": "عوامة أريله",
+        "TYPE": "BUOY",
+        "LATITUDE": "24.7421",
+        "LONGITUDE": "54.2777"
+      },
+      {
+        "ID": "44",
+        "NAME_EN": "Dabaaiya Buoy",
+        "NAME_AR": "عوامة الضبعية",
+        "TYPE": "BUOY",
+        "LATITUDE": "24.3423",
+        "LONGITUDE": "54.0468"
+      },
+      {
+        "ID": "49",
+        "NAME_EN": "Ghantuat Buoy",
+        "NAME_AR": "عوامة غنتوت",
+        "TYPE": "BUOY",
+        "LATITUDE": "24.965289",
+        "LONGITUDE": "54.6707"
+      },
+      {
+        "ID": "47",
+        "NAME_EN": "Ghasha Buoy",
+        "NAME_AR": "عوامة غشا",
+        "TYPE": "BUOY",
+        "LATITUDE": "24.4708",
+        "LONGITUDE": "52.8743"
+      },
+      {
+        "ID": "42",
+        "NAME_EN": "Khalifa Port Buoy",
+        "NAME_AR": "عوامة ميناء خليفة",
+        "TYPE": "BUOY",
+        "LATITUDE": "24.8764",
+        "LONGITUDE": "54.7276"
+      },
+      {
+        "ID": "50",
+        "NAME_EN": "Qafay Buoy",
+        "NAME_AR": "عوامة القفاي  ",
+        "TYPE": "BUOY",
+        "LATITUDE": "24.5495",
+        "LONGITUDE": "51.9938"
+      },
+      {
+        "ID": "45",
+        "NAME_EN": "Umm Al Dalkh Buoy",
+        "NAME_AR": "عوامة أم الدلخ",
+        "TYPE": "BUOY",
+        "LATITUDE": "24.5388",
+        "LONGITUDE": "53.9193"
+      },
+      {
+        "ID": "48",
+        "NAME_EN": "Yasat Buoy",
+        "NAME_AR": "عوامة الياسات",
+        "TYPE": "BUOY",
+        "LATITUDE": "24.094",
+        "LONGITUDE": "52.2152"
+      },
+      {
+        "ID": "43",
+        "NAME_EN": "Zayed Port Buoy",
+        "NAME_AR": "عوامة ميناء زايد",
+        "TYPE": "BUOY",
+        "LATITUDE": "24.5714",
+        "LONGITUDE": "54.4082"
+      },
+      {
+        "ID": "26",
+        "NAME_EN": "Abu Dhabi corniche",
+        "NAME_AR": "كورنيش أبوظبي",
+        "TYPE": "AWS",
+        "LATITUDE": "24.476028",
+        "LONGITUDE": "54.329027"
+      },
+      {
+        "ID": "386",
+        "NAME_EN": "Ajman",
+        "NAME_AR": "عجمان",
+        "TYPE": "AWS",
+        "LATITUDE": "25.42361",
+        "LONGITUDE": "55.44472"
+      },
+      {
+        "ID": "112",
+        "NAME_EN": "Dalma",
+        "NAME_AR": "دلما",
+        "TYPE": "AWS",
+        "LATITUDE": "24.490592",
+        "LONGITUDE": "52.291426"
+      },
+      {
+        "ID": "31",
+        "NAME_EN": "Dhudna",
+        "NAME_AR": "ضدنا",
+        "TYPE": "AWS",
+        "LATITUDE": "25.5345424",
+        "LONGITUDE": "56.3698173"
+      },
+      {
+        "ID": "413",
+        "NAME_EN": "Fujairah Port",
+        "NAME_AR": "ميناء الفجيرة",
+        "TYPE": "AWS",
+        "LATITUDE": "25.169943",
+        "LONGITUDE": "56.359456"
+      },
+      {
+        "ID": "437",
+        "NAME_EN": "Jumeirah",
+        "NAME_AR": "جميرا",
+        "TYPE": "AWS",
+        "LATITUDE": "25.088796",
+        "LONGITUDE": "55.135467"
+      },
+      {
+        "ID": "474",
+        "NAME_EN": "Khor Fakkan Port",
+        "NAME_AR": "ميناء خورفكان",
+        "TYPE": "AWS",
+        "LATITUDE": "25.357825",
+        "LONGITUDE": "56.363844"
+      },
+      {
+        "ID": "20001",
+        "NAME_EN": "Khor fakkan",
+        "NAME_AR": "خورفكان",
+        "TYPE": "AWS",
+        "LATITUDE": "25.3578239",
+        "LONGITUDE": "56.3638232"
+      },
+      {
+        "ID": "113",
+        "NAME_EN": "Makassib",
+        "NAME_AR": "مكاسب",
+        "TYPE": "AWS",
+        "LATITUDE": "24.664237",
+        "LONGITUDE": "51.821188"
+      },
+      {
+        "ID": "27",
+        "NAME_EN": "Qarnen",
+        "NAME_AR": "قرنين",
+        "TYPE": "AWS",
+        "LATITUDE": "24.938177",
+        "LONGITUDE": "52.8481"
+      },
+      {
+        "ID": "420",
+        "NAME_EN": "Ras Al Khaimah",
+        "NAME_AR": "رأس الخيمة",
+        "TYPE": "AWS",
+        "LATITUDE": "25.771607",
+        "LONGITUDE": "55.939239"
+      },
+      {
+        "ID": "383",
+        "NAME_EN": "Saqr Port",
+        "NAME_AR": "ميناء صقر",
+        "TYPE": "AWS",
+        "LATITUDE": "25.981758",
+        "LONGITUDE": "56.054222"
+      },
+      {
+        "ID": "108",
+        "NAME_EN": "Sir Bani Yas",
+        "NAME_AR": "صير بني ياس",
+        "TYPE": "AWS",
+        "LATITUDE": "24.318756",
+        "LONGITUDE": "52.598961"
+      },
+      {
+        "ID": "126",
+        "NAME_EN": "Sir Bu Nair",
+        "NAME_AR": "صير بو نعير",
+        "TYPE": "AWS",
+        "LATITUDE": "25.220094",
+        "LONGITUDE": "54.234121"
+      },
+      {
+        "ID": "111",
+        "NAME_EN": "Umm Al Quwain",
+        "NAME_AR": "أم القيوين",
+        "TYPE": "AWS",
+        "LATITUDE": "25.530085",
+        "LONGITUDE": "55.654817"
+      },
+      {
+        "ID": "185",
+        "NAME_EN": "Yasat",
+        "NAME_AR": "الياسات",
+        "TYPE": "AWS",
+        "LATITUDE": "24.186493",
+        "LONGITUDE": "51.994983"
+      }
+    ]
+  }
+}

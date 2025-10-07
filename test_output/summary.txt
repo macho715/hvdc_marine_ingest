@@ -1,25 +1,28 @@
 🌊 UAE 해역 해양 날씨 보고서
 ========================================
-생성 시간: 2025-10-07 00:50:32 UTC
+생성 시간: 2025-10-07 19:07:40 UTC
 위치: AGI (Al Ghallan Island)
 예보 기간: 24시간
+실행 모드: OFFLINE
+오프라인 사유: 필수 시크릿 누락: STORMGLASS_API_KEY, WORLDTIDES_API_KEY; NCM Selenium 모듈 미로드
 
 📊 데이터 수집 현황:
-  STORMGLASS: ❌ API 키 없음 (신뢰도: 0.00)
-  OPEN_METEO: ✅ 실제 데이터 (신뢰도: 0.75)
-  NCM_SELENIUM: ✅ 실제 데이터 (신뢰도: 0.70)
-  WORLDTIDES: ❌ API 키 없음 (신뢰도: 0.00)
+  STORMGLASS: ⚠️ 오프라인 모드 (신뢰도: 0.00)
+  OPEN_METEO: ⚠️ 오프라인 모드 (신뢰도: 0.00)
+  NCM_SELENIUM: ⚠️ 오프라인 모드 (신뢰도: 0.00)
+  WORLDTIDES: ⚠️ 오프라인 모드 (신뢰도: 0.00)
+  SYNTHETIC: ✅ 오프라인 합성 데이터 (신뢰도: 0.70)
 
 📈 분석 결과:
-  - 총 데이터 포인트: 72개
-  - 융합 예보: 72개
-  - 평균 ERI: 0.268
-  - 평균 풍속: 11.5 m/s
-  - 평균 파고: 0.58 m
+  - 총 데이터 포인트: 24개
+  - 융합 예보: 24개
+  - 평균 ERI: 0.173
+  - 평균 풍속: 9.3 m/s
+  - 평균 파고: 0.67 m
 
 🚢 운항 판정:
-  - GO: 24회
-  - CONDITIONAL: 3회
-  - NO-GO: 45회
+  - GO: 22회
+  - CONDITIONAL: 2회
+  - NO-GO: 0회
 
-📋 상세 보고서: summary_20251007_0050.json
+📋 상세 보고서: summary_20251007_1907.json

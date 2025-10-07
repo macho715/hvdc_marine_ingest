@@ -1,10 +1,10 @@
 🌊 UAE 해역 해양 날씨 보고서
 ========================================
-생성 시간: 2025-10-07 21:53:22 UTC
+생성 시간: 2025-10-07 23:36:55 UTC
 위치: AGI (Al Ghallan Island)
 예보 기간: 24시간
 실행 모드: OFFLINE
-오프라인 사유: 필수 시크릿 누락: STORMGLASS_API_KEY, WORLDTIDES_API_KEY; NCM Selenium 모듈 미로드
+오프라인 사유: 사용자 지정 오프라인 모드
 
 📊 데이터 수집 현황:
   STORMGLASS: ⚠️ 오프라인 모드 (신뢰도: 0.00)
@@ -25,4 +25,4 @@
   - CONDITIONAL: 2회
   - NO-GO: 0회
 
-📋 상세 보고서: summary_20251007_2153.json
+📋 상세 보고서: summary_20251007_2336.json

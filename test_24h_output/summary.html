@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1 { color: #0066cc; }
+        .section { margin: 20px 0; }
+        .status { padding: 5px; margin: 2px 0; }
+        .success { color: #00aa00; }
+        .warning { color: #ff9900; }
+        .error { color: #cc0000; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #0066cc; color: white; }
+    </style>
+</head>
+<body>
+    <h1>🌊 UAE 해역 해양 날씨 보고서</h1>
+    <div class="section">
+        <p><strong>생성 시간:</strong> 2025-10-07 23:36:55 UTC</p>
+        <p><strong>위치:</strong> AGI (Al Ghallan Island)</p>
+        <p><strong>예보 기간:</strong> 24시간</p>
+        <p><strong>실행 모드:</strong> OFFLINE</p>
+        <p><strong>오프라인 사유:</strong> 사용자 지정 오프라인 모드</p>
+    </div>
+    
+    <div class="section">
+        <h2>📊 데이터 수집 현황</h2>
+        <table>
+            <tr><th>API</th><th>상태</th><th>신뢰도</th></tr>
+            <tr class='warning'><td>STORMGLASS</td><td>⚠️ 오프라인 모드</td><td>0.00</td></tr>
+            <tr class='warning'><td>OPEN_METEO</td><td>⚠️ 오프라인 모드</td><td>0.00</td></tr>
+            <tr class='warning'><td>NCM_SELENIUM</td><td>⚠️ 오프라인 모드</td><td>0.00</td></tr>
+            <tr class='warning'><td>WORLDTIDES</td><td>⚠️ 오프라인 모드</td><td>0.00</td></tr>
+            <tr class='success'><td>SYNTHETIC</td><td>✅ 오프라인 합성 데이터</td><td>0.70</td></tr>
+        </table>
+    </div>
+    
+    <div class="section">
+        <h2>📈 분석 결과</h2>
+        <ul>
+            <li>총 데이터 포인트: 24개</li>
+            <li>융합 예보: 24개</li>
+            <li>평균 ERI: 0.173</li>
+            <li>평균 풍속: 9.3 m/s</li>
+            <li>평균 파고: 0.67 m</li>
+        </ul>
+    </div>
+    
+    <div class="section">
+        <h2>🚢 운항 판정</h2>
+        <ul>
+            <li class="success">GO: 22회</li>
+            <li class="warning">CONDITIONAL: 2회</li>
+            <li class="error">NO-GO: 0회</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <p><em>상세 보고서: summary_20251007_2336.json</em></p>
+    </div>
+</body>
+</html>

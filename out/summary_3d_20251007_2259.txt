@@ -1,0 +1,33 @@
+72h Marine Report (2025-10-07 22:59 +04)
+Alerts: None
+
+Route windows:
+  (none)
+
+AGI dayparts:
+  - D+0 dawn: DATA-MISS
+  - D+0 morning: DATA-MISS
+  - D+0 afternoon: DATA-MISS
+  - D+0 evening: DATA-MISS
+  - D+1 dawn: NO-GO (Hs~0.22 m, Wind~40.8 kt)
+  - D+1 morning: GO (Hs~0.22 m, Wind~16.1 kt)
+  - D+1 afternoon: NO-GO (Hs~0.15 m, Wind~42.7 kt)
+  - D+1 evening: NO-GO (Hs~0.14 m, Wind~44.7 kt)
+  - D+2 dawn: NO-GO (Hs~0.24 m, Wind~46.7 kt)
+  - D+2 morning: NO-GO (Hs~0.29 m, Wind~43.3 kt)
+  - D+2 afternoon: NO-GO (Hs~0.27 m, Wind~27.4 kt)
+  - D+2 evening: NO-GO (Hs~0.20 m, Wind~40.4 kt)
+
+DAS dayparts:
+  - D+0 dawn: DATA-MISS
+  - D+0 morning: DATA-MISS
+  - D+0 afternoon: DATA-MISS
+  - D+0 evening: DATA-MISS
+  - D+1 dawn: NO-GO (Hs~0.26 m, Wind~30.9 kt)
+  - D+1 morning: NO-GO (Hs~0.21 m, Wind~30.8 kt)
+  - D+1 afternoon: NO-GO (Hs~0.18 m, Wind~37.6 kt)
+  - D+1 evening: NO-GO (Hs~0.15 m, Wind~44.7 kt)
+  - D+2 dawn: NO-GO (Hs~0.28 m, Wind~38.3 kt)
+  - D+2 morning: NO-GO (Hs~0.28 m, Wind~49.3 kt)
+  - D+2 afternoon: NO-GO (Hs~0.22 m, Wind~32.0 kt)
+  - D+2 evening: NO-GO (Hs~0.19 m, Wind~42.5 kt)
