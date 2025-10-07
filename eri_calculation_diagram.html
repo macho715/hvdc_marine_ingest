@@ -60,11 +60,21 @@
 </head>
 <body>
     <div class="container">
-        <h1>⚠️ ERI (Environmental Risk Index) 계산 알고리즘</h1>
+        <h1>⚠️ ERI (Environmental Risk Index) 계산 알고리즘 v2.2</h1>
+        
+        <div style="background: #fff3e0; padding: 15px; margin-bottom: 20px; border-radius: 8px; border-left: 5px solid #ff9800;">
+            <strong>⭐ v2.2 업데이트</strong>: DEFAULT_ERI_RULES 상수 추가 + 파일 기반 규칙 병합 지원
+        </div>
         
         <div class="mermaid">
             graph TD
-                A[해양 데이터 입력] --> B{데이터 유효성 검사}
+                A[해양 데이터 입력] --> RULES{ERI 규칙 로드}
+                RULES --> DEFAULT[DEFAULT_ERI_RULES]
+                RULES --> FILE{eri_rules.yaml 존재?}
+                FILE -->|Yes| MERGE[규칙 병합]
+                FILE -->|No| DEFAULT
+                MERGE --> DEFAULT
+                DEFAULT --> B{데이터 유효성 검사}
                 B -->|유효| C[개별 위험도 계산]
                 B -->|무효| D[기본값 할당]
                 D --> C
@@ -238,6 +248,30 @@
                 <li><strong>높은 위험 (0.6 - 0.8)</strong>: 조건부 운항 권장</li>
                 <li><strong>극한 위험 (0.8 - 1.0)</strong>: 운항 금지 권장</li>
             </ul>
+        </div>
+        
+        <div style="background: #e8f5e9; padding: 20px; margin-top: 20px; border-radius: 8px; border-left: 5px solid #4caf50;">
+            <h3>⭐ v2.2 업데이트 내용 (2025-10-07)</h3>
+            <h4>ERI 규칙 시스템 개선</h4>
+            <ul>
+                <li><strong>DEFAULT_ERI_RULES</strong>: 하드코딩된 기본 규칙 상수 추가</li>
+                <li><strong>규칙 병합 로직</strong>: eri_rules.yaml 파일로 기본값 오버라이드 가능</li>
+                <li><strong>안전한 병합</strong>: deepcopy를 사용한 규칙 병합으로 부작용 방지</li>
+                <li><strong>유연성</strong>: 파일 누락 시 기본 규칙으로 자동 복구</li>
+            </ul>
+            
+            <h4>코드 예시</h4>
+            <pre style="background: #263238; color: #aed581; padding: 15px; border-radius: 5px; overflow-x: auto;">
+DEFAULT_ERI_RULES = {
+    "wind": {"thresholds": [10, 15, 20, 25], "weights": [0.2, 0.4, 0.7, 1.0]},
+    "wave": {"thresholds": [1.0, 1.5, 2.0, 2.5], "weights": [0.2, 0.4, 0.7, 1.0]},
+    # ... 7개 해양 변수
+}
+
+def _merge_rules(base, overrides):
+    # eri_rules.yaml의 값으로 기본값 오버라이드
+    return merged_rules
+            </pre>
         </div>
     </div>
 

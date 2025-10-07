@@ -3,9 +3,9 @@
 ## 🎯 현재 완료된 설정
 
 ### ✅ Telegram 설정 (완료)
-- **Bot Token**: `8396276442:AAGGmN1wfEPoCNqXTt7YnN3SXunsK6eULUk`
-- **Chat ID**: `470962761`
-- **테스트 메시지**: 성공적으로 발송됨
+- **Bot Token**: `<YOUR_TELEGRAM_BOT_TOKEN>`
+- **Chat ID**: `<YOUR_TELEGRAM_CHAT_ID>`
+- **테스트 메시지**: 성공적으로 발송됨 (실제 값은 GitHub Secrets에만 저장)
 
 ### ❌ Gmail 설정 (문제 있음)
 - **App Password**: 인증 실패 (535 오류)
@@ -23,22 +23,22 @@
 #### A) Telegram Secrets (즉시 설정 가능)
 ```
 Name: TELEGRAM_BOT_TOKEN
-Value: 8396276442:AAGGmN1wfEPoCNqXTt7YnN3SXunsK6eULUk
+Value: <YOUR_TELEGRAM_BOT_TOKEN>
 
 Name: TELEGRAM_CHAT_ID
-Value: 470962761
+Value: <YOUR_TELEGRAM_CHAT_ID>
 ```
 
 #### B) Gmail Secrets (App Password 재생성 후)
 ```
 Name: MAIL_USERNAME
-Value: mscho715@gmail.com
+Value: <YOUR_GMAIL_ADDRESS>
 
 Name: MAIL_PASSWORD
-Value: [새로운 16자리 App Password]
+Value: <YOUR_16_CHAR_APP_PASSWORD>
 
 Name: MAIL_TO
-Value: mscho715@gmail.com
+Value: <RECIPIENT_EMAIL>
 ```
 
 ## 🚀 테스트 순서

@@ -1,4 +1,4 @@
-# 🚢 NCM Al Bahar 웹 페이지 자동 수집 기능 업데이트 완료
+# 🚢 NCM Al Bahar 웹 페이지 자동 수집 기능 업데이트 완료 v2.2
 
 ## 🎯 업데이트 내용
 
@@ -16,6 +16,20 @@
 - **단위 변환**: 노트 → m/s, 피트 → 미터, 화씨 → 섭씨
 - **방향 매핑**: N, NE, E 등 방향명을 각도로 변환
 - **정규식 추출**: 텍스트에서 숫자 및 단위 자동 인식
+
+### ⭐ 4. Optional Import 지원 (v2.2 신규)
+- **문제**: Selenium 의존성으로 인한 설치 실패
+- **해결**: Optional import 패턴으로 모듈 누락 시에도 시스템 정상 작동
+- **결과**: NCM Selenium 없이도 전체 파이프라인 실행 가능
+
+```python
+try:
+    from ncm_web.ncm_selenium_ingestor import NCMSeleniumIngestor
+    NCM_IMPORT_ERROR = None
+except Exception as e:
+    NCMSeleniumIngestor = None
+    NCM_IMPORT_ERROR = e
+```
 
 ## 🔧 기술적 구현
 
@@ -178,5 +192,26 @@ NCM Al Bahar 해양 관측 페이지의 자동 수집 기능이 성공적으로 
 ✅ **향상된 파싱**: 다양한 데이터 형식 지원  
 ✅ **벡터 DB 연동**: 실시간 검색 및 분석  
 ✅ **자동화 준비**: 크론 스케줄러 및 알림 시스템  
+⭐ **Optional Import**: Selenium 모듈 누락 시에도 시스템 정상 작동 (v2.2)  
+⭐ **Resilience**: NCM 수집 실패 시 자동 모의 데이터 생성 (v2.2)
 
-이제 **"AGI high tide RORO window"** 같은 자연어 질의로 실제 NCM 데이터를 검색하고 분석할 수 있습니다! 🚢⚓
+### ⭐ v2.2 추가 개선사항 (2025-10-07)
+
+#### **시스템 안정성 향상**
+- NCM Selenium 모듈이 없어도 전체 파이프라인 실행 가능
+- NCM 데이터 수집 실패 시 자동 fallback 데이터 생성
+- `NCM_IMPORT_ERROR` 변수로 오류 원인 추적
+
+#### **사용 시나리오**
+```bash
+# Selenium 없이 실행
+pip install -r requirements.txt --exclude selenium webdriver-manager
+python scripts/weather_job.py --mode auto
+# → NCM Selenium 건너뛰고 다른 소스로 실행
+
+# Selenium 있으면 정상 사용
+python scripts/weather_job.py --mode auto
+# → NCM Selenium 포함 모든 소스 수집
+```
+
+이제 **"AGI high tide RORO window"** 같은 자연어 질의로 실제 NCM 데이터를 검색하고 분석할 수 있으며, **Selenium 모듈 없이도 시스템이 안정적으로 작동**합니다! 🚢⚓

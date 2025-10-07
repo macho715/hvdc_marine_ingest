@@ -1,146 +1,120 @@
 #!/usr/bin/env python3
-"""
-KR: 통합된 운항 가능성 예측 데모
-EN: Integrated operability prediction demo
+"""KR: 운항 가능성 예측 데모 / EN: Operability prediction demo."""
 
-이 스크립트는 HVDC 해양 데이터 수집 시스템과 operability_package를 통합하여
-실제 기상 데이터를 기반으로 운항 가능성 예측을 수행합니다.
-"""
-
+import argparse
+import os
 import sys
 import json
 import pandas as pd
 from pathlib import Path
-from datetime import datetime, timedelta
-from typing import List, Dict, Any
+from datetime import datetime, timedelta, timezone
+from typing import Any, Dict, List, Tuple
 
 # 프로젝트 루트를 Python 경로에 추가
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from src.marine_ops.core.schema import MarineTimeseries, MarineDataPoint
-from src.marine_ops.operability.api import OperabilityPredictor, create_operability_report
+from src.marine_ops.core.schema import MarineTimeseries
+from src.marine_ops.operability.api import create_operability_report
 from src.marine_ops.connectors.stormglass import StormglassConnector
 from src.marine_ops.connectors.open_meteo import OpenMeteoConnector
-from src.marine_ops.connectors.worldtides import fetch_worldtides_heights, create_marine_timeseries_from_worldtides
-from src.marine_ops.eri.compute import ERICalculator
+from src.marine_ops.connectors.worldtides import create_marine_timeseries_from_worldtides
+from scripts.offline_support import decide_execution_mode, generate_offline_dataset
 
-def collect_weather_data() -> List[MarineTimeseries]:
-    """실제 기상 데이터 수집"""
+def collect_weather_data(mode: str = "auto") -> Tuple[List[MarineTimeseries], str, List[str]]:
+    """KR: 기상 데이터 수집 / EN: Collect marine weather data."""
+
     print("🌊 기상 데이터 수집 중...")
-    
-    weather_data = []
-    
-    # UAE 해역 좌표 (Dubai 근처)
+
     lat, lon = 25.2048, 55.2708
-    
+    forecast_hours = 24 * 7
+    start_time = datetime.now(timezone.utc)
+    end_time = start_time + timedelta(hours=forecast_hours)
+    required_secrets = ["STORMGLASS_API_KEY", "WORLDTIDES_API_KEY"]
+    missing_secrets = [key for key in required_secrets if not os.getenv(key)]
+    resolved_mode, offline_reasons = decide_execution_mode(mode, missing_secrets, ncm_available=True)
+
+    if resolved_mode == "offline":
+        synthetic_series, _ = generate_offline_dataset("UAE_Waters", forecast_hours)
+        if offline_reasons:
+            print(f"⚠️ 오프라인 모드 전환: {', '.join(offline_reasons)}")
+        return synthetic_series, resolved_mode, offline_reasons
+
+    weather_data: List[MarineTimeseries] = []
+
+    stormglass_key = os.getenv("STORMGLASS_API_KEY", "")
+    if stormglass_key:
+        try:
+            print("  📡 Stormglass API에서 데이터 수집...")
+            sg_connector = StormglassConnector(api_key=stormglass_key)
+            sg_data = sg_connector.get_marine_weather(
+                lat,
+                lon,
+                start_time,
+                end_time,
+                location="UAE_Waters",
+            )
+            if sg_data and sg_data.data_points:
+                weather_data.append(sg_data)
+                print(f"    ✅ {len(sg_data.data_points)}개 데이터 포인트 수집")
+            else:
+                print("    ⚠️ Stormglass 데이터 없음")
+        except Exception as error:
+            print(f"    ❌ Stormglass 오류: {error}")
+    else:
+        print("  ⚠️ Stormglass API 키 없음으로 건너뜀")
+
     try:
-        # Stormglass 데이터 수집
-        print("  📡 Stormglass API에서 데이터 수집...")
-        sg_connector = StormglassConnector()
-        sg_data = sg_connector.get_marine_weather(lat, lon, days=7)
-        if sg_data and sg_data.data_points:
-            weather_data.append(sg_data)
-            print(f"    ✅ {len(sg_data.data_points)}개 데이터 포인트 수집")
-        else:
-            print("    ⚠️ Stormglass 데이터 없음")
-    except Exception as e:
-        print(f"    ❌ Stormglass 오류: {e}")
-    
-    try:
-        # Open-Meteo 데이터 수집
         print("  📡 Open-Meteo API에서 데이터 수집...")
         om_connector = OpenMeteoConnector()
-        om_data = om_connector.get_marine_weather(lat, lon, days=7)
+        om_data = om_connector.get_marine_weather(
+            lat,
+            lon,
+            start_time,
+            end_time,
+            location="UAE_Waters",
+        )
         if om_data and om_data.data_points:
             weather_data.append(om_data)
             print(f"    ✅ {len(om_data.data_points)}개 데이터 포인트 수집")
         else:
             print("    ⚠️ Open-Meteo 데이터 없음")
-    except Exception as e:
-        print(f"    ❌ Open-Meteo 오류: {e}")
-    
-    try:
-        # WorldTides 데이터 수집
-        print("  📡 WorldTides API에서 데이터 수집...")
-        wt_key = "a7b5bd88-041e-4316-8f8e-02670eb44bc7"  # API 키
-        wt_raw = fetch_worldtides_heights(lat, lon, wt_key, hours=168)  # 7일
-        if wt_raw and 'heights' in wt_raw:
-            wt_data = create_marine_timeseries_from_worldtides(wt_raw, lat, lon)
+    except Exception as error:
+        print(f"    ❌ Open-Meteo 오류: {error}")
+
+    worldtides_key = os.getenv("WORLDTIDES_API_KEY", "")
+    if worldtides_key:
+        try:
+            print("  📡 WorldTides API에서 데이터 수집...")
+            wt_data = create_marine_timeseries_from_worldtides(
+                lat,
+                lon,
+                worldtides_key,
+                forecast_hours,
+                "UAE_Waters",
+            )
             if wt_data and wt_data.data_points:
                 weather_data.append(wt_data)
                 print(f"    ✅ {len(wt_data.data_points)}개 데이터 포인트 수집")
             else:
-                print("    ⚠️ WorldTides 데이터 변환 실패")
-        else:
-            print("    ⚠️ WorldTides 데이터 없음")
-    except Exception as e:
-        print(f"    ❌ WorldTides 오류: {e}")
-    
-    print(f"📊 총 {len(weather_data)}개 소스에서 데이터 수집 완료")
-    return weather_data
+                print("    ⚠️ WorldTides 데이터 없음")
+        except Exception as error:
+            print(f"    ❌ WorldTides 오류: {error}")
+    else:
+        print("  ⚠️ WorldTides API 키 없음으로 건너뜀")
 
-def create_synthetic_ensemble_data() -> List[MarineTimeseries]:
-    """합성 앙상블 데이터 생성 (실제 데이터가 부족할 경우)"""
-    print("🎲 합성 앙상블 데이터 생성...")
-    
-    import random
-    import numpy as np
-    from datetime import datetime, timedelta
-    
-    random.seed(42)
-    np.random.seed(42)
-    
-    # 7일간의 시간별 데이터 생성
-    data_points = []
-    base_time = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
-    
-    for day in range(7):
-        for hour in range(0, 24, 3):  # 3시간 간격
-            timestamp = base_time + timedelta(days=day, hours=hour)
-            
-            # 시간과 날짜에 따른 파라미터 변화
-            day_factor = 1 + (day * 0.05)  # 날이 지날수록 조건 악화
-            hour_factor = 1 + 0.1 * np.sin(hour / 4.0)  # 시간에 따른 변화
-            
-            # 파고 (Hs) 생성
-            hs_base = 0.8 + (day * 0.1) * hour_factor
-            hs = max(0.1, np.random.normal(hs_base, 0.2))
-            
-            # 풍속 생성
-            wind_base = 15.0 + (day * 0.5) * hour_factor
-            wind = max(0.5, np.random.normal(wind_base, 3.0))
-            
-            # 풍향 생성
-            wind_dir = np.random.uniform(0, 360)
-            
-            data_point = MarineDataPoint(
-                timestamp=timestamp.isoformat(),
-                wind_speed=wind,
-                wind_direction=wind_dir,
-                wave_height=hs,
-                wave_period=np.random.uniform(6, 12),
-                wave_direction=wind_dir + np.random.uniform(-30, 30),
-                sea_state="Moderate" if hs < 1.5 else "Rough",
-                visibility=np.random.uniform(8, 15),
-                temperature=np.random.uniform(22, 28),
-                confidence=0.7  # 합성 데이터 신뢰도
-            )
-            data_points.append(data_point)
-    
-    # MarineTimeseries 객체 생성
-    synthetic_timeseries = MarineTimeseries(
-        source="synthetic_ensemble",
-        location="UAE_Waters",
-        data_points=data_points,
-        ingested_at=datetime.now().isoformat()
-    )
-    
-    print(f"    ✅ {len(data_points)}개 합성 데이터 포인트 생성")
-    return [synthetic_timeseries]
+    if not weather_data:
+        print("⚠️ 외부 데이터가 없어 합성 데이터로 대체합니다.")
+        synthetic_series, _ = generate_offline_dataset("UAE_Waters", forecast_hours)
+        weather_data = synthetic_series
+        offline_reasons.append("외부 데이터 수집 실패")
+        resolved_mode = "offline"
+
+    print(f"📊 총 {len(weather_data)}개 소스에서 데이터 수집 완료")
+    return weather_data, resolved_mode, offline_reasons
 
 def run_operability_prediction(weather_data: List[MarineTimeseries]) -> Dict[str, Any]:
-    """운항 가능성 예측 실행"""
+    """KR: 운항 가능성 예측 실행 / EN: Run operability prediction."""
     print("🚢 운항 가능성 예측 실행 중...")
     
     # 항로 정보 정의
@@ -166,7 +140,7 @@ def run_operability_prediction(weather_data: List[MarineTimeseries]) -> Dict[str
     return report
 
 def save_results(report: Dict[str, Any], output_dir: Path):
-    """결과 저장"""
+    """KR: 결과 저장 / EN: Persist results."""
     print("💾 결과 저장 중...")
     
     # JSON 보고서 저장
@@ -216,7 +190,7 @@ def save_results(report: Dict[str, Any], output_dir: Path):
         print(f"  ✅ ETA 예측 CSV: {eta_csv_file}")
 
 def print_summary(report: Dict[str, Any]):
-    """결과 요약 출력"""
+    """KR: 결과 요약 출력 / EN: Print result summary."""
     print("\n" + "="*60)
     print("📊 운항 가능성 예측 결과 요약")
     print("="*60)
@@ -247,41 +221,44 @@ def print_summary(report: Dict[str, Any]):
         status = "🟢" if min_p_go > 0.5 else "🟡" if min_p_go > 0.3 else "🔴"
         print(f"  {status} {day}: P(Go) = {min_p_go:.2f}")
 
-def main():
-    """메인 함수"""
+def parse_args() -> argparse.Namespace:
+    """KR: CLI 인자 파싱 / EN: Parse CLI arguments."""
+
+    parser = argparse.ArgumentParser(description="HVDC Marine operability demo")
+    parser.add_argument("--mode", choices=["auto", "online", "offline"], default="auto", help="실행 모드 (auto/online/offline)")
+    parser.add_argument("--output", default="out", help="결과 출력 디렉터리")
+    return parser.parse_args()
+
+
+def main() -> None:
+    """KR: 데모 실행 / EN: Run demo."""
+
+    args = parse_args()
+
     print("🚢 HVDC 해양 운항 가능성 예측 시스템")
-    print("="*50)
-    
-    # 출력 디렉토리 생성
-    output_dir = Path("out")
-    output_dir.mkdir(exist_ok=True)
-    
+    print("=" * 50)
+
+    output_dir = Path(args.output)
+    output_dir.mkdir(exist_ok=True, parents=True)
+
     try:
-        # 1. 기상 데이터 수집
-        weather_data = collect_weather_data()
-        
-        # 실제 데이터가 부족하면 합성 데이터 추가
-        if len(weather_data) == 0 or sum(len(ts.data_points) for ts in weather_data) < 50:
-            print("⚠️ 실제 데이터가 부족하여 합성 데이터를 추가합니다...")
-            synthetic_data = create_synthetic_ensemble_data()
-            weather_data.extend(synthetic_data)
-        
-        # 2. 운항 가능성 예측 실행
+        weather_data, resolved_mode, offline_reasons = collect_weather_data(args.mode)
+        print(f"⚙️ 실행 모드: {resolved_mode}")
+        if offline_reasons:
+            print("  ↳ 사유: " + ", ".join(offline_reasons))
+
         report = run_operability_prediction(weather_data)
-        
-        # 3. 결과 저장
         save_results(report, output_dir)
-        
-        # 4. 요약 출력
         print_summary(report)
-        
+
         print(f"\n✅ 운항 가능성 예측 완료! 결과는 {output_dir} 디렉토리에 저장되었습니다.")
-        
-    except Exception as e:
-        print(f"\n❌ 오류 발생: {e}")
+
+    except Exception as error:
+        print(f"\n❌ 오류 발생: {error}")
         import traceback
         traceback.print_exc()
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

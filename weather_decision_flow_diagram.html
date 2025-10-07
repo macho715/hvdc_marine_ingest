@@ -56,15 +56,28 @@
 </head>
 <body>
     <div class="container">
-        <h1>🌊 해양 날씨 판정 로직 플로우</h1>
+        <h1>🌊 해양 날씨 판정 로직 플로우 v2.2</h1>
         
         <div class="mermaid">
             flowchart TD
-                %% 데이터 수집 단계
-                A[데이터 수집 시작] --> B[Stormglass API]
-                A --> C[Open-Meteo API]
-                A --> D[NCM Selenium]
-                A --> E[WorldTides API]
+                %% 실행 모드 결정 (NEW)
+                START[데이터 수집 시작] --> MODE{실행 모드 결정}
+                MODE -->|auto| CHECK{API 키 확인}
+                MODE -->|online| ONLINE[온라인 모드]
+                MODE -->|offline| OFFLINE[오프라인 모드]
+                
+                CHECK -->|API 키 존재| ONLINE
+                CHECK -->|API 키 누락| OFFLINE
+                
+                %% 온라인 데이터 수집
+                ONLINE --> B[Stormglass API]
+                ONLINE --> C[Open-Meteo API]
+                ONLINE --> D[NCM Selenium]
+                ONLINE --> E[WorldTides API]
+                
+                %% 오프라인 데이터 생성 (NEW)
+                OFFLINE --> SYNTH[합성 데이터 생성]
+                SYNTH --> F[SI 단위 정규화]
                 
                 %% 데이터 전처리
                 B --> F[SI 단위 정규화]
@@ -143,6 +156,16 @@
             <div class="legend-item processing">데이터 처리</div>
             <div class="legend-item decision">판정 로직</div>
             <div class="legend-item output">결과 출력</div>
+        </div>
+        
+        <div style="background: #fff3e0; padding: 20px; margin-top: 20px; border-radius: 8px; border-left: 5px solid #ff9800;">
+            <h3>⭐ v2.2 업데이트 (2025-10-07)</h3>
+            <ul>
+                <li><strong>실행 모드 결정</strong>: auto/online/offline 모드 자동 전환</li>
+                <li><strong>오프라인 모드</strong>: API 키 누락 시 합성 데이터 자동 생성</li>
+                <li><strong>Resilience</strong>: 각 데이터 소스별 독립적 fallback</li>
+                <li><strong>투명성</strong>: execution_mode, offline_reasons 메타데이터 추적</li>
+            </ul>
         </div>
     </div>
 
