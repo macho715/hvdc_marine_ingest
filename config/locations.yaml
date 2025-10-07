@@ -1,0 +1,54 @@
+# 72-hour marine forecast configuration
+
+locations:
+  - id: "AGI"
+    name: "AGI (Al Ghallan)"
+    lat: 25.2111
+    lon: 54.1578
+    description: "HVDC offshore export platform"
+  - id: "DAS"
+    name: "DAS Island"
+    lat: 24.8667
+    lon: 53.7333
+    description: "ADNOC hub"
+
+tz: "Asia/Dubai"
+forecast_hours: 72
+report_times:
+  - "06:00"
+  - "17:00"
+marine_vars:
+  - wave_height
+  - wind_wave_height
+  - swell_wave_height
+  - wave_period
+  - wind_wave_period
+  - swell_wave_period
+  - wave_direction
+  - wind_wave_direction
+  - swell_wave_direction
+  - ocean_current_velocity
+  - sea_surface_temperature
+weather_vars:
+  - wind_speed_10m
+  - wind_gusts_10m
+  - wind_direction_10m
+  - visibility
+thresholds:
+  sea_state:
+    slight: 1.25
+    moderate: 2.5
+    rough: 4.0
+  gate:
+    go:
+      hs_m: 1.0
+      wind_kt: 20.0
+    conditional:
+      hs_m: 1.2
+      wind_kt: 22.0
+alerts:
+  gamma_weights:
+    rough at times: 0.15
+    high seas: 0.30
+    fog: 1.0
+  fog_no_go: true
