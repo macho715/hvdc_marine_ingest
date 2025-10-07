@@ -25,15 +25,14 @@ def decide_execution_mode(requested_mode: str, missing_secrets: Sequence[str], n
     if normalized == "online":
         return "online", reasons
 
-    if os.getenv("CI", "").lower() == "true":
-        reasons.append("CI 환경 자동 전환")
-
+    # Auto 모드: API 키나 NCM이 없을 때만 오프라인으로 전환
     if missing_secrets:
         reasons.append(f"필수 시크릿 누락: {', '.join(missing_secrets)}")
 
     if not ncm_available:
         reasons.append("NCM Selenium 모듈 미로드")
 
+    # CI 환경이라도 API 키가 있으면 온라인으로 실행
     resolved_mode = "offline" if reasons else "online"
     return resolved_mode, reasons
 
