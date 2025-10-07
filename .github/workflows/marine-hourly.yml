@@ -33,8 +33,8 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         
-        # Playwright 브라우저 설치 (Chromium)
-        playwright install chromium
+        # Playwright 브라우저 설치 (Chromium) - Python 모듈로 실행
+        python -m playwright install chromium --with-deps
         
         # Selenium을 위한 시스템 의존성 (폴백용)
         sudo apt-get update
