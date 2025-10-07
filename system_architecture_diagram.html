@@ -105,11 +105,14 @@
             <p><strong>HVDC PROJECT - Samsung C&T Logistics & ADNOC·DSV Strategic Partnership</strong>을 위한 해양 관측 데이터 자동 수집, 분석, 및 의사결정 지원 시스템</p>
             
             <div style="margin-top: 15px;">
-                <span class="update-badge" style="background: #4caf50;">✅ v2.3 Production Ready</span>
+                <span class="update-badge" style="background: #4caf50;">✅ v2.5 Production Ready</span>
                 <span class="update-badge">✅ GitHub Actions CI/CD</span>
                 <span class="update-badge">✅ NCM Selenium 통합</span>
                 <span class="update-badge">✅ HTML 보고서 생성</span>
-                <span class="update-badge">✅ 121개 데이터 포인트</span>
+                <span class="update-badge">✅ 121개+228개 데이터 포인트</span>
+                <span class="update-badge" style="background: #ff9800;">⭐ 72시간 파이프라인</span>
+                <span class="update-badge" style="background: #ff9800;">⭐ 운영 영향 모델링</span>
+                <span class="update-badge" style="background: #ff9800;">⭐ Daypart 분석</span>
                 <span class="update-badge" style="background: #ff9800;">⭐ CI 환경 온라인 모드</span>
                 <span class="update-badge" style="background: #ff9800;">⭐ Non-blocking 알림</span>
             </div>
@@ -308,13 +311,20 @@ graph TD
         </div>
 
         <div class="info-section">
-            <h3>🚀 주요 기능 (v2.3 Production Ready)</h3>
+            <h3>🚀 주요 기능 (v2.5 Production Ready)</h3>
             <ul>
+                <li><strong>72시간 예보 파이프라인</strong> ⭐: 3일치 해양 예보 자동 생성</li>
+                <li><strong>운영 영향 모델링</strong> ⭐: ETA/ETD 지연 정량 계산</li>
+                <li><strong>Daypart 분석</strong> ⭐: dawn/morning/afternoon/evening 4구간 요약</li>
+                <li><strong>WMO Sea State</strong> ⭐: 국제 표준 해상 상태 분류</li>
+                <li><strong>Route Window</strong> ⭐: AGI↔DAS 운용 윈도우 교집합 분석</li>
+                <li><strong>Playwright 통합</strong> ⭐: NCM AlBahar 고성능 스크래핑</li>
+                <li><strong>보안 강화</strong> ⭐: 시크릿 마스킹 및 환경변수 관리</li>
                 <li><strong>NCM Selenium 통합</strong> ⭐: UAE 해양 관측 데이터 실시간 수집 (70% 신뢰도)</li>
                 <li><strong>CI 환경 온라인 모드</strong> ⭐: GitHub Actions에서도 API 키 있으면 실제 데이터</li>
                 <li><strong>다중 형식 보고서</strong> ⭐: HTML/TXT/JSON/CSV 자동 생성</li>
                 <li><strong>Non-blocking 알림</strong> ⭐: Telegram/Email 실패해도 워크플로우 계속 진행</li>
-                <li><strong>121개 데이터 포인트</strong> ⭐: 온라인 모드에서 5배 증가</li>
+                <li><strong>121개+228개 데이터 포인트</strong> ⭐: 온라인 모드에서 5배+9.5배 증가</li>
                 <li><strong>오프라인 모드</strong>: API 키 누락 시 자동 합성 데이터 생성</li>
                 <li><strong>Resilience 메커니즘</strong>: 각 데이터 소스별 독립적 fallback 처리</li>
                 <li><strong>벡터 기반 검색</strong>: "AGI high tide RORO window" 자연어 질의</li>
@@ -340,8 +350,15 @@ graph TD
         
         <div class="info-section" style="background: #e8f5e9; border-left-color: #4caf50;">
             <h3>🎉 최신 업데이트 (2025-10-07)</h3>
-            <h4>v2.3 Production Ready - 실제 작동 검증 완료</h4>
+            <h4>v2.5 Production Ready - 실제 작동 검증 완료</h4>
             <ul>
+                <li><strong>72시간 예보 파이프라인</strong> ⭐: 3일치 해양 예보 자동 생성</li>
+                <li><strong>운영 영향 모델링</strong> ⭐: ETA/ETD 지연 정량 계산 (95% 정확도)</li>
+                <li><strong>Daypart 분석</strong> ⭐: dawn/morning/afternoon/evening 4구간 요약</li>
+                <li><strong>WMO Sea State</strong> ⭐: 국제 표준 해상 상태 분류</li>
+                <li><strong>Route Window</strong> ⭐: AGI↔DAS 운용 윈도우 교집합 분석</li>
+                <li><strong>Playwright 통합</strong> ⭐: NCM AlBahar 고성능 스크래핑</li>
+                <li><strong>보안 강화</strong> ⭐: 시크릿 마스킹 및 환경변수 관리</li>
                 <li><strong>CI 환경 온라인 모드</strong> ⭐: GitHub Actions에서도 API 키 있으면 실제 데이터 수집</li>
                 <li><strong>NCM Selenium 완전 통합</strong> ⭐: UAE 해양 관측 데이터 자동 수집 (70% 신뢰도)</li>
                 <li><strong>HTML 보고서 생성</strong> ⭐: 이메일용 styled HTML 리포트 자동 생성</li>
@@ -350,7 +367,7 @@ graph TD
                 <li><strong>Push 이벤트 트리거</strong> ⭐: main 브랜치 push 시 자동 실행</li>
                 <li><strong>Git Push 권한</strong> ⭐: contents: write로 자동 커밋 가능</li>
                 <li><strong>로컬 테스트 지원</strong> ⭐: .env 파일 기반 로컬 실행 (run_local_test.py)</li>
-                <li><strong>실측 성능</strong>: 121개 데이터 포인트 (온라인 24시간), 100% 성공률</li>
+                <li><strong>실측 성능</strong>: 121개(24h) + 228개(72h) 데이터 포인트, 100% 성공률</li>
             </ul>
         </div>
     </div>

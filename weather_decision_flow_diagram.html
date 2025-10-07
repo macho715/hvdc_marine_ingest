@@ -56,7 +56,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>🌊 해양 날씨 판정 로직 플로우 v2.2</h1>
+        <h1>🌊 해양 날씨 판정 로직 플로우 v2.5</h1>
         
         <div class="mermaid">
             flowchart TD
@@ -159,8 +159,15 @@
         </div>
         
         <div style="background: #fff3e0; padding: 20px; margin-top: 20px; border-radius: 8px; border-left: 5px solid #ff9800;">
-            <h3>⭐ v2.2 업데이트 (2025-10-07)</h3>
+            <h3>⭐ v2.5 업데이트 (2025-10-07)</h3>
             <ul>
+                <li><strong>72시간 예보 파이프라인</strong>: 3일치 해양 예보 자동 생성</li>
+                <li><strong>Daypart 분석</strong>: dawn/morning/afternoon/evening 4구간 요약</li>
+                <li><strong>WMO Sea State</strong>: 국제 표준 해상 상태 분류</li>
+                <li><strong>Route Window</strong>: AGI↔DAS 운용 윈도우 교집합 분석</li>
+                <li><strong>운영 영향 모델링</strong>: ETA/ETD 지연 정량 계산</li>
+                <li><strong>Playwright 통합</strong>: NCM AlBahar 고성능 스크래핑</li>
+                <li><strong>보안 강화</strong>: 시크릿 마스킹 및 환경변수 관리</li>
                 <li><strong>실행 모드 결정</strong>: auto/online/offline 모드 자동 전환</li>
                 <li><strong>오프라인 모드</strong>: API 키 누락 시 합성 데이터 자동 생성</li>
                 <li><strong>Resilience</strong>: 각 데이터 소스별 독립적 fallback</li>

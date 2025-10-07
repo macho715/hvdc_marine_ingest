@@ -34,6 +34,7 @@ from src.marine_ops.core.schema import (
 from src.marine_ops.decision.fusion import ForecastFusion, OperationalDecisionMaker
 from src.marine_ops.eri.compute import ERICalculator
 from scripts.offline_support import decide_execution_mode, generate_offline_dataset
+from scripts.three_day_formatter import ThreeDayFormatter
 
 try:
     from ncm_web.ncm_selenium_ingestor import NCMSeleniumIngestor
@@ -403,7 +404,7 @@ def analyze_weather_data(data: dict) -> dict:
     }
 
 
-def generate_summary_report(data: dict, analysis: dict, output_dir: str) -> dict:
+def generate_summary_report(data: dict, analysis: dict, output_dir: str, use_3day_format: bool = True) -> dict:
     """요약 보고서 생성 / Generate summary report."""
     print("📝 요약 보고서 생성 중...")
 
@@ -461,8 +462,29 @@ def generate_summary_report(data: dict, analysis: dict, output_dir: str) -> dict
     df = pd.DataFrame(csv_data)
     df.to_csv(csv_path, index=False, encoding="utf-8")
 
-    # 텍스트 요약
-    txt_content = f"""🌊 UAE 해역 해양 날씨 보고서
+    # 3-Day GO/NO-GO 포맷 사용
+    if use_3day_format:
+        formatter = ThreeDayFormatter(data["location"])
+        
+        # 시계열 데이터 준비
+        timeseries_for_formatter = []
+        for ts in data.get("timeseries", []):
+            for dp in ts.data_points:
+                ts_str = dp.timestamp if isinstance(dp.timestamp, str) else dp.timestamp.isoformat()
+                timeseries_for_formatter.append({
+                    'timestamp': ts_str,
+                    'wave_height_m': getattr(dp, 'wave_height_m', 0),
+                    'wind_speed_ms': getattr(dp, 'wind_speed_ms', 0),
+                })
+        
+        # Telegram용 메시지
+        txt_content = formatter.generate_telegram_message(summary_json, timeseries_for_formatter)
+        
+        # Email용 HTML
+        html_content = formatter.generate_email_html(summary_json, timeseries_for_formatter)
+    else:
+        # 기존 포맷 (호환성)
+        txt_content = f"""🌊 UAE 해역 해양 날씨 보고서
 ========================================
 생성 시간: {datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC')}
 위치: {data['location']} (Al Ghallan Island)
@@ -470,17 +492,17 @@ def generate_summary_report(data: dict, analysis: dict, output_dir: str) -> dict
 실행 모드: {execution_mode.upper()}
 """
 
-    if data.get('offline_reasons'):
-        txt_content += "오프라인 사유: " + "; ".join(data['offline_reasons']) + "\n"
+        if data.get('offline_reasons'):
+            txt_content += "오프라인 사유: " + "; ".join(data['offline_reasons']) + "\n"
 
-    txt_content += "\n📊 데이터 수집 현황:\n"
+        txt_content += "\n📊 데이터 수집 현황:\n"
 
-    for api_name, status in data["api_status"].items():
-        conf = status.get("confidence", None)
-        conf_txt = f"{conf:.2f}" if isinstance(conf, (int, float)) else "N/A"
-        txt_content += f"  {api_name}: {status['status']} (신뢰도: {conf_txt})\n"
+        for api_name, status in data["api_status"].items():
+            conf = status.get("confidence", None)
+            conf_txt = f"{conf:.2f}" if isinstance(conf, (int, float)) else "N/A"
+            txt_content += f"  {api_name}: {status['status']} (신뢰도: {conf_txt})\n"
 
-    txt_content += f"""
+        txt_content += f"""
 📈 분석 결과:
   - 총 데이터 포인트: {analysis.get('total_data_points', 0):,}개
   - 융합 예보: {analysis.get('fused_forecasts', 0)}개
@@ -496,17 +518,13 @@ def generate_summary_report(data: dict, analysis: dict, output_dir: str) -> dict
 📋 상세 보고서: {json_path.name}
 """
 
-    if resilience_notes:
-        txt_content += "\n🛡️ 시스템 안정화 메모:\n"
-        for note in resilience_notes:
-            txt_content += f"  - {note}\n"
+        if resilience_notes:
+            txt_content += "\n🛡️ 시스템 안정화 메모:\n"
+            for note in resilience_notes:
+                txt_content += f"  - {note}\n"
 
-    txt_path = output_path / "summary.txt"
-    with open(txt_path, "w", encoding="utf-8") as f:
-        f.write(txt_content)
-
-    # HTML 요약 (Email용)
-    html_content = f"""<!DOCTYPE html>
+        # HTML 요약 (Email용) - 기존 포맷
+        html_content = f"""<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -584,13 +602,18 @@ def generate_summary_report(data: dict, analysis: dict, output_dir: str) -> dict
     </div>
 """
     
-    html_content += f"""
+        html_content += f"""
     <div class="section">
         <p><em>상세 보고서: {json_path.name}</em></p>
     </div>
 </body>
 </html>
 """
+    
+    # 파일 저장
+    txt_path = output_path / "summary.txt"
+    with open(txt_path, "w", encoding="utf-8") as f:
+        f.write(txt_content)
     
     html_path = output_path / "summary.html"
     with open(html_path, "w", encoding="utf-8") as f:
