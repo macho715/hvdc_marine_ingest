@@ -58,8 +58,50 @@ jobs:
         echo "  MAIL_TO: ${{ secrets.MAIL_TO != '' && '설정됨' || '없음' }}"
         echo "  STORMGLASS_API_KEY: ${{ secrets.STORMGLASS_API_KEY != '' && '설정됨' || '없음' }}"
         echo "  WORLDTIDES_API_KEY: ${{ secrets.WORLDTIDES_API_KEY != '' && '설정됨' || '없음' }}"
+        echo ""
+        echo "📊 게이트 출력값:"
+        echo "  has_tg: ${{ secrets.TELEGRAM_BOT_TOKEN != '' && secrets.TELEGRAM_CHAT_ID != '' }}"
+        echo "  has_mail: ${{ secrets.MAIL_USERNAME != '' && secrets.MAIL_PASSWORD != '' && secrets.MAIL_TO != '' }}"
+        echo "  has_apis: ${{ secrets.STORMGLASS_API_KEY != '' || secrets.WORLDTIDES_API_KEY != '' }}"
+        
+    # ✅ 시크릿 검증 핑 (데이터 수집 전에 먼저 확인)
+    - name: Telegram ping (secrets validation)
+      if: ${{ steps.gates.outputs.has_tg == 'true' }}
+      run: |
+        echo "🔍 Telegram 시크릿 검증 시작..."
+        
+        # 1. Bot Token 유효성 확인
+        echo "📡 Bot Token 검증 중..."
+        BOT_INFO=$(curl -fsS "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/getMe" || echo '{"ok":false}')
+        echo "Bot Info: $BOT_INFO"
+        
+        if echo "$BOT_INFO" | grep -q '"ok":true'; then
+          echo "✅ Bot Token 유효"
+        else
+          echo "❌ Bot Token 무효 - 새로운 토큰 필요"
+          exit 1
+        fi
+        
+        # 2. Chat ID 권한 확인 (테스트 메시지)
+        echo "📱 Chat ID 검증 중..."
+        PING_RESULT=$(curl -fsS -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+          --data-urlencode "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
+          --data-urlencode "text=🔍 HVDC Marine Weather - 시크릿 검증 성공 ${{ steps.now.outputs.utc }}" \
+          --data-urlencode "parse_mode=HTML" || echo '{"ok":false}')
+        
+        if echo "$PING_RESULT" | grep -q '"ok":true'; then
+          echo "✅ Telegram 시크릿 검증 완료"
+          echo "Response: $PING_RESULT"
+        else
+          echo "❌ Chat ID 권한 오류"
+          echo "Response: $PING_RESULT"
+          exit 1
+        fi
         
     - name: Run marine weather collection
+      env:
+        STORMGLASS_API_KEY: ${{ secrets.STORMGLASS_API_KEY }}
+        WORLDTIDES_API_KEY: ${{ secrets.WORLDTIDES_API_KEY }}
       run: |
         set -eo pipefail
         mkdir -p out
@@ -120,27 +162,18 @@ jobs:
         from: "HVDC Weather Bot <${{ secrets.MAIL_USERNAME }}>"
         html_body: file://out/summary.html
 
-    # ✅ 시크릿 진단 스텝 (시크릿 "사라짐" 문제 해결)
-    - name: Telegram ping (secrets validation)
-      if: ${{ steps.gates.outputs.has_tg == 'true' }}
+    # ✅ 알림 전송 결과 검증
+    - name: Verify notification delivery
+      if: always()
       run: |
-        echo "🔍 Telegram 시크릿 검증 시작..."
+        echo "📊 알림 전송 상태 확인"
+        echo "  Telegram: ${{ steps.gates.outputs.has_tg == 'true' && '활성화' || '비활성화' }}"
+        echo "  Email: ${{ steps.gates.outputs.has_mail == 'true' && '활성화' || '비활성화' }}"
         
-        # 1. Bot Token 유효성 확인
-        echo "📡 Bot Token 검증 중..."
-        BOT_INFO=$(curl -fsS "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/getMe")
-        echo "Bot Info: $BOT_INFO"
-        
-        # 2. Chat ID 권한 확인
-        echo "📱 Chat ID 검증 중..."
-        curl -fsS -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
-          --data-urlencode "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
-          --data-urlencode "text=🔍 HVDC Marine Weather System - 시크릿 검증 성공 ${{ steps.now.outputs.utc }}" \
-          --data-urlencode "parse_mode=HTML" \
-          -o .tg_ping_response.json
-        
-        echo "✅ Telegram 시크릿 검증 완료"
-        echo "Response: $(cat .tg_ping_response.json)"
+        if [ -f .tg_resp.json ]; then
+          echo "  Telegram 응답:"
+          cat .tg_resp.json
+        fi
 
     - name: Upload artifacts (optional)
       uses: actions/upload-artifact@v4
