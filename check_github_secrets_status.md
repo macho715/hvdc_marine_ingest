@@ -18,13 +18,13 @@
 
 | Secret Name | 설정 상태 | 값 예시 |
 |-------------|-----------|---------|
-| `TELEGRAM_BOT_TOKEN` | ❓ 확인 필요 | `8396276442:AAGGmN1wfEPoCNqXTt7YnN3SXunsK6eULUk` |
-| `TELEGRAM_CHAT_ID` | ❓ 확인 필요 | `470962761` |
-| `MAIL_USERNAME` | ❓ 확인 필요 | `mscho715@gmail.com` |
-| `MAIL_PASSWORD` | ❓ 확인 필요 | `svomdxwnvdzedfle` |
-| `MAIL_TO` | ❓ 확인 필요 | `mscho715@gmail.com` |
-| `STORMGLASS_API_KEY` | ❓ 확인 필요 | `[API 키]` |
-| `WORLDTIDES_API_KEY` | ❓ 확인 필요 | `[API 키]` |
+| `TELEGRAM_BOT_TOKEN` | ❓ 확인 필요 | `<YOUR_TELEGRAM_BOT_TOKEN>` |
+| `TELEGRAM_CHAT_ID` | ❓ 확인 필요 | `<YOUR_TELEGRAM_CHAT_ID>` |
+| `MAIL_USERNAME` | ❓ 확인 필요 | `<YOUR_GMAIL_ADDRESS>` |
+| `MAIL_PASSWORD` | ❓ 확인 필요 | `<YOUR_16_CHAR_APP_PASSWORD>` |
+| `MAIL_TO` | ❓ 확인 필요 | `<RECIPIENT_EMAIL>` |
+| `STORMGLASS_API_KEY` | ❓ 확인 필요 | `<STORMGLASS_API_KEY>` |
+| `WORLDTIDES_API_KEY` | ❓ 확인 필요 | `<WORLDTIDES_API_KEY>` |
 
 ### **3단계: Secrets 설정 방법**
 1. **"New repository secret"** 클릭

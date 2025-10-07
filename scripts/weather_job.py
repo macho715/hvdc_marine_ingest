@@ -10,6 +10,8 @@ import json
 import argparse
 from pathlib import Path
 from datetime import datetime, timedelta
+from typing import List
+
 import pandas as pd
 
 # 프로젝트 루트를 Python 경로에 추가
@@ -19,11 +21,18 @@ sys.path.insert(0, str(project_root))
 from src.marine_ops.connectors.stormglass import StormglassConnector, LOCATIONS as SG_LOCATIONS
 from src.marine_ops.connectors.open_meteo import OpenMeteoConnector
 from src.marine_ops.connectors.worldtides import create_marine_timeseries_from_worldtides
-from ncm_web.ncm_selenium_ingestor import NCMSeleniumIngestor
 from src.marine_ops.eri.compute import ERICalculator
 from src.marine_ops.decision.fusion import ForecastFusion, OperationalDecisionMaker
-from src.marine_ops.core.schema import MarineTimeseries, MarineDataPoint, OperationalDecision, ERIPoint
+from src.marine_ops.core.schema import MarineTimeseries, ERIPoint
+from scripts.offline_support import decide_execution_mode, generate_offline_dataset
 
+try:
+    from ncm_web.ncm_selenium_ingestor import NCMSeleniumIngestor
+
+    NCM_IMPORT_ERROR: Exception | None = None
+except Exception as import_error:  # pragma: no cover - import guard
+    NCMSeleniumIngestor = None  # type: ignore[assignment]
+    NCM_IMPORT_ERROR = import_error
 def load_config(config_path: str) -> dict:
     """설정 파일 로드"""
     try:
@@ -37,21 +46,39 @@ def load_config(config_path: str) -> dict:
         print(f"설정 파일을 찾을 수 없습니다: {config_path}")
         return {}
 
-def collect_weather_data(location_name: str = "AGI", forecast_hours: int = 24) -> dict:
+def collect_weather_data(location_name: str = "AGI", forecast_hours: int = 24, mode: str = "auto") -> dict:
     """해양 날씨 데이터 수집"""
     print(f"🌊 {location_name} 해역 날씨 데이터 수집 시작...")
-    
+
     lat, lon = SG_LOCATIONS[location_name]['lat'], SG_LOCATIONS[location_name]['lon']
     now = datetime.now()
     end_date = now + timedelta(hours=forecast_hours)
-    
-    all_timeseries = []
-    api_status = {}
-    
+
+    required_secrets = ["STORMGLASS_API_KEY", "WORLDTIDES_API_KEY"]
+    missing_secrets = [key for key in required_secrets if not os.getenv(key)]
+    resolved_mode, offline_reasons = decide_execution_mode(mode, missing_secrets, NCMSeleniumIngestor is not None)
+
+    if resolved_mode == "offline":
+        synthetic_series, statuses = generate_offline_dataset(location_name, forecast_hours)
+        if offline_reasons:
+            print(f"⚠️ 오프라인 모드 전환: {', '.join(offline_reasons)}")
+        return {
+            'timeseries': synthetic_series,
+            'api_status': statuses,
+            'location': location_name,
+            'forecast_hours': forecast_hours,
+            'collected_at': now.isoformat(),
+            'mode': resolved_mode,
+            'offline_reasons': offline_reasons,
+        }
+
+    all_timeseries: List[MarineTimeseries] = []
+    api_status: dict[str, dict[str, float]] = {}
+
     # API 키 로드
     stormglass_key = os.getenv('STORMGLASS_API_KEY', '')
     worldtides_key = os.getenv('WORLDTIDES_API_KEY', '')
-    
+
     # 1. Stormglass 데이터 수집
     try:
         if stormglass_key:
@@ -69,7 +96,7 @@ def collect_weather_data(location_name: str = "AGI", forecast_hours: int = 24) -
     except Exception as e:
         print(f"❌ Stormglass 수집 실패: {e}")
         api_status['STORMGLASS'] = {'status': '❌ 실패', 'confidence': 0.0}
-    
+
     # 2. Open-Meteo 데이터 수집
     try:
         om_connector = OpenMeteoConnector()
@@ -83,21 +110,26 @@ def collect_weather_data(location_name: str = "AGI", forecast_hours: int = 24) -
     except Exception as e:
         print(f"❌ Open-Meteo 수집 실패: {e}")
         api_status['OPEN_METEO'] = {'status': '❌ 실패', 'confidence': 0.0}
-    
+
     # 3. NCM Selenium 데이터 수집
-    try:
-        ncm_ingestor = NCMSeleniumIngestor(headless=True)
-        ncm_timeseries = ncm_ingestor.create_marine_timeseries(location=location_name, forecast_hours=forecast_hours)
-        all_timeseries.append(ncm_timeseries)
-        api_status['NCM_SELENIUM'] = {
-            'status': '✅ 실제 데이터' if "fallback" not in ncm_timeseries.source else '⚠️ 폴백 데이터', 
-            'confidence': getattr(ncm_timeseries, 'confidence', 0.5)
-        }
-        print(f"✅ NCM Selenium: {len(ncm_timeseries.data_points)}개 데이터 포인트")
-    except Exception as e:
-        print(f"❌ NCM Selenium 수집 실패: {e}")
-        api_status['NCM_SELENIUM'] = {'status': '❌ 실패', 'confidence': 0.0}
-    
+    if NCMSeleniumIngestor is None:
+        api_status['NCM_SELENIUM'] = {'status': '❌ 모듈 누락', 'confidence': 0.0}
+        if NCM_IMPORT_ERROR is not None:
+            print(f"❌ NCM Selenium 로드 실패: {NCM_IMPORT_ERROR}")
+    else:
+        try:
+            ncm_ingestor = NCMSeleniumIngestor(headless=True)
+            ncm_timeseries = ncm_ingestor.create_marine_timeseries(location=location_name, forecast_hours=forecast_hours)
+            all_timeseries.append(ncm_timeseries)
+            api_status['NCM_SELENIUM'] = {
+                'status': '✅ 실제 데이터' if "fallback" not in ncm_timeseries.source else '⚠️ 폴백 데이터',
+                'confidence': getattr(ncm_timeseries, 'confidence', 0.5)
+            }
+            print(f"✅ NCM Selenium: {len(ncm_timeseries.data_points)}개 데이터 포인트")
+        except Exception as e:
+            print(f"❌ NCM Selenium 수집 실패: {e}")
+            api_status['NCM_SELENIUM'] = {'status': '❌ 실패', 'confidence': 0.0}
+
     # 4. WorldTides 데이터 수집 (선택사항)
     if worldtides_key:
         try:
@@ -113,13 +145,23 @@ def collect_weather_data(location_name: str = "AGI", forecast_hours: int = 24) -
             api_status['WORLDTIDES'] = {'status': '⚠️ 크레딧 부족', 'confidence': 0.3}
     else:
         api_status['WORLDTIDES'] = {'status': '❌ API 키 없음', 'confidence': 0.0}
-    
+
+    if not all_timeseries:
+        print("⚠️ 외부 데이터가 없어 합성 데이터로 대체합니다.")
+        synthetic_series, synthetic_status = generate_offline_dataset(location_name, forecast_hours)
+        all_timeseries.extend(synthetic_series)
+        api_status.update(synthetic_status)
+        offline_reasons.append("외부 데이터 수집 실패")
+        resolved_mode = "offline"
+
     return {
         'timeseries': all_timeseries,
         'api_status': api_status,
         'location': location_name,
         'forecast_hours': forecast_hours,
-        'collected_at': now.isoformat()
+        'collected_at': now.isoformat(),
+        'mode': resolved_mode,
+        'offline_reasons': offline_reasons,
     }
 
 def analyze_weather_data(data: dict) -> dict:
@@ -201,21 +243,29 @@ def generate_summary_report(data: dict, analysis: dict, output_dir: str) -> dict
     timestamp = datetime.now().strftime("%Y%m%d_%H%M")
     
     # JSON 요약
+    execution_mode = data.get('mode', 'online')
+    success_sources = sum(1 for status in data['api_status'].values() if '✅' in status['status'])
+    total_sources = max(len(data['api_status']), 1)
+    collection_rate = success_sources / total_sources * 100
     summary_json = {
         'metadata': {
             'generated_at': datetime.now().isoformat(),
             'location': data['location'],
             'forecast_hours': data['forecast_hours'],
-            'system_version': 'v2.1'
+            'system_version': 'v2.1',
+            'execution_mode': execution_mode,
         },
         'api_status': data['api_status'],
         'analysis': analysis,
         'collection_stats': {
             'total_timeseries': len(data['timeseries']),
             'total_data_points': analysis.get('total_data_points', 0),
-            'data_collection_rate': len([s for s in data['api_status'].values() if '✅' in s['status']]) / len(data['api_status']) * 100
+            'data_collection_rate': collection_rate,
         }
     }
+
+    if data.get('offline_reasons'):
+        summary_json['metadata']['offline_reasons'] = data['offline_reasons']
     
     json_path = output_path / f"summary_{timestamp}.json"
     with open(json_path, 'w', encoding='utf-8') as f:
@@ -241,10 +291,14 @@ def generate_summary_report(data: dict, analysis: dict, output_dir: str) -> dict
 생성 시간: {datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC')}
 위치: {data['location']} (Al Ghallan Island)
 예보 기간: {data['forecast_hours']}시간
-
-📊 데이터 수집 현황:
+실행 모드: {execution_mode.upper()}
 """
-    
+
+    if data.get('offline_reasons'):
+        txt_content += "오프라인 사유: " + "; ".join(data['offline_reasons']) + "\n"
+
+    txt_content += "\n📊 데이터 수집 현황:\n"
+
     for api_name, status in data['api_status'].items():
         conf = status.get('confidence', None)
         conf_txt = f"{conf:.2f}" if isinstance(conf, (int, float)) else "N/A"
@@ -289,6 +343,7 @@ def main():
     parser.add_argument('--out', default='out', help='출력 디렉터리')
     parser.add_argument('--location', default='AGI', help='위치 코드')
     parser.add_argument('--hours', type=int, default=24, help='예보 시간')
+    parser.add_argument('--mode', choices=['auto', 'online', 'offline'], default='auto', help='실행 모드 (auto/online/offline)')
     
     args = parser.parse_args()
     
@@ -301,7 +356,7 @@ def main():
         print(f"✅ 설정 로드: {args.config}")
         
         # 날씨 데이터 수집
-        data = collect_weather_data(args.location, args.hours)
+        data = collect_weather_data(args.location, args.hours, args.mode)
         
         # 데이터 분석
         analysis = analyze_weather_data(data)
