@@ -13,9 +13,9 @@ jobs:
   marine-weather:
     runs-on: ubuntu-latest
     
-    # ✅ 워크플로우 권한 설정 (시크릿 접근 권한 명시)
+    # ✅ 워크플로우 권한 설정 (Git push 및 시크릿 접근 권한)
     permissions:
-      contents: read
+      contents: write      # Git push를 위한 쓰기 권한
       actions: read
       secrets: read
 
