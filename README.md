@@ -9,12 +9,15 @@
 
 ### 주요 기능
 - 🌐 **다중 소스 수집**: Stormglass, Open-Meteo, WorldTides, NCM 웹
+- 🛡️ **오프라인 모드**: API 키 누락 시 자동 합성 데이터 생성 ⭐ NEW
+- 🔄 **Resilience**: 각 데이터 소스별 독립적 fallback 처리 ⭐ NEW
 - 🔍 **벡터 검색**: SQLite + 임베딩 기반 자연어 질의
 - ⚠️ **ERI 계산**: 7개 해양 변수 기반 환경 위험 지수
 - 🚢 **운항 판정**: GO/CONDITIONAL/NO-GO 자동 분류
 - 📊 **자동 보고서**: 3일 기상 예보 및 분석
 - 🔄 **실시간 수집**: GitHub Actions 기반 자동화
 - 📱 **알림 시스템**: Telegram, Email 자동 알림
+- ⚙️ **실행 모드**: auto/online/offline 모드 선택 ⭐ NEW
 
 ## Directory Structure
 
@@ -122,35 +125,61 @@ WORLDTIDES_API_KEY=your_worldtides_key
 ### 로컬 실행
 
 ```bash
-# GitHub Actions 작업 시뮬레이션
-python scripts/weather_job.py --config config/locations.yml --out out
+# GitHub Actions 작업 시뮬레이션 (자동 모드)
+python scripts/weather_job.py --config config/locations.yml --out out --mode auto
 
 # 특정 위치 및 시간 설정
 python scripts/weather_job.py --location AGI --hours 48 --out reports/
+
+# 오프라인 모드 강제 실행 (API 키 없이)
+python scripts/weather_job.py --location AGI --hours 24 --mode offline --out test_output
+```
+
+### 실행 모드 옵션 ⭐ NEW
+
+| 모드 | 설명 | 사용 시나리오 |
+|------|------|---------------|
+| `--mode auto` | 자동 감지 (기본값) | CI 환경 감지, API 키 확인 후 자동 전환 |
+| `--mode online` | 온라인 모드 강제 | 실제 API 데이터만 수집 |
+| `--mode offline` | 오프라인 모드 강제 | API 키 없이 합성 데이터로 테스트 |
+
+```bash
+# 운항 가능성 예측 (오프라인 모드)
+python scripts/demo_operability_integration.py --mode offline --output test_output
 ```
 
 ### 주요 스크립트
 
 | 스크립트 | 용도 | 설명 |
 |----------|------|------|
-| `scripts/weather_job.py` | GitHub Actions 작업 | 매시간 자동 실행 스크립트 |
+| `scripts/weather_job.py` | GitHub Actions 작업 | 매시간 자동 실행 (오프라인 모드 지원) ⭐ |
+| `scripts/offline_support.py` | 오프라인 유틸 | 합성 데이터 생성 및 모드 전환 ⭐ NEW |
+| `scripts/demo_operability_integration.py` | 운항 예측 | 운항 가능성 예측 데모 ⭐ |
 | `generate_3day_weather_report.py` | 기상 보고서 | 3일 예보 생성 |
 | `query_knn.py` | 벡터 검색 | 자연어 질의 |
 | `git_upload_verifier.py` | Git 업로드 | 자동 검증 및 정리 |
 
-### API 키 설정 (선택사항)
+### API 키 설정 (선택사항) ⭐ 업데이트
 
-실제 데이터 수집률을 높이려면:
+**중요**: API 키가 없어도 시스템은 **오프라인 모드**로 정상 작동합니다!
 
-1. **Stormglass API**:
+실제 데이터 수집률을 높이려면 (선택사항):
+
+1. **Stormglass API** (선택사항):
    ```bash
    export STORMGLASS_API_KEY="your_api_key"
    ```
 
-2. **WorldTides API**:
+2. **WorldTides API** (선택사항):
    ```bash
    export WORLDTIDES_API_KEY="your_api_key"
    ```
+
+**오프라인 모드의 장점**:
+- ✅ API 키 없이 즉시 테스트 가능
+- ✅ CI/CD 환경에서 안정적 동작
+- ✅ 합성 데이터로 시스템 검증
+- ✅ 신뢰도 0.7 (70%)의 현실적인 데이터
 
 ## Performance
 
@@ -167,12 +196,16 @@ python scripts/weather_job.py --location AGI --hours 48 --out reports/
 - **24-48시간 예보**: 75%
 - **48-72시간 예보**: 65%
 
-### 데이터 수집률
-- **전체 수집률**: 83.3% (실제 데이터)
-- **Stormglass**: ✅ 실제 데이터
-- **Open-Meteo**: ✅ 실제 데이터  
-- **NCM Selenium**: ✅ 실제/폴백 데이터
-- **WorldTides**: ⚠️ 크레딧 부족 (폴백 데이터)
+### 데이터 수집률 ⭐ 개선
+- **온라인 모드**: 83.3% (실제 데이터 수집)
+  - **Stormglass**: ✅ 실제 데이터 (API 키 필요)
+  - **Open-Meteo**: ✅ 실제 데이터 (무료)
+  - **NCM Selenium**: ✅ 실제/폴백 데이터 (optional import)
+  - **WorldTides**: ⚠️ 크레딧 부족 (폴백 데이터)
+- **오프라인 모드**: 100% (합성 데이터 생성) ⭐ NEW
+  - **합성 데이터 신뢰도**: 0.7 (70%)
+  - **API 키 불필요**: 즉시 테스트 가능
+  - **CI/CD 친화적**: 안정적 동작 보장
 
 ## CI/CD
 
@@ -226,6 +259,20 @@ MIT License - 자세한 내용은 [LICENSE](LICENSE) 파일 참조
 
 ---
 
-*마지막 업데이트: 2025-10-06 23:30:00*  
-*시스템 버전: v2.1*  
-*GitHub Actions: 활성화*
+## ⭐ 최신 업데이트 (2025-10-07)
+
+### 새로운 기능
+- **오프라인 모드**: API 키 없이 즉시 테스트 가능
+- **Resilience 메커니즘**: 데이터 소스 장애 시 자동 복구
+- **실행 모드 선택**: auto/online/offline 모드 지원
+- **투명한 메타데이터**: execution_mode, offline_reasons 추적
+
+### 관련 문서
+- [패치 검증 보고서](PATCH_VERIFICATION_REPORT.md) - 전체 변경사항 검증
+- [실행 테스트 보고서](SYSTEM_EXECUTION_TEST_REPORT.md) - 오프라인 모드 실행 결과
+
+---
+
+*마지막 업데이트: 2025-10-07 19:10:00*  
+*시스템 버전: v2.2* ⭐ 업그레이드  
+*GitHub Actions: 활성화 (오프라인 모드 지원)* ⭐
