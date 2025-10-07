@@ -105,7 +105,7 @@ jobs:
       run: |
         set -eo pipefail
         mkdir -p out
-        python scripts/weather_job.py --location "AGI" --hours 24 --out out
+        python scripts/weather_job.py --location "AGI" --hours 24 --mode auto --out out
 
     # ✅ TXT 없으면 HTML→TXT 폴백 생성
     - name: Ensure summary.txt exists
