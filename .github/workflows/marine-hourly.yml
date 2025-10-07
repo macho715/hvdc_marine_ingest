@@ -122,6 +122,7 @@ jobs:
     # ✅ 텔레그램: 4096자 초과 시 sendDocument로 자동 전환, 실패시 로그 남김
     - name: Telegram notify (text or document)
       if: ${{ steps.gates.outputs.has_tg == 'true' }}
+      continue-on-error: true
       env:
         TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         TG_CHAT:  ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -154,6 +155,7 @@ jobs:
 
     - name: Email notify (Gmail SMTP via action)
       if: ${{ steps.gates.outputs.has_mail == 'true' }}
+      continue-on-error: true
       uses: dawidd6/action-send-mail@v6
       with:
         server_address: smtp.gmail.com
