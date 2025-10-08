@@ -137,14 +137,15 @@ def main():
     csv_path = "out/marine_data.csv"
     extract_marine_data_to_csv(str(latest_summary), csv_path)
     
-    # 4. GeoJSON 생성
-    print("\n🗺️ 4단계: GeoJSON 생성 중...")
+    # 4. GeoJSON 생성 (Open-Meteo API 실시간 호출)
+    print("\n🗺️ 4단계: GeoJSON 생성 중 (실시간 API)...")
     subprocess.run([
         sys.executable,
         "VIZ/src/marine_ops/viz/adapter.py",
-        "--wind", csv_path,
         "--out", "out/wind_uv.geojson",
-        "--site", args.location
+        "--site", args.location,
+        "--hours", "72",
+        "--radius_km", "30"
     ], check=True)
     
     # 5. Leaflet 지도 생성
