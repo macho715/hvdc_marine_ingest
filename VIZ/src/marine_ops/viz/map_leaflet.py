@@ -43,6 +43,7 @@ __WIND_GEOJSON__
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/esri-leaflet/dist/esri-leaflet.js"></script>
 <script>
 const SITE   = %(site)s;
 const CENTER = [%(lat).6f, %(lon).6f];
@@ -51,14 +52,25 @@ const WMS_LAYER = %(layer_json)s;
 const WMS_TIME  = %(wms_time)s; // 'current' or ISO8601
 
 const map = L.map('map', { zoomControl: true }).setView(CENTER, 7);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-  maxZoom: 12, attribution:'© OpenStreetMap'
-}).addTo(map);
 
-// Hs (WW3) — WMS tile layer with time
+// 1) Ocean Base (우선) - Esri World Ocean Base
+L.esri.basemapLayer('Oceans').addTo(map);
+
+// 2) OSM (보조) - 필요 시 토글
+const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+  maxZoom: 12, attribution:'© OpenStreetMap'
+});
+
+// Hs (WW3) — WMS tile layer with time + 컬러스케일 강화
 const hs = L.tileLayer.wms(WMS_URL, {
-  layers: WMS_LAYER, format: 'image/png', transparent: true, opacity: 0.68,
-  time: WMS_TIME
+  layers: WMS_LAYER, 
+  format: 'image/png', 
+  transparent: true, 
+  opacity: 0.70,
+  time: WMS_TIME,
+  COLORSCALERANGE: '0,2.5',          // 걸프 평시 가독 범위
+  NUMCOLORBANDS: 40,
+  PALETTE: 'rainbow'
 }).addTo(map);
 
 // Wind arrows — 픽셀 기반 벡터 (줌 안정)
