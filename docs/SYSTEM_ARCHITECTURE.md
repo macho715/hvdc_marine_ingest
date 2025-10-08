@@ -7,17 +7,31 @@
 ## 🏗️ 시스템 아키텍처 개요
 
 ### 핵심 기능
+
+#### v2.7 신규 기능 ⭐
+- **GIS 시각화**: Leaflet + TimeDimension 기반 실시간 바람/파고 지도
+- **Dynamic ML Pipeline**: 설정 기반 RandomForest 학습/예측 (wave_height, ERI 등)
+- **WMS 통합**: WaveWatch3 파고 오버레이 + Open-Meteo 바람 벡터
+- **Pixel-based 벡터**: 줌 안정적 화살표 렌더링 (latLngToLayerPoint)
+- **cmocean 팔레트**: 3단 색상 분류 (해양 과학 표준)
+
+#### v2.6 기능
+- **3-Day GO/NO-GO**: Impact-Based Forecast (IBFWS) 원칙 적용
+- **일별 운항 윈도우**: D0/D+1/D+2 연속 윈도우 자동 탐지
+- **WMO/NOAA 표준**: Sea State Code 3700 + Small Craft Advisory
+
+#### 기존 핵심 기능
 - **다중 소스 데이터 수집**: Stormglass, Open-Meteo, WorldTides, NCM Al Bahar
-- **온라인/오프라인 자동 전환**: API 키 유무에 따라 자동 모드 전환 ⭐ v2.3
-- **CI 환경 온라인 모드**: GitHub Actions에서도 API 키 있으면 실제 데이터 수집 ⭐ v2.3
+- **온라인/오프라인 자동 전환**: API 키 유무에 따라 자동 모드 전환
+- **CI 환경 온라인 모드**: GitHub Actions에서도 API 키 있으면 실제 데이터 수집
 - **Resilience 메커니즘**: 각 데이터 소스별 독립적 fallback 처리
-- **NCM Selenium 통합**: 실제 UAE 해양 관측 데이터 자동 수집 (신뢰도 70%) ⭐ v2.3
+- **NCM Selenium 통합**: 실제 UAE 해양 관측 데이터 자동 수집 (신뢰도 70%)
 - **벡터 기반 검색**: SQLite-vec + sentence-transformers
 - **자연어 질의**: LLM 기반 해양 조건 분석
 - **운항 판정**: GO/CONDITIONAL/NO-GO 자동 분류
-- **다중 형식 보고서**: HTML/TXT/JSON/CSV 자동 생성 ⭐ v2.3
-- **실시간 알림**: Telegram/Email 통합 (파일 존재 확인) ⭐ v2.3
-- **GitHub Actions CI/CD**: 매시간 자동 실행 + push 이벤트 트리거 ⭐ v2.3
+- **다중 형식 보고서**: HTML/TXT/JSON/CSV 자동 생성
+- **실시간 알림**: Telegram/Email 통합 (파일 존재 확인)
+- **GitHub Actions CI/CD**: 매시간 자동 실행 + push 이벤트 트리거
 - **신뢰도 기반 데이터 품질 관리**: confidence 필드로 데이터 신뢰도 추적
 - **실행 모드 선택**: auto/online/offline 모드 지원
 
@@ -498,4 +512,59 @@ C:\Users\jichu\Downloads\hvdc_marine_ingest\
 
 ---
 
+## 🗺️ GIS 시각화 모듈 (v2.7 신규)
+
+### 개요
+Leaflet + TimeDimension 기반 실시간 해양 데이터 시각화. Open-Meteo API와 WMS를 통합하여 바람 벡터와 파고를 지도에 표시합니다.
+
+### 구조
+```
+VIZ/
+├── src/marine_ops/viz/
+│   ├── adapter.py          # API → GeoJSON (u/v 벡터)
+│   ├── map_leaflet.py      # Leaflet HTML 생성
+│   ├── map_windy.py        # Windy Map 임베드
+│   └── screenshot.py       # Playwright 스크린샷
+├── map_optionA_ww3.html    # WMS + 시간 동기화 ⭐
+├── map_final_working.html  # 100% 작동 보장 ⭐
+└── out/                    # GeoJSON, HTML, PNG
+```
+
+### 핵심 기술
+- **Pixel-based vectors**: latLngToLayerPoint로 줌 안정
+- **WMS integration**: WaveWatch3 파고 오버레이
+- **Time synchronization**: TimeDimension ↔ Open-Meteo
+- **Basemap fallback**: Esri Oceans → OSM (tileerror)
+- **cmocean palette**: 3-tier color classification
+
+---
+
+## 🤖 Dynamic ML 파이프라인 (v2.7 신규)
+
+### 개요
+설정 기반 RandomForest 회귀. 과거 데이터 + 실시간 융합 → 7일 예측 + z-score 이상탐지.
+
+### 주요 함수
+```python
+# 학습
+train_dynamic_model(history, recent, target, features, cache)
+→ ForecastArtifacts (model, rmse, metrics)
+
+# 예측
+predict_long_range_dynamic(artifacts, frames, 168h)
+→ dict[location, DataFrame]
+
+# 이상탐지
+detect_dynamic_anomalies(artifacts, threshold=3.0σ)
+→ DataFrame (observed, predicted, z_score)
+```
+
+### 동작 모드
+- **Dynamic**: ML 설정 있음 → train_dynamic_model
+- **Legacy**: ML 설정 없음 → train_model (역호환)
+
+---
+
 이 아키텍처는 **HVDC PROJECT**의 해양 물류 운영을 위한 완전 자동화된 지능형 시스템으로, 실시간 데이터 수집부터 AI 기반 의사결정 지원까지 전 과정을 통합 관리합니다.
+
+**최종 업데이트**: 2025-10-08 (v2.7) - GIS 시각화 + Dynamic ML 추가

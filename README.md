@@ -7,15 +7,22 @@
 
 통합 해양 날씨 데이터 수집 및 분석 시스템으로, 다중 소스에서 해양 기상 데이터를 수집하여 ERI(Environmental Risk Index)를 계산하고 3일치 운항 판정을 제공합니다.
 
-### 주요 기능 (v2.6 Production Ready)
+### 주요 기능 (v2.7 Production Ready)
 
-#### 🆕 v2.6 신규 기능
-- 🌊 **3-Day GO/NO-GO Format**: Impact-Based Forecast (IBFWS) 원칙 적용 ⭐
-- 📅 **일별 운항 윈도우**: D0/D+1/D+2 연속 윈도우 자동 탐지 ⭐
-- 📊 **WMO/NOAA 표준**: Sea State Code 3700 + Small Craft Advisory ⭐
-- 📱 **Telegram 최적화**: 한눈에 보는 3일 운항 가능성 ⭐
-- 📧 **Email HTML**: 깔끔한 포맷 + 참조 문헌 ⭐
-- 🤖 **ML 장기 예측**: RandomForest 기반 7일 ERI 추정 + 이상 탐지 ⭐
+#### 🆕 v2.7 신규 기능
+- 🗺️ **GIS 시각화**: Leaflet 기반 실시간 바람/파고 지도 + TimeDimension ⭐
+- 🤖 **Dynamic ML Pipeline**: 설정 기반 RandomForest 학습/예측 (wave_height, ERI 등) ⭐
+- 📊 **WMS 통합**: WaveWatch3 파고 오버레이 + Open-Meteo 바람 벡터 ⭐
+- 🎨 **cmocean 팔레트**: 3단 색상 분류 (저/중/고) ⭐
+- 🔧 **Pixel-based 벡터**: 줌 안정적 바람 화살표 렌더링 ⭐
+
+#### v2.6 기능
+- 🌊 **3-Day GO/NO-GO Format**: Impact-Based Forecast (IBFWS) 원칙 적용
+- 📅 **일별 운항 윈도우**: D0/D+1/D+2 연속 윈도우 자동 탐지
+- 📊 **WMO/NOAA 표준**: Sea State Code 3700 + Small Craft Advisory
+- 📱 **Telegram 최적화**: 한눈에 보는 3일 운항 가능성
+- 📧 **Email HTML**: 깔끔한 포맷 + 참조 문헌
+- 🤖 **ML 장기 예측**: RandomForest 기반 7일 ERI 추정 + 이상 탐지
 
 #### v2.5 기능
 - 🌊 **72시간 예보 파이프라인**: 3일치 해양 예보 자동 생성
@@ -64,8 +71,15 @@ python scripts/weather_job.py --location AGI --hours 24 --mode offline --out out
 # 온라인 모드 (API 키 필요)
 python scripts/weather_job.py --location AGI --hours 24 --mode online --out out
 
-# 72시간 예보
+# 72시간 예보 (Dynamic ML)
 python scripts/weather_job_3d.py --mode offline --out out
+
+# GIS 시각화 (⭐ v2.7 신규)
+python VIZ/src/marine_ops/viz/adapter.py --site AGI --out VIZ/out/wind_uv.geojson
+python VIZ/src/marine_ops/viz/map_leaflet.py --geo VIZ/out/wind_uv.geojson --out VIZ/out/map.html
+
+# 통합 실행 (데이터 수집 + GIS 생성)
+python scripts/run_integrated_viz.py --location AGI --out out
 ```
 
 ### 출력 예시 (v2.6 3-Day Format)
@@ -162,6 +176,19 @@ WORLDTIDES_API_KEY=your_key  # 선택
 - [시스템 아키텍처](docs/system_architecture_diagram.html)
 - [ERI 계산](docs/eri_calculation_diagram.html)
 
+#### GIS 시각화 (⭐ v2.7)
+- [VIZ 모듈 README](VIZ/README.md) - 빠른 시작 가이드
+- [Option A - WW3 WMS](VIZ/map_optionA_ww3.html) - 시간 동기화 고급 버전
+- [Final Working](VIZ/map_final_working.html) - 100% 작동 보장
+- [옵션 비교](VIZ/OPTION_COMPARISON.md) - 6개 버전 비교
+- [패치 검증](VIZ/PATCH_VERIFICATION.md) - 가이드 적용 검증
+- [최종 상태](VIZ/FINAL_STATUS.md) - 서버 상태 및 대안
+
+#### Dynamic ML (⭐ v2.7)
+- [ML 예측 가이드 (EN)](docs/en/ml_forecast.md)
+- [ML 예측 가이드 (KR)](docs/kr/ml_forecast.md)
+- [PR #7 해결](VIZ/PR7_RESOLUTION.md) - 충돌 해결 및 테스트
+
 #### 문제 해결
 - [GitHub Actions 문제 해결](docs/GITHUB_ACTIONS_FIX.md)
 - [시크릿 관리](docs/SECRETS_TROUBLESHOOTING_GUIDE.md)
@@ -173,10 +200,16 @@ MIT License
 
 ---
 
-**시스템 버전**: v2.6 Production Ready ⭐  
-**최신 업데이트**: 2025-10-07  
+**시스템 버전**: v2.7 Production Ready ⭐  
+**최신 업데이트**: 2025-10-08  
 **상태**: 🟢 All Systems Operational  
 **GitHub Actions**: ✅ 자동 실행 중
 
 *3-Day GO/NO-GO 포맷으로 매시간 해양 운항 조건을 자동으로 분석하여 Telegram 및 Email로 전송합니다.*
+
+### 🆕 v2.7 Features
+- **GIS Visualization**: Real-time wind/wave maps with Leaflet + TimeDimension
+- **Dynamic ML**: Config-driven RandomForest forecasting (7-day horizon)
+- **WMS Integration**: WaveWatch3 wave height overlay + Open-Meteo wind vectors
+- **Production Ready**: 100% working alternatives + diagnostic tools
 
