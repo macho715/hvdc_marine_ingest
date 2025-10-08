@@ -126,9 +126,24 @@ def collect_weather_data(location_name: str = "AGI", forecast_hours: int = 24, m
     now = datetime.now()
     end_date = now + timedelta(hours=forecast_hours)
 
-    required_secrets = ["STORMGLASS_API_KEY", "WORLDTIDES_API_KEY"]
-    missing_secrets = [key for key in required_secrets if not os.getenv(key)]
-    resolved_mode, offline_reasons = decide_execution_mode(mode, missing_secrets, NCMSeleniumIngestor is not None)
+    mandatory_secrets = ["STORMGLASS_API_KEY"]
+    optional_secrets = ["WORLDTIDES_API_KEY"]
+
+    missing_mandatory = [key for key in mandatory_secrets if not os.getenv(key)]
+    missing_optional = [key for key in optional_secrets if not os.getenv(key)]
+
+    resolved_mode, offline_reasons = decide_execution_mode(
+        mode,
+        missing_mandatory,
+        NCMSeleniumIngestor is not None,
+    )
+
+    if missing_optional:
+        print(
+            "ℹ️ 선택 시크릿 누락: "
+            + ", ".join(missing_optional)
+            + " (실제 데이터 수집은 계속 진행됩니다)"
+        )
 
     if resolved_mode == "offline":
         synthetic_series, statuses = generate_offline_dataset(location_name, forecast_hours)
