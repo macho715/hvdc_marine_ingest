@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>보고서 생성 로직 플로우차트 - v2.3</title>
+    <title>보고서 생성 로직 플로우차트 - v2.7 (GIS + ML 통합)</title>
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
     <style>
         body {
@@ -80,10 +80,17 @@
         
         <div class="info-box">
             <h3>시스템 정보</h3>
-            <p><strong>버전:</strong> v2.3 Production Ready</p>
-            <p><strong>파일:</strong> scripts/weather_job.py</p>
-            <p><strong>함수:</strong> generate_summary_report(data, analysis, output_dir)</p>
-            <p><strong>출력:</strong> 4가지 형식 (JSON, CSV, TXT, HTML)</p>
+            <p><strong>버전:</strong> v2.7 Production Ready</p>
+            <p><strong>파일:</strong> scripts/weather_job.py, weather_job_3d.py</p>
+            <p><strong>함수:</strong> generate_summary_report(), render_html_3d(), write_side_outputs()</p>
+            <p><strong>출력:</strong> 4가지 형식 (JSON, CSV, TXT, HTML) + GIS Maps + ML Forecasts</p>
+        </div>
+        
+        <div class="info-box" style="background: #e1f5fe; border-left-color: #2196f3;">
+            <h3>⭐ v2.7 신규 출력</h3>
+            <p><strong>GIS:</strong> map_leaflet.html (Leaflet 지도), wind_uv.geojson (108 vectors), screenshots</p>
+            <p><strong>ML:</strong> summary_3d_*_ml.csv (7-day predictions), anomaly alerts (z-score)</p>
+            <p><strong>통합:</strong> run_integrated_viz.py (데이터 수집 + GIS + ML 한 번에)</p>
         </div>
 
         <!-- 전체 파이프라인 -->

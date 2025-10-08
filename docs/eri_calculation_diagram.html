@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ERI 계산 알고리즘 다이어그램</title>
+    <title>ERI 계산 알고리즘 다이어그램 - v2.7 (Dynamic ML 통합)</title>
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
     <style>
         body {
@@ -60,10 +60,14 @@
 </head>
 <body>
     <div class="container">
-        <h1>⚠️ ERI (Environmental Risk Index) 계산 알고리즘 v2.2</h1>
+        <h1>⚠️ ERI (Environmental Risk Index) 계산 알고리즘 v2.7</h1>
+        
+        <div style="background: #e1f5fe; padding: 15px; margin-bottom: 20px; border-radius: 8px; border-left: 5px solid #2196f3;">
+            <strong>⭐ v2.7 업데이트</strong>: Dynamic ML 예측 통합 + GIS 시각화 + z-score 이상탐지
+        </div>
         
         <div style="background: #fff3e0; padding: 15px; margin-bottom: 20px; border-radius: 8px; border-left: 5px solid #ff9800;">
-            <strong>⭐ v2.2 업데이트</strong>: DEFAULT_ERI_RULES 상수 추가 + 파일 기반 규칙 병합 지원
+            <strong>v2.2 기능</strong>: DEFAULT_ERI_RULES 상수 + 파일 기반 규칙 병합
         </div>
         
         <div class="mermaid">
@@ -250,28 +254,60 @@
             </ul>
         </div>
         
-        <div style="background: #e8f5e9; padding: 20px; margin-top: 20px; border-radius: 8px; border-left: 5px solid #4caf50;">
-            <h3>⭐ v2.2 업데이트 내용 (2025-10-07)</h3>
-            <h4>ERI 규칙 시스템 개선</h4>
+        <div style="background: #e1f5fe; padding: 20px; margin-top: 20px; border-radius: 8px; border-left: 5px solid #2196f3;">
+            <h3>⭐ v2.7 업데이트 내용 (2025-10-08)</h3>
+            
+            <h4>1. Dynamic ML 예측 통합</h4>
             <ul>
-                <li><strong>DEFAULT_ERI_RULES</strong>: 하드코딩된 기본 규칙 상수 추가</li>
-                <li><strong>규칙 병합 로직</strong>: eri_rules.yaml 파일로 기본값 오버라이드 가능</li>
-                <li><strong>안전한 병합</strong>: deepcopy를 사용한 규칙 병합으로 부작용 방지</li>
-                <li><strong>유연성</strong>: 파일 누락 시 기본 규칙으로 자동 복구</li>
+                <li><strong>train_dynamic_model</strong>: 설정 기반 RandomForest 학습 (256 trees)</li>
+                <li><strong>predict_long_range_dynamic</strong>: 7일 장기 예측 (168시간)</li>
+                <li><strong>detect_dynamic_anomalies</strong>: z-score 3.0σ 기반 이상탐지</li>
+                <li><strong>유연한 타겟</strong>: ERI, wave_height, wind_speed 등 모든 숫자 컬럼</li>
             </ul>
             
-            <h4>코드 예시</h4>
+            <h4>2. GIS 시각화</h4>
+            <ul>
+                <li><strong>Leaflet Maps</strong>: 실시간 바람 화살표 + 파고 WMS</li>
+                <li><strong>Pixel-based vectors</strong>: latLngToLayerPoint (줌 안정)</li>
+                <li><strong>TimeDimension</strong>: 72시간 시계열 슬라이더</li>
+                <li><strong>6가지 버전</strong>: Option A (시간 동기화) ~ Final Working (100% 작동)</li>
+            </ul>
+            
+            <h4>코드 예시 (Dynamic ML)</h4>
             <pre style="background: #263238; color: #aed581; padding: 15px; border-radius: 5px; overflow-x: auto;">
-DEFAULT_ERI_RULES = {
-    "wind": {"thresholds": [10, 15, 20, 25], "weights": [0.2, 0.4, 0.7, 1.0]},
-    "wave": {"thresholds": [1.0, 1.5, 2.0, 2.5], "weights": [0.2, 0.4, 0.7, 1.0]},
-    # ... 7개 해양 변수
-}
+# Dynamic ML Training
+train_dynamic_model(
+    history_source="data/historical.csv",
+    recent_frames=fused_frames,
+    target_column="wave_height",
+    feature_columns=["hs_value", "wind_value", "eri_value"],
+    cache_path="cache/ml_dynamic.joblib"
+)
 
-def _merge_rules(base, overrides):
-    # eri_rules.yaml의 값으로 기본값 오버라이드
-    return merged_rules
+# 7-day Prediction
+predict_long_range_dynamic(
+    artifacts=model_artifacts,
+    recent_frames=fused_frames,
+    horizon_hours=168,  # 7 days
+    tz="Asia/Dubai"
+)
+
+# Anomaly Detection
+detect_dynamic_anomalies(
+    artifacts=model_artifacts,
+    threshold=3.0  # z-score σ
+)
             </pre>
+        </div>
+        
+        <div style="background: #e8f5e9; padding: 20px; margin-top: 20px; border-radius: 8px; border-left: 5px solid #4caf50;">
+            <h3>v2.2 기능 (기존)</h3>
+            <h4>ERI 규칙 시스템</h4>
+            <ul>
+                <li><strong>DEFAULT_ERI_RULES</strong>: 하드코딩된 기본 규칙 상수</li>
+                <li><strong>규칙 병합 로직</strong>: eri_rules.yaml 파일로 오버라이드</li>
+                <li><strong>안전한 병합</strong>: deepcopy 기반</li>
+            </ul>
         </div>
     </div>
 

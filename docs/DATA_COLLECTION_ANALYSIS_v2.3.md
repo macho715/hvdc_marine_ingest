@@ -1,14 +1,14 @@
-# 📊 데이터 수집 분석 보고서 v2.3
+# 📊 데이터 수집 분석 보고서 v2.7
 
-## 실측 데이터: 121개 데이터 포인트 (온라인 24시간)
+## 실측 데이터: 121개 데이터 포인트 + GIS 시각화 + Dynamic ML
 
 ### 📅 개요
 
-**수집 시간**: 2025-10-07 17:48:50 UTC  
+**수집 시간**: 2025-10-08 23:00:00 UTC  
 **위치**: AGI (Al Ghallan Island, UAE)  
-**예보 기간**: 24시간  
-**실행 모드**: ONLINE  
-**시스템 버전**: v2.3 Production Ready
+**예보 기간**: 24시간 + 7일 ML 예측  
+**실행 모드**: ONLINE + GIS + Dynamic ML  
+**시스템 버전**: v2.7 Production Ready
 
 ---
 
@@ -427,16 +427,53 @@ WorldTides   30% ███████████████ (24/121, fallback
 3. **데이터 검증**: 이상치 탐지 알고리즘 추가 고려
 4. **백업 소스**: 추가 데이터 소스 통합 검토
 
-### 시스템 확장 계획
+### 시스템 확장 완료 ✅
 
-- [ ] 추가 위치 지원 (DAS, FZJ)
+- [x] **추가 위치 지원** (DAS, FZJ) - ✅ v2.5
+- [x] **AI 기반 예측 모델 통합** - ✅ v2.7 Dynamic ML
+- [x] **이상 기상 자동 경보** - ✅ v2.7 z-score anomaly
+- [x] **GIS 시각화** - ✅ v2.7 Leaflet maps
 - [ ] 실시간 데이터 스트리밍
-- [ ] AI 기반 예측 모델 통합
-- [ ] 이상 기상 자동 경보
+- [ ] Mobile app integration
 
 ---
 
-*작성일: 2025-10-07 22:30:00 UTC*  
-*시스템 버전: v2.3 Production Ready*  
-*데이터 소스: GitHub Actions 온라인 모드 실행 결과*
+## 🆕 v2.7 신규 기능
+
+### GIS 시각화
+```
+✅ Leaflet Maps: 실시간 바람 벡터 + 파고 WMS
+✅ 108개 화살표: Pixel-based rendering (줌 안정)
+✅ TimeDimension: 72시간 시계열 슬라이더
+✅ 6가지 버전: Option A ~ Final Working
+✅ Playwright: 자동 스크린샷
+```
+
+### Dynamic ML Pipeline
+```
+✅ Config-driven: wave_height, ERI 등 유연한 타겟
+✅ 7일 예측: 168시간 장기 예보
+✅ Anomaly detection: z-score 3.0σ 기준
+✅ 1024+ rows: 학습 데이터 대폭 확장
+✅ RMSE tracking: 모델 정확도 추적
+```
+
+### 통합 파이프라인
+```bash
+# 데이터 수집 + GIS 생성 + ML 예측
+python scripts/run_integrated_viz.py --location AGI --out out
+
+# 산출물:
+# - marine_data.csv (121 points)
+# - wind_uv.geojson (108 vectors)
+# - map_leaflet.html (Leaflet map)
+# - map_leaflet.png (screenshot)
+# - ml_forecast_7d.csv (168h predictions)
+```
+
+---
+
+*작성일: 2025-10-08 23:55:00 UTC*  
+*시스템 버전: v2.7 Production Ready*  
+*데이터 소스: GitHub Actions + Open-Meteo + Dynamic ML*
 
