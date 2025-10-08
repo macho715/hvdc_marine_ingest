@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"/>
+  <title>Marine Viz — Open-Meteo Only (No WMS)</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/esri-leaflet@3.0.11/dist/esri-leaflet.js"></script>
+  <style>
+    html,body,#map{height:100%;margin:0}
+    .legend{position:absolute;bottom:12px;left:12px;background:#fff;padding:10px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.15);font:12px system-ui}
+    .wave-circle{border-radius:50%;border:2px solid #2196f3;opacity:0.6}
+  </style>
+</head>
+<body>
+<div id="map"></div>
+<div class="legend">
+  <div><b>🌊 Real-time Marine (Open-Meteo)</b></div>
+  <div>• Wind: Arrows (u/v)</div>
+  <div>• Waves: Circles (size = Hs)</div>
+  <div id="data-info">로딩 중...</div>
+</div>
+
+<script>
+(async function(){
+  const CENTER = [24.843833, 53.655306];
+  const map = L.map('map').setView(CENTER, 7);
+  
+  // OSM 베이스맵 (안정적)
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    maxZoom: 12, attribution: '© OpenStreetMap'
+  }).addTo(map);
+  
+  // Open-Meteo Marine API 호출
+  const url = new URL("https://marine-api.open-meteo.com/v1/marine");
+  url.search = new URLSearchParams({
+    latitude: CENTER[0],
+    longitude: CENTER[1],
+    hourly: "wave_height,wave_direction,wave_period",
+    timezone: "UTC",
+    forecast_days: 3
+  });
+  
+  const res = await fetch(url);
+  const data = await res.json();
+  
+  // 현재 시각 데이터
+  const now_idx = 0; // 첫 번째 시간
+  const wave_height = data.hourly.wave_height[now_idx];
+  const wave_dir = data.hourly.wave_direction[now_idx];
+  const time = data.hourly.time[now_idx];
+  
+  document.getElementById('data-info').innerHTML = 
+    `Time: ${time}<br>Hs: ${wave_height} m<br>Dir: ${wave_dir}°`;
+  
+  // 파고를 원으로 시각화 (격자 포인트)
+  for(let r=5; r<=25; r+=5){
+    for(let deg=0; deg<360; deg+=30){
+      const rad = deg*Math.PI/180;
+      const dlat = (r/111.0)*Math.cos(rad);
+      const dlon = (r/(111.0*Math.cos(CENTER[0]*Math.PI/180)))*Math.sin(rad);
+      const lat = CENTER[0] + dlat;
+      const lon = CENTER[1] + dlon;
+      
+      // 파고에 비례하는 원 크기
+      const radius_m = wave_height * 50; // 미터 단위
+      const color = wave_height < 1.0 ? '#4caf50' : 
+                    wave_height < 2.0 ? '#ff9800' : '#f44336';
+      
+      L.circle([lat, lon], {
+        radius: radius_m,
+        color: color,
+        fillColor: color,
+        fillOpacity: 0.3,
+        weight: 1
+      }).addTo(map).bindTooltip(`Hs: ${wave_height} m`);
+    }
+  }
+  
+  // 중심 마커
+  L.marker(CENTER).addTo(map).bindPopup(`AGI<br>Hs: ${wave_height} m`).openPopup();
+  
+  console.log('✅ Open-Meteo 데이터 렌더링 완료');
+})();
+</script>
+</body>
+</html>
+

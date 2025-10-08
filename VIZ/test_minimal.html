@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Minimal Test - WMS + Basemap</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <style>html,body,#map{height:100%;margin:0}</style>
+</head>
+<body>
+<div id="map"></div>
+<div style="position:absolute;top:10px;right:10px;background:white;padding:10px;border-radius:5px;z-index:1000">
+  <div id="status">로딩 중...</div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/esri-leaflet@3.0.11/dist/esri-leaflet.js"></script>
+<script>
+const status = document.getElementById('status');
+const log = (msg) => { 
+  console.log(msg); 
+  status.innerHTML += '<br>' + msg; 
+};
+
+log('✅ Leaflet 로드 완료');
+log('✅ Esri-Leaflet 로드 완료');
+
+const map = L.map('map').setView([24.843833, 53.655306], 7);
+log('✅ Map 초기화 완료');
+
+// OSM 백업
+const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+  maxZoom: 12
+});
+
+// Esri Oceans 시도
+let oceans;
+try {
+  oceans = L.esri.basemapLayer('Oceans').addTo(map);
+  log('✅ Esri Oceans 추가 시도');
+  
+  oceans.on('tileerror', (e) => {
+    log('⚠️ Esri 타일 에러 발생 → OSM 폴백');
+    if (map.hasLayer(oceans)) map.removeLayer(oceans);
+    if (!map.hasLayer(osm)) osm.addTo(map);
+  });
+  
+  oceans.on('tileload', () => {
+    log('✅ Esri 타일 로드 성공');
+  });
+} catch(e) {
+  log('❌ Esri 에러: ' + e.message);
+  osm.addTo(map);
+}
+
+// WMS 테스트
+log('🌊 WMS 레이어 추가 중...');
+const wmsUrl = 'https://pae-paha.pacioos.hawaii.edu/erddap/wms/ww3_global/request';
+const wmsLayer = 'ww3_global:whgt';
+
+const wms = L.tileLayer.wms(wmsUrl, {
+  layers: wmsLayer,
+  format: 'image/png',
+  transparent: true,
+  opacity: 0.80,
+  COLORSCALERANGE: '0,2.5',
+  NUMCOLORBANDS: 40,
+  PALETTE: 'Rainbow'
+}).addTo(map);
+
+wms.on('load', () => log('✅ WMS 로드 완료'));
+wms.on('tileerror', (e) => log('❌ WMS 타일 에러: ' + e.error));
+
+// 마커
+L.marker([24.843833, 53.655306]).addTo(map)
+  .bindPopup('AGI - Al Ghallan Island').openPopup();
+log('✅ 마커 추가 완료');
+
+// 2초 후 최종 상태
+setTimeout(() => {
+  log('');
+  log('=== 최종 상태 ===');
+  log('베이스맵: ' + (map.hasLayer(oceans) ? 'Esri Oceans' : 'OSM'));
+  log('WMS 레이어: ' + (map.hasLayer(wms) ? '활성' : '비활성'));
+}, 2000);
+</script>
+</body>
+</html>
+
