@@ -33,6 +33,13 @@ class PipelineConfig:
     gate_thresholds: dict[str, dict[str, float]]
     alert_weights: dict[str, float]
     alert_fog_no_go: bool
+    ml_history_path: Optional[str] = None
+    ml_model_cache: Optional[str] = None
+    ml_sqlite_table: Optional[str] = None
+    ml_feature_columns: Optional[List[str]] = None
+    ml_target_column: Optional[str] = None
+    ml_force_retrain: bool = False
+    ml_forecast_horizon_hours: Optional[int] = None
 
     def location_ids(self) -> List[str]:
         return [loc.id for loc in self.locations]
@@ -104,6 +111,34 @@ def load_pipeline_config(path: str | Path = "config/locations.yaml") -> Pipeline
     alert_weights = alerts.get("gamma_weights", {})
     alert_fog_no_go = bool(alerts.get("fog_no_go", True))
 
+    ml_section = raw.get("ml", {})
+    if ml_section is None:
+        ml_section = {}
+    if not isinstance(ml_section, dict):
+        raise ValueError("ml section, if provided, must be a mapping")
+
+    def _coalesce_ml_value(*keys, default=None):
+        for key in keys:
+            if key in raw:
+                return raw.get(key)
+            if key in ml_section:
+                return ml_section.get(key)
+        return default
+
+    ml_history_path = _coalesce_ml_value("ml_history_path", "history_path")
+    ml_model_cache = _coalesce_ml_value("ml_model_cache", "model_cache", "cache_path")
+    ml_sqlite_table = _coalesce_ml_value("ml_sqlite_table", "sqlite_table")
+    ml_feature_columns = _coalesce_ml_value("ml_feature_columns", "feature_columns")
+    if ml_feature_columns is not None:
+        if not isinstance(ml_feature_columns, list):
+            raise ValueError("ml_feature_columns must be a list when provided")
+        ml_feature_columns = [str(col) for col in ml_feature_columns]
+    ml_target_column = _coalesce_ml_value("ml_target_column", "target_column")
+    ml_force_retrain = bool(_coalesce_ml_value("ml_force_retrain", "force_retrain", default=False))
+    ml_forecast_horizon_hours = _coalesce_ml_value("ml_forecast_horizon_hours", "forecast_horizon_hours")
+    if ml_forecast_horizon_hours is not None:
+        ml_forecast_horizon_hours = int(ml_forecast_horizon_hours)
+
     return PipelineConfig(
         locations=locations,
         tz=tz,
@@ -115,4 +150,11 @@ def load_pipeline_config(path: str | Path = "config/locations.yaml") -> Pipeline
         gate_thresholds={region: {key: float(value) for key, value in params.items()} for region, params in gate_thresholds.items()},
         alert_weights={str(k).lower(): float(v) for k, v in alert_weights.items()},
         alert_fog_no_go=alert_fog_no_go,
+        ml_history_path=str(ml_history_path) if ml_history_path else None,
+        ml_model_cache=str(ml_model_cache) if ml_model_cache else None,
+        ml_sqlite_table=str(ml_sqlite_table) if ml_sqlite_table else None,
+        ml_feature_columns=ml_feature_columns,
+        ml_target_column=str(ml_target_column) if ml_target_column else None,
+        ml_force_retrain=ml_force_retrain,
+        ml_forecast_horizon_hours=ml_forecast_horizon_hours,
     )

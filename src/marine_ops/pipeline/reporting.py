@@ -41,6 +41,33 @@ def _safe_json(value):
     return value
 
 
+def _resolve_prediction_column(df: pd.DataFrame) -> str | None:
+    """Identify the most relevant prediction value column for reporting output."""
+    candidates = [
+        "predicted_eri",
+        "predicted_value",
+        "eri_value",
+        "prediction",
+    ]
+    for candidate in candidates:
+        if candidate in df.columns:
+            return candidate
+    numeric_cols = [
+        col
+        for col in df.columns
+        if col
+        not in {
+            "timestamp",
+            "location",
+            "model_rmse",
+            "hs_value",
+            "wind_value",
+        }
+        and pd.api.types.is_numeric_dtype(df[col])
+    ]
+    return numeric_cols[0] if numeric_cols else None
+
+
 def render_html_3d(
     run_ts: datetime,
     cfg: PipelineConfig,
@@ -82,11 +109,14 @@ def render_html_3d(
     long_range_table = pd.concat(lr_frames, ignore_index=True) if lr_frames else pd.DataFrame()
 
     anomalies_rows: List[Dict[str, object]] = []
-    for location, records in (anomalies or {}).items():
-        for record in records:
-            payload = {"location": location}
-            payload.update(record)
-            anomalies_rows.append(payload)
+    if isinstance(anomalies, pd.DataFrame):
+        anomalies_rows = anomalies.to_dict(orient="records")
+    else:
+        for location, records in (anomalies or {}).items():
+            for record in records:
+                payload = {"location": location}
+                payload.update(record)
+                anomalies_rows.append(payload)
     anomalies_table = pd.DataFrame(anomalies_rows)
 
     metadata_html = "<p>No ML metadata.</p>"
@@ -132,7 +162,7 @@ section {{ margin-bottom: 32px; }}
   {_render_table(das_rows)}
 </section>
 <section>
-  <h2>7-Day ERI Forecast</h2>
+  <h2>7-Day Long-Range Forecast</h2>
   {_render_table(long_range_table)}
 </section>
 <section>
@@ -238,19 +268,38 @@ def write_side_outputs(
             txt_lines.append(summary_line)
         txt_lines.append("")
 
-    txt_lines.append("7-day ERI forecast:")
+    txt_lines.append("7-day long-range forecast:")
     if long_range:
         for location, df in long_range.items():
-            if isinstance(df, pd.DataFrame) and not df.empty:
-                for _, row in df.iterrows():
-                    ts_str = row["timestamp"].strftime("%Y-%m-%d %H:%M") if pd.notna(row["timestamp"]) else "N/A"
-                    txt_lines.append(
-                        "  - "
-                        f"{location} {ts_str}: ERI {row['predicted_eri']:.2f} "
-                        f"(Hs {row['hs_value']:.2f} m, Wind {row['wind_value']:.2f} kt)"
-                    )
-            else:
+            if not isinstance(df, pd.DataFrame) or df.empty:
                 txt_lines.append(f"  - {location}: no forecast data")
+                continue
+            predicted_column = _resolve_prediction_column(df)
+            if not predicted_column:
+                txt_lines.append(f"  - {location}: forecast value unavailable")
+                continue
+            label = predicted_column.replace("_", " ")
+            for _, row in df.iterrows():
+                ts_value = row.get("timestamp")
+                if isinstance(ts_value, (pd.Timestamp, datetime)) and pd.notna(ts_value):
+                    ts_str = ts_value.strftime("%Y-%m-%d %H:%M")
+                else:
+                    ts_str = str(ts_value) if ts_value not in (None, pd.NA) else "N/A"
+                value = row.get(predicted_column)
+                value_str = "N/A"
+                if value is not None and not pd.isna(value):
+                    value_str = f"{float(value):.2f}"
+                line = f"  - {location} {ts_str}: {label} {value_str}"
+                hs_value = row.get("hs_value")
+                wind_value = row.get("wind_value")
+                extras: List[str] = []
+                if hs_value is not None and not pd.isna(hs_value):
+                    extras.append(f"Hs {float(hs_value):.2f} m")
+                if wind_value is not None and not pd.isna(wind_value):
+                    extras.append(f"Wind {float(wind_value):.2f} kt")
+                if extras:
+                    line = f"{line} ({', '.join(extras)})"
+                txt_lines.append(line)
     else:
         txt_lines.append("  (no forecast data)")
 
@@ -261,12 +310,30 @@ def write_side_outputs(
             if not records:
                 continue
             for record in records:
-                txt_lines.append(
-                    "  - "
-                    f"{location} {record.get('timestamp')}: ERI {record.get('eri_value', float('nan')):.2f}, "
-                    f"Hs {record.get('hs_value', float('nan')):.2f} m, "
-                    f"Wind {record.get('wind_value', float('nan')):.2f} kt"
-                )
+                ts_value = record.get("timestamp")
+                if isinstance(ts_value, (pd.Timestamp, datetime)):
+                    ts_str = ts_value.strftime("%Y-%m-%d %H:%M")
+                else:
+                    ts_str = str(ts_value) if ts_value is not None else "N/A"
+                parts: List[str] = []
+                for key, label in (
+                    ("eri_value", "ERI"),
+                    ("observed", "Obs"),
+                    ("predicted", "Pred"),
+                    ("hs_value", "Hs"),
+                    ("wind_value", "Wind"),
+                ):
+                    value = record.get(key)
+                    if value is None or pd.isna(value):
+                        continue
+                    suffix = " kt" if key == "wind_value" else " m" if key == "hs_value" else ""
+                    parts.append(f"{label} {float(value):.2f}{suffix}")
+                detail = ", ".join(parts) if parts else "no metrics"
+                message = record.get("message")
+                line = f"  - {location} {ts_str}: {detail}"
+                if message:
+                    line = f"{line} ({message})"
+                txt_lines.append(line)
     else:
         txt_lines.append("  (no anomalies)")
 

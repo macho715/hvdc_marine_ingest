@@ -1,6 +1,8 @@
 """Marine ML forecasting utilities for the extended 72h pipeline."""
 from __future__ import annotations
 
+import logging
+import sqlite3
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Iterable, List, Mapping, Sequence
@@ -9,6 +11,7 @@ import joblib
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import IsolationForest, RandomForestRegressor
+from sklearn.impute import SimpleImputer
 from sklearn.metrics import mean_absolute_error
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
@@ -25,6 +28,7 @@ FEATURE_COLUMNS = [
     "dayofweek",
 ]
 TARGET_COLUMN = "eri_target_7d"
+LOGGER = logging.getLogger(__name__)
 
 
 @dataclass(slots=True)
@@ -35,6 +39,20 @@ class MLForecastArtifacts:
     artifact_path: Path
     feature_columns: List[str]
     metrics: Dict[str, float]
+
+
+@dataclass(slots=True)
+class ForecastArtifacts:
+    """Container describing dynamically trained long-range forecast artifacts."""
+
+    model: Pipeline
+    feature_columns: List[str]
+    target_column: str
+    training_frame: pd.DataFrame
+    rmse: float | None
+    cache_path: Path | None = None
+    artifact_path: Path | None = None
+    metrics: Dict[str, float] | None = None
 
 
 def _normalise_paths(sources: Iterable[str | Path]) -> List[Path]:
@@ -387,4 +405,289 @@ def detect_anomalies(
             )
         anomalies[location] = location_anomalies
     return anomalies
+
+
+def _normalise_history_sources(
+    history_source: str | Path | Iterable[str | Path] | None,
+) -> List[Path]:
+    """Normalise historical data source inputs into a list of paths."""
+    if history_source is None:
+        return []
+    if isinstance(history_source, (str, Path)):
+        return [Path(history_source).expanduser().resolve()]
+    paths: List[Path] = []
+    for item in history_source:
+        if not item:
+            continue
+        paths.append(Path(item).expanduser().resolve())
+    return paths
+
+
+def _coerce_timestamp_frame(df: pd.DataFrame) -> pd.DataFrame:
+    """Ensure that a dataframe has a proper UTC timestamp column."""
+    working = df.copy()
+    if "timestamp" in working.columns:
+        working["timestamp"] = pd.to_datetime(working["timestamp"], utc=True, errors="coerce")
+    elif isinstance(working.index, pd.DatetimeIndex):
+        working = working.reset_index().rename(columns={"index": "timestamp"})
+        working["timestamp"] = pd.to_datetime(working["timestamp"], utc=True, errors="coerce")
+    else:
+        working["timestamp"] = pd.NaT
+    working = working.dropna(subset=["timestamp"]).sort_values("timestamp")
+    return working
+
+
+def _load_historical_dataset(source: Path, sqlite_table: str | None = None) -> pd.DataFrame:
+    """Load a historical dataset from CSV or SQLite storage."""
+    if not source.exists():
+        LOGGER.warning("Historical dataset not found at %s", source)
+        return pd.DataFrame()
+    suffix = source.suffix.lower()
+    if suffix == ".csv":
+        data = pd.read_csv(source)
+    elif suffix in {".sqlite", ".db"}:
+        table_name = sqlite_table or DEFAULT_TABLE_NAME
+        with sqlite3.connect(source) as conn:
+            data = pd.read_sql(f"SELECT * FROM {table_name}", conn)
+    else:
+        raise ValueError(f"Unsupported historical data format: {source.suffix}")
+    if "location" not in data.columns:
+        data["location"] = "UNKNOWN"
+    return _coerce_timestamp_frame(data)
+
+
+def _assemble_training_frame_dynamic(
+    historical: pd.DataFrame,
+    recent_frames: Mapping[str, pd.DataFrame],
+) -> pd.DataFrame:
+    """Merge historical data with the latest fused frames for model training."""
+    parts: List[pd.DataFrame] = []
+    if not historical.empty:
+        parts.append(historical.copy())
+    for location, frame in recent_frames.items():
+        if frame is None or frame.empty:
+            continue
+        working = _coerce_timestamp_frame(frame)
+        if working.empty:
+            continue
+        working["location"] = location
+        parts.append(working)
+    if not parts:
+        return pd.DataFrame()
+    merged = pd.concat(parts, ignore_index=True, sort=False)
+    merged = merged.drop_duplicates(subset=["location", "timestamp"], keep="last")
+    merged = merged.sort_values(["location", "timestamp"])
+    return merged.reset_index(drop=True)
+
+
+def _derive_dynamic_feature_columns(
+    df: pd.DataFrame,
+    target_column: str,
+    feature_columns: Sequence[str] | None,
+) -> List[str]:
+    """Determine the feature columns to use when training the dynamic model."""
+    if feature_columns:
+        return [col for col in feature_columns if col in df.columns]
+    numeric_cols = [
+        col
+        for col, dtype in df.dtypes.items()
+        if col != target_column and pd.api.types.is_numeric_dtype(dtype)
+    ]
+    return numeric_cols
+
+
+def train_dynamic_model(
+    *,
+    history_source: str | Path | Iterable[str | Path] | None,
+    recent_frames: Mapping[str, pd.DataFrame],
+    target_column: str = "wave_height",
+    feature_columns: Sequence[str] | None = None,
+    cache_path: str | Path | None = None,
+    sqlite_table: str | None = None,
+    force_retrain: bool = False,
+) -> ForecastArtifacts:
+    """Train or load a dynamic RandomForest regression model for long-range forecasts."""
+    sources = _normalise_history_sources(history_source)
+    historical_frames: List[pd.DataFrame] = []
+    for source in sources:
+        historical_frames.append(_load_historical_dataset(source, sqlite_table))
+    historical = (
+        pd.concat(historical_frames, ignore_index=True, sort=False) if historical_frames else pd.DataFrame()
+    )
+    training_frame = _assemble_training_frame_dynamic(historical, recent_frames)
+    if training_frame.empty:
+        raise ValueError("No data available for training the long-range model")
+    resolved_features = _derive_dynamic_feature_columns(training_frame, target_column, feature_columns)
+    if not resolved_features:
+        raise ValueError("No feature columns available for model training")
+    if target_column not in training_frame.columns:
+        raise ValueError(f"Target column '{target_column}' is missing from training data")
+    cache_file = Path(cache_path).expanduser().resolve() if cache_path else None
+    if cache_file and cache_file.exists() and not force_retrain:
+        payload = joblib.load(cache_file)
+        model = payload["model"]
+        cached_features = list(payload.get("feature_columns", resolved_features))
+        cached_target = str(payload.get("target_column", target_column))
+        cached_rmse = payload.get("rmse")
+        cached_metrics = payload.get("metrics")
+        LOGGER.info("Loaded long-range model from cache: %s", cache_file)
+        return ForecastArtifacts(
+            model=model,
+            feature_columns=cached_features,
+            target_column=cached_target,
+            training_frame=training_frame,
+            rmse=float(cached_rmse) if cached_rmse is not None else None,
+            cache_path=cache_file,
+            artifact_path=cache_file,
+            metrics=cached_metrics if isinstance(cached_metrics, dict) else None,
+        )
+    features = training_frame[resolved_features].astype(float)
+    target = training_frame[target_column].astype(float)
+    pipeline = Pipeline(
+        steps=[
+            ("imputer", SimpleImputer(strategy="median")),
+            ("scaler", StandardScaler()),
+            (
+                "model",
+                RandomForestRegressor(
+                    n_estimators=256,
+                    random_state=42,
+                    n_jobs=-1,
+                ),
+            ),
+        ]
+    )
+    pipeline.fit(features, target)
+    predictions = pipeline.predict(features)
+    residuals = target.to_numpy() - predictions
+    rmse = float(np.sqrt(np.mean(residuals**2))) if len(residuals) else None
+    metrics = {
+        "rows_trained": float(len(training_frame)),
+        "rmse": float(rmse) if rmse is not None else None,
+    }
+    if cache_file:
+        cache_file.parent.mkdir(parents=True, exist_ok=True)
+        joblib.dump(
+            {
+                "model": pipeline,
+                "feature_columns": list(resolved_features),
+                "target_column": target_column,
+                "rmse": rmse,
+                "metrics": metrics,
+            },
+            cache_file,
+        )
+        LOGGER.info("Stored long-range model cache at %s", cache_file)
+    return ForecastArtifacts(
+        model=pipeline,
+        feature_columns=list(resolved_features),
+        target_column=target_column,
+        training_frame=training_frame,
+        rmse=rmse,
+        cache_path=cache_file,
+        artifact_path=cache_file,
+        metrics=metrics,
+    )
+
+
+def predict_long_range_dynamic(
+    artifacts: ForecastArtifacts,
+    recent_frames: Mapping[str, pd.DataFrame],
+    *,
+    horizon_hours: int = 168,
+    tz: str = "UTC",
+) -> Dict[str, pd.DataFrame]:
+    """Produce dynamic long-range forecasts for each configured location."""
+    outputs: Dict[str, pd.DataFrame] = {}
+    if horizon_hours <= 0:
+        return outputs
+    for location, frame in recent_frames.items():
+        if frame is None or frame.empty:
+            continue
+        working = _coerce_timestamp_frame(frame)
+        if working.empty:
+            continue
+        feature_tail = working[artifacts.feature_columns].tail(1).copy()
+        if feature_tail.empty:
+            continue
+        feature_tail = feature_tail.ffill(axis=0).bfill(axis=0)
+        replicated = pd.concat([feature_tail] * horizon_hours, ignore_index=True)
+        predictions = artifacts.model.predict(replicated)
+        last_ts = working["timestamp"].iloc[-1]
+        if pd.isna(last_ts):
+            continue
+        if last_ts.tzinfo is None:
+            last_ts = last_ts.tz_localize("UTC")
+        timestamps = pd.date_range(
+            last_ts.tz_convert(tz) + pd.Timedelta(hours=1),
+            periods=horizon_hours,
+            freq="H",
+            tz=tz,
+        )
+        outputs[location] = pd.DataFrame(
+            {
+                "timestamp": timestamps,
+                artifacts.target_column: predictions,
+                "location": location,
+                "model_rmse": artifacts.rmse,
+            }
+        )
+    return outputs
+
+
+def detect_dynamic_anomalies(
+    artifacts: ForecastArtifacts,
+    *,
+    threshold: float = 3.0,
+) -> pd.DataFrame:
+    """Detect residual anomalies from the dynamic training frame."""
+    frame = artifacts.training_frame
+    if frame is None or frame.empty:
+        return pd.DataFrame(
+            columns=[
+                "timestamp",
+                "location",
+                "observed",
+                "predicted",
+                "z_score",
+                "message",
+            ]
+        )
+    features = frame[artifacts.feature_columns].astype(float)
+    target = frame[artifacts.target_column].astype(float)
+    predictions = artifacts.model.predict(features)
+    residuals = target.to_numpy() - predictions
+    std = float(np.std(residuals))
+    if std == 0 or np.isnan(std):
+        return pd.DataFrame(
+            columns=[
+                "timestamp",
+                "location",
+                "observed",
+                "predicted",
+                "z_score",
+                "message",
+            ]
+        )
+    z_scores = residuals / std
+    mask = np.abs(z_scores) >= threshold
+    if not np.any(mask):
+        return pd.DataFrame(
+            columns=[
+                "timestamp",
+                "location",
+                "observed",
+                "predicted",
+                "z_score",
+                "message",
+            ]
+        )
+    anomalies = frame.loc[mask, ["timestamp", "location", artifacts.target_column]].copy()
+    anomalies.rename(columns={artifacts.target_column: "observed"}, inplace=True)
+    anomalies["predicted"] = predictions[mask]
+    anomalies["z_score"] = z_scores[mask]
+    anomalies["message"] = [
+        f"Deviation of {abs(z):.2f}σ for {artifacts.target_column}" for z in anomalies["z_score"]
+    ]
+    return anomalies.reset_index(drop=True)
 

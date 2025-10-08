@@ -21,8 +21,11 @@ from src.marine_ops.pipeline.ingest import collect_weather_data_3d
 from src.marine_ops.pipeline.ml_forecast import (
     MODEL_FILENAME,
     detect_anomalies,
+    detect_dynamic_anomalies,
     load_model,
     predict_long_range,
+    predict_long_range_dynamic,
+    train_dynamic_model,
     train_model,
 )
 from src.marine_ops.pipeline.reporting import render_html_3d, write_side_outputs
@@ -55,52 +58,137 @@ def main() -> int:
     fused = fuse_timeseries_3d(raw["sources"])
     compute_eri_3d(fused["timeseries"])  # ERI computed for downstream analyses
 
-    model_dir = Path("cache/ml_forecast")
-    model_dir.mkdir(parents=True, exist_ok=True)
-    artifact_path = model_dir / MODEL_FILENAME
-    history_sources = [
-        Path("data/historical_marine_metrics.csv"),
-        Path("data/historical_marine_metrics.sqlite"),
-    ]
-
-    model = None
-    training_metrics: dict[str, object] = {}
-    if artifact_path.exists():
+    long_range: dict[str, pd.DataFrame] = {}
+    anomalies: dict[str, list[dict[str, object]]] = {}
+    ml_metadata: dict[str, object] = {}
+    dynamic_success = False
+    dynamic_configured = bool(getattr(cfg, "ml_history_path", None) or getattr(cfg, "ml_model_cache", None))
+    if dynamic_configured:
+        print("[72H][ML] Training dynamic long-range model")
         try:
-            model = load_model(artifact_path)
-            print(f"[72H][ML] Loaded cached model from {artifact_path}")
-        except Exception as exc:  # noqa: BLE001
-            print(f"[72H][ML] Failed to load cached model: {exc}. Retraining...")
-    if model is None:
-        try:
-            artifacts = train_model(history_sources, model_dir)
-            model = artifacts.model
-            training_metrics = artifacts.metrics
-            artifact_path = artifacts.artifact_path
-            print(
-                "[72H][ML] Trained RandomForest model "
-                f"({training_metrics.get('rows_trained', 0):.0f} rows, "
-                f"MAE={training_metrics.get('mae', 0.0):.2f})",
+            dynamic_artifacts = train_dynamic_model(
+                history_source=getattr(cfg, "ml_history_path", None),
+                recent_frames=fused["frames"],
+                target_column=getattr(cfg, "ml_target_column", "wave_height"),
+                feature_columns=getattr(cfg, "ml_feature_columns", None),
+                cache_path=getattr(cfg, "ml_model_cache", None),
+                sqlite_table=getattr(cfg, "ml_sqlite_table", None),
+                force_retrain=bool(getattr(cfg, "ml_force_retrain", False)),
             )
+            horizon_setting = getattr(cfg, "ml_forecast_horizon_hours", None)
+            horizon_hours = int(horizon_setting) if horizon_setting else 24 * 7
+            dynamic_long_range = predict_long_range_dynamic(
+                artifacts=dynamic_artifacts,
+                recent_frames=fused["frames"],
+                horizon_hours=horizon_hours,
+                tz=cfg.tz,
+            )
+            converted_long_range: dict[str, pd.DataFrame] = {}
+            for location, df in dynamic_long_range.items():
+                if df is None or df.empty:
+                    continue
+                working = df.copy()
+                predicted_col = None
+                for candidate in (dynamic_artifacts.target_column, "prediction", "predicted"):
+                    if candidate in working.columns:
+                        predicted_col = candidate
+                        break
+                if predicted_col is None:
+                    continue
+                if "location" not in working.columns:
+                    working.insert(0, "location", location)
+                working.rename(columns={predicted_col: "predicted_value"}, inplace=True)
+                if "hs_value" not in working.columns:
+                    working["hs_value"] = pd.NA
+                if "wind_value" not in working.columns:
+                    working["wind_value"] = pd.NA
+                converted_long_range[location] = working
+            long_range = converted_long_range
+            anomalies_df = detect_dynamic_anomalies(dynamic_artifacts)
+            if not anomalies_df.empty:
+                grouped: dict[str, list[dict[str, object]]] = {}
+                for record in anomalies_df.to_dict(orient="records"):
+                    loc = str(record.get("location", "UNKNOWN"))
+                    payload = record.copy()
+                    payload.pop("location", None)
+                    ts_value = payload.get("timestamp")
+                    if hasattr(ts_value, "isoformat"):
+                        payload["timestamp"] = ts_value.isoformat()  # type: ignore[assignment]
+                    grouped.setdefault(loc, []).append(payload)
+                anomalies = grouped
+            else:
+                anomalies = {}
+            ml_metadata = {
+                "mode": "dynamic",
+                "target_column": dynamic_artifacts.target_column,
+                "feature_columns": dynamic_artifacts.feature_columns,
+                "rmse": dynamic_artifacts.rmse,
+                "cache": str(dynamic_artifacts.cache_path) if dynamic_artifacts.cache_path else None,
+                "rows_trained": (
+                    dynamic_artifacts.metrics.get("rows_trained")
+                    if dynamic_artifacts.metrics and dynamic_artifacts.metrics.get("rows_trained") is not None
+                    else len(dynamic_artifacts.training_frame)
+                ),
+            }
+            dynamic_success = True
+        except ValueError as exc:
+            print(f"[72H][ML] Dynamic model skipped: {exc}")
         except Exception as exc:  # noqa: BLE001
-            print(f"[72H][ML] Training failed: {exc}")
-            model = None
-
-    long_range = {}
-    anomalies = {}
-    if model is not None:
-        try:
-            long_range = predict_long_range(model, fused["frames"])
-        except Exception as exc:  # noqa: BLE001
-            print(f"[72H][ML] Long-range prediction failed: {exc}")
-            long_range = {}
-        try:
-            anomalies = detect_anomalies(fused["frames"])
-        except Exception as exc:  # noqa: BLE001
-            print(f"[72H][ML] Anomaly detection failed: {exc}")
-            anomalies = {}
-    else:
-        print("[72H][ML] Skipping ML outputs due to missing model")
+            print(f"[72H][ML] Dynamic ML pipeline failed: {exc}")
+    if not dynamic_success:
+        model_dir = Path("cache/ml_forecast")
+        model_dir.mkdir(parents=True, exist_ok=True)
+        artifact_path = model_dir / MODEL_FILENAME
+        history_sources = [
+            Path("data/historical_marine_metrics.csv"),
+            Path("data/historical_marine_metrics.sqlite"),
+        ]
+        model = None
+        training_metrics: dict[str, object] = {}
+        if artifact_path.exists():
+            try:
+                model = load_model(artifact_path)
+                print(f"[72H][ML] Loaded cached model from {artifact_path}")
+            except Exception as exc:  # noqa: BLE001
+                print(f"[72H][ML] Failed to load cached model: {exc}. Retraining...")
+        if model is None:
+            try:
+                artifacts = train_model(history_sources, model_dir)
+                model = artifacts.model
+                training_metrics = artifacts.metrics
+                artifact_path = artifacts.artifact_path
+                print(
+                    "[72H][ML] Trained RandomForest model "
+                    f"({training_metrics.get('rows_trained', 0):.0f} rows, "
+                    f"MAE={training_metrics.get('mae', 0.0):.2f})",
+                )
+            except Exception as exc:  # noqa: BLE001
+                print(f"[72H][ML] Training failed: {exc}")
+                model = None
+        long_range = {}
+        anomalies = {}
+        if model is not None:
+            try:
+                long_range = predict_long_range(model, fused["frames"])
+            except Exception as exc:  # noqa: BLE001
+                print(f"[72H][ML] Long-range prediction failed: {exc}")
+                long_range = {}
+            try:
+                anomalies = detect_anomalies(fused["frames"])
+            except Exception as exc:  # noqa: BLE001
+                print(f"[72H][ML] Anomaly detection failed: {exc}")
+                anomalies = {}
+            ml_metadata = {
+                "mode": "legacy-cache",
+                "artifact": str(artifact_path),
+                "metrics": training_metrics,
+            }
+        else:
+            print("[72H][ML] Skipping ML outputs due to missing model")
+            ml_metadata = {
+                "mode": "legacy-cache",
+                "artifact": str(artifact_path),
+            }
 
     decisions = {}
     for loc in args.locations:
@@ -123,10 +211,7 @@ def main() -> int:
         ncm_alerts=raw.get("ncm_alerts", []),
         long_range=long_range,
         anomalies=anomalies,
-        ml_metadata={
-            "artifact": str(artifact_path),
-            "metrics": training_metrics,
-        },
+        ml_metadata=ml_metadata,
         out_dir=args.out,
     )
 
@@ -140,10 +225,7 @@ def main() -> int:
         api_status=raw.get("api_status", {}),
         long_range=long_range,
         anomalies=anomalies,
-        ml_metadata={
-            "artifact": str(artifact_path),
-            "metrics": training_metrics,
-        },
+        ml_metadata=ml_metadata,
         out_dir=args.out,
     )
 
