@@ -15,6 +15,7 @@
 - 📊 **WMO/NOAA 표준**: Sea State Code 3700 + Small Craft Advisory ⭐
 - 📱 **Telegram 최적화**: 한눈에 보는 3일 운항 가능성 ⭐
 - 📧 **Email HTML**: 깔끔한 포맷 + 참조 문헌 ⭐
+- 🤖 **ML 장기 예측**: RandomForest 기반 7일 ERI 추정 + 이상 탐지 ⭐
 
 #### v2.5 기능
 - 🌊 **72시간 예보 파이프라인**: 3일치 해양 예보 자동 생성
@@ -103,6 +104,11 @@ Data: OPEN-METEO ✅  NCM ✅  STORMGLASS ✅  TIDES ⚠️
 - **트리거**: push (main), 수동 실행, 스케줄
 - **알림**: Telegram + Email (3-Day GO/NO-GO 포맷)
 
+### 주간 ML 재학습
+- **스케줄**: 매주 일요일 03:00 UTC (`ml-retrain.yml`)
+- **내용**: `scripts/train_ml_model.py` 실행 → RandomForest 모델 학습 및 아티팩트 업로드
+- **산출물**: `cache/ml_forecast/` 폴더의 모델과 `metadata.json`
+
 ### GitHub Secrets 설정
 
 **필수 (알림용)**:
@@ -137,6 +143,8 @@ WORLDTIDES_API_KEY=your_key  # 선택
 - [상세 README](docs/README.md) - 전체 기능 설명
 - [빠른 시작](docs/README_quickstart.md) - 5분 설정
 - [로컬 실행 가이드](docs/LOCAL_SETUP_GUIDE.md)
+- [ML 장기 예측 가이드 (EN)](docs/en/ml_forecast.md)
+- [ML 장기 예측 가이드 (KR)](docs/kr/ml_forecast.md)
 
 #### 시스템 아키텍처
 - [시스템 아키텍처](docs/SYSTEM_ARCHITECTURE.md)
