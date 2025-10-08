@@ -1,9 +1,10 @@
 """Configuration helpers for the 72-hour marine pipeline."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Optional
+from typing import List
 
 import yaml
 
@@ -21,7 +22,7 @@ class LocationSpec:
 
 @dataclass(frozen=True)
 class PipelineConfig:
-    """Top-level configuration for the 72-hour pipeline."""
+    """72시간 파이프라인 설정입니다. / Configuration for the 72-hour pipeline."""
 
     locations: List[LocationSpec]
     tz: str
@@ -33,6 +34,9 @@ class PipelineConfig:
     gate_thresholds: dict[str, dict[str, float]]
     alert_weights: dict[str, float]
     alert_fog_no_go: bool
+    ml_history_path: Path | None = None
+    ml_model_cache: Path | None = None
+    ml_sqlite_table: str | None = None
 
     def location_ids(self) -> List[str]:
         return [loc.id for loc in self.locations]
@@ -104,6 +108,21 @@ def load_pipeline_config(path: str | Path = "config/locations.yaml") -> Pipeline
     alert_weights = alerts.get("gamma_weights", {})
     alert_fog_no_go = bool(alerts.get("fog_no_go", True))
 
+    ml_cfg = raw.get("ml_forecast", {})
+    ml_history_path = None
+    ml_model_cache = None
+    ml_sqlite_table = None
+    if isinstance(ml_cfg, dict):
+        history_value = ml_cfg.get("history_path")
+        if history_value:
+            ml_history_path = Path(history_value)
+        model_cache_value = ml_cfg.get("model_cache")
+        if model_cache_value:
+            ml_model_cache = Path(model_cache_value)
+        sqlite_table_value = ml_cfg.get("sqlite_table")
+        if sqlite_table_value:
+            ml_sqlite_table = str(sqlite_table_value)
+
     return PipelineConfig(
         locations=locations,
         tz=tz,
@@ -111,8 +130,16 @@ def load_pipeline_config(path: str | Path = "config/locations.yaml") -> Pipeline
         report_times=report_times,
         marine_vars=marine_vars,
         weather_vars=weather_vars,
-        sea_state_thresholds={str(k): float(v) for k, v in sea_state_thresholds.items()},
-        gate_thresholds={region: {key: float(value) for key, value in params.items()} for region, params in gate_thresholds.items()},
+        sea_state_thresholds={
+            str(k): float(v) for k, v in sea_state_thresholds.items()
+        },
+        gate_thresholds={
+            region: {key: float(value) for key, value in params.items()}
+            for region, params in gate_thresholds.items()
+        },
         alert_weights={str(k).lower(): float(v) for k, v in alert_weights.items()},
         alert_fog_no_go=alert_fog_no_go,
+        ml_history_path=ml_history_path,
+        ml_model_cache=ml_model_cache,
+        ml_sqlite_table=ml_sqlite_table,
     )

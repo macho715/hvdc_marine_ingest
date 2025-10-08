@@ -17,6 +17,10 @@ forecast_hours: 72
 report_times:
   - "06:00"
   - "17:00"
+ml_forecast:
+  history_path: "data/ml_forecast_history.csv"
+  model_cache: "cache/ml_forecast_model.joblib"
+  sqlite_table: "marine_forecast_history"
 marine_vars:
   - wave_height
   - wind_wave_height
