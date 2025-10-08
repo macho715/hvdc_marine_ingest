@@ -61,28 +61,57 @@ const hs = L.tileLayer.wms(WMS_URL, {
   time: WMS_TIME
 }).addTo(map);
 
-// Wind arrows — from inline GeoJSON
-const RAD=Math.PI/180;
+// Wind arrows — 픽셀 기반 벡터 (줌 안정)
+const gj = JSON.parse(document.getElementById('wind-data').textContent || "{}");
+
 function drawArrows(gj){
   if(!gj || !gj.features){return;}
-  for(const f of gj.features){
-    const lon=f.geometry.coordinates[0], lat=f.geometry.coordinates[1];
-    const u=f.properties.u_ms, v=f.properties.v_ms;
-    const spd_ms=Math.hypot(u,v), spd_kt=spd_ms*1.94384;
-    const K=0.008*spd_ms;                      // 속도비례 길이
-    const dlat=K*v, dlon=K*u/Math.cos(lat*RAD);
-    const lat2=lat+dlat, lon2=lon+dlon;
-    const col = spd_kt<10?'#5B9BD5':spd_kt<20?'#1F77B4':'#0A3D91';
-    L.polyline([[lat,lon],[lat2,lon2]],{color:col,weight:1.7,opacity:0.9}).addTo(map);
-    const backLat=lat2-0.3*dlat, backLon=lon2-0.3*dlon;
-    const orthoLat=-dlon, orthoLon=dlat;
-    const tip1=[backLat+0.15*orthoLat, backLon+0.15*orthoLon];
-    const tip2=[backLat-0.15*orthoLat, backLon-0.15*orthoLon];
-    L.polyline([tip1,[lat2,lon2],tip2],{color:col,weight:1.2,opacity:0.9}).addTo(map);
+  // 이전 벡터 지우기
+  if (window._windLayer) { map.removeLayer(window._windLayer); }
+  window._windLayer = L.layerGroup().addTo(map);
+
+  const RAD = Math.PI/180;
+  const MIN = 6, MAX = 28;          // 화살 최소/최대 길이(px)
+  const PX_PER_KT = 0.9;            // 1 kt 당 픽셀 스케일 (필요시 0.6~1.2 조정)
+
+  for (const f of gj.features){
+    const lon = f.geometry.coordinates[0], lat = f.geometry.coordinates[1];
+    const u = Number(f.properties.u_ms) || 0;     // +동/-서
+    const v = Number(f.properties.v_ms) || 0;     // +북/-남
+    const spd_ms = Math.hypot(u, v);
+    if (spd_ms < 0.1) continue;
+
+    const spd_kt = spd_ms * 1.94384;
+    let Lpx = Math.min(MAX, Math.max(MIN, PX_PER_KT * spd_kt));
+
+    // 픽셀 벡터: x는 동(+), y는 남(+) 주의 → Leaflet 화면좌표는 y가 아래로 증가
+    const unitX =  u / spd_ms;
+    const unitY = -v / spd_ms;      // 북(+)면 화면 y는 감소하므로 부호 반전
+    const start = map.latLngToLayerPoint([lat, lon]);
+    const end   = L.point(start.x + Lpx*unitX, start.y + Lpx*unitY);
+    const endLL = map.layerPointToLatLng(end);
+
+    // 색상 맵 (kt)
+    const col = spd_kt < 10 ? '#5B9BD5' : (spd_kt < 20 ? '#1F77B4' : '#0A3D91');
+
+    L.polyline([[lat, lon], endLL], {color: col, weight: 1.7, opacity: 0.9})
+      .addTo(window._windLayer);
+
+    // 간단 화살촉
+    const back = L.point(start.x + 0.7*(end.x - start.x), start.y + 0.7*(end.y - start.y));
+    const ortho = L.point(-(end.y - start.y), (end.x - start.x)); // 직교 벡터
+    const tip1  = map.layerPointToLatLng(L.point(back.x + 0.12*ortho.x, back.y + 0.12*ortho.y));
+    const tip2  = map.layerPointToLatLng(L.point(back.x - 0.12*ortho.x, back.y - 0.12*ortho.y));
+    L.polyline([tip1, endLL, tip2], {color: col, weight: 1.1, opacity: 0.9})
+      .addTo(window._windLayer);
   }
 }
-const gj = JSON.parse(document.getElementById('wind-data').textContent || "{}");
+
 drawArrows(gj);
+
+// 줌/이동 시 길이 재계산(픽셀 기준 유지)
+function rerender() { drawArrows(gj); }
+map.on('zoomend moveend', rerender);
 
 // center marker
 L.marker(CENTER).addTo(map).bindTooltip(SITE + " center");
