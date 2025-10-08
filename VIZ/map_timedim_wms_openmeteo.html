@@ -50,8 +50,8 @@
 (async function(){
   // ---- Config ----
   const CENTER=[24.843833,53.655306]; // AGI
-  const WMS_URL   = "https://erddap.aoml.noaa.gov/hdb/erddap/wms/WaveWatch_2021/request";
-  const WMS_LAYER = "WaveWatch_2021:whgt";      // WW3 significant wave height (wind waves)
+  const WMS_URL   = 'https://pae-paha.pacioos.hawaii.edu/erddap/wms/ww3_global/request';
+  const WMS_LAYER = 'ww3_global:whgt';          // wind significant wave height (m) - 2017~현재 커버리지
   const HOURS_BACK = 24, HOURS_FWD = 48;        // slider window
 
   // ---- Map + TimeDimension ----
@@ -65,16 +65,41 @@
       autoPlay: false, speedSlider: true, timeSliderDragUpdate: true
     }
   });
-  try { L.esri.basemapLayer('Oceans').addTo(map); }
-  catch(e){ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:12}).addTo(map); }
+
+  // Basemap with auto-fallback
+  const osm = L.tileLayer(
+    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    { maxZoom: 12, attribution: '© OpenStreetMap' }
+  );
+
+  let oceans;
+  try {
+    oceans = L.esri.basemapLayer('Oceans').addTo(map);
+    oceans.on('tileerror', () => {         // 타일 실패 → 폴백
+      if (map.hasLayer(oceans)) map.removeLayer(oceans);
+      if (!map.hasLayer(osm)) osm.addTo(map);
+    });
+  } catch(e) {
+    osm.addTo(map);
+  }
 
   // ---- ERDDAP WMS (Hs) bound to TimeDimension ----
   const wmsBase = L.tileLayer.wms(WMS_URL, {
-    layers: WMS_LAYER, format: "image/png", transparent: true, opacity: 0.72,
-    COLORSCALERANGE: "0,2.5", NUMCOLORBANDS: 40, PALETTE: "Rainbow"
+    layers: WMS_LAYER,
+    format: 'image/png',
+    transparent: true,
+    opacity: 0.72,
+    // 색 범위 고정(걸프 평시 가독 범위)
+    COLORSCALERANGE: '0,2.5',
+    NUMCOLORBANDS: 40,
+    PALETTE: 'Rainbow' // 서버가 cmocean 지원 시 'cmocean/thermal' 등으로
   });
+
+  // TimeDimension이 WMS 요청마다 time=...을 자동 주입
   L.timeDimension.layer.wms(wmsBase, {
-    updateTimeDimension: true, requestTimeFromCapabilities: true, cache: 24
+    requestTimeFromCapabilities: true, // GetCapabilities에서 가능한 시간 가져오기
+    updateTimeDimension: true,
+    cache: 24
   }).addTo(map);
 
   // ---- Fetch Open‑Meteo wind hourly (UTC): past + forecast ----
