@@ -98,13 +98,12 @@ def main():
     center = AGI if args.site == "AGI" else DAS
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
 
-    html = HTML_TMPL % {
-        "site": json.dumps(args.site),
-        "lat": center[0], "lon": center[1],
-        "wms": json.dumps(args.wms),
-        "layer": json.dumps(args.layer),
-        "geojson_path": json.dumps(Path(args.geo).name)  # same dir reference
-    }
+    html = HTML_TMPL.replace("%(site)s", json.dumps(args.site))
+    html = html.replace("%(lat).6f", f"{center[0]:.6f}")
+    html = html.replace("%(lon).6f", f"{center[1]:.6f}")
+    html = html.replace("%(wms)s", json.dumps(args.wms))
+    html = html.replace("%(layer)s", json.dumps(args.layer))
+    html = html.replace("%(geojson_path)s", json.dumps(Path(args.geo).name))
 
     # Write HTML and copy GeoJSON next to it
     out_path = Path(args.out)
