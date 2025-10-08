@@ -86,7 +86,7 @@ def main():
     ap.add_argument("--out", default="out/wind_uv.geojson")
     ap.add_argument("--site", default="AGI", choices=["AGI","DAS"])
     ap.add_argument("--hs_wms", default="https://erddap.aoml.noaa.gov/hdb/erddap/wms/WaveWatch_2021/request")
-    ap.add_argument("--hs_layer", default="WaveWatch_2021:hs")
+    ap.add_argument("--hs_layer", default="WaveWatch_2021:whgt", help="whgt=wind wave, Thgt=total, shgt=swell")
     args = ap.parse_args()
 
     center = AGI if args.site == "AGI" else DAS
