@@ -18,6 +18,13 @@ from src.marine_ops.pipeline.daypart import decide_dayparts, route_window, summa
 from src.marine_ops.pipeline.eri import compute_eri_3d
 from src.marine_ops.pipeline.fusion import fuse_timeseries_3d
 from src.marine_ops.pipeline.ingest import collect_weather_data_3d
+from src.marine_ops.pipeline.ml_forecast import (
+    MODEL_FILENAME,
+    detect_anomalies,
+    load_model,
+    predict_long_range,
+    train_model,
+)
 from src.marine_ops.pipeline.reporting import render_html_3d, write_side_outputs
 
 
@@ -48,6 +55,53 @@ def main() -> int:
     fused = fuse_timeseries_3d(raw["sources"])
     compute_eri_3d(fused["timeseries"])  # ERI computed for downstream analyses
 
+    model_dir = Path("cache/ml_forecast")
+    model_dir.mkdir(parents=True, exist_ok=True)
+    artifact_path = model_dir / MODEL_FILENAME
+    history_sources = [
+        Path("data/historical_marine_metrics.csv"),
+        Path("data/historical_marine_metrics.sqlite"),
+    ]
+
+    model = None
+    training_metrics: dict[str, object] = {}
+    if artifact_path.exists():
+        try:
+            model = load_model(artifact_path)
+            print(f"[72H][ML] Loaded cached model from {artifact_path}")
+        except Exception as exc:  # noqa: BLE001
+            print(f"[72H][ML] Failed to load cached model: {exc}. Retraining...")
+    if model is None:
+        try:
+            artifacts = train_model(history_sources, model_dir)
+            model = artifacts.model
+            training_metrics = artifacts.metrics
+            artifact_path = artifacts.artifact_path
+            print(
+                "[72H][ML] Trained RandomForest model "
+                f"({training_metrics.get('rows_trained', 0):.0f} rows, "
+                f"MAE={training_metrics.get('mae', 0.0):.2f})",
+            )
+        except Exception as exc:  # noqa: BLE001
+            print(f"[72H][ML] Training failed: {exc}")
+            model = None
+
+    long_range = {}
+    anomalies = {}
+    if model is not None:
+        try:
+            long_range = predict_long_range(model, fused["frames"])
+        except Exception as exc:  # noqa: BLE001
+            print(f"[72H][ML] Long-range prediction failed: {exc}")
+            long_range = {}
+        try:
+            anomalies = detect_anomalies(fused["frames"])
+        except Exception as exc:  # noqa: BLE001
+            print(f"[72H][ML] Anomaly detection failed: {exc}")
+            anomalies = {}
+    else:
+        print("[72H][ML] Skipping ML outputs due to missing model")
+
     decisions = {}
     for loc in args.locations:
         frame = fused["frames"].get(loc, pd.DataFrame())
@@ -67,6 +121,12 @@ def main() -> int:
         das=das_decisions,
         route_windows=windows,
         ncm_alerts=raw.get("ncm_alerts", []),
+        long_range=long_range,
+        anomalies=anomalies,
+        ml_metadata={
+            "artifact": str(artifact_path),
+            "metrics": training_metrics,
+        },
         out_dir=args.out,
     )
 
@@ -78,6 +138,12 @@ def main() -> int:
         route_windows=windows,
         ncm_alerts=raw.get("ncm_alerts", []),
         api_status=raw.get("api_status", {}),
+        long_range=long_range,
+        anomalies=anomalies,
+        ml_metadata={
+            "artifact": str(artifact_path),
+            "metrics": training_metrics,
+        },
         out_dir=args.out,
     )
 
