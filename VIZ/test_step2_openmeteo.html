@@ -1,0 +1,52 @@
+<!doctype html>
+<html><head><meta charset="utf-8"/><title>Step 2: Open-Meteo Fetch</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>html,body,#map{height:100%;margin:0}</style>
+</head><body>
+<div id="map"></div>
+<div style="position:absolute;top:10px;right:10px;background:white;padding:10px;z-index:1000;max-width:300px">
+  <h3>Step 2 Test</h3>
+  <div id="log">로딩 중...</div>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+(async function(){
+const log = document.getElementById('log');
+const info = (msg) => { log.innerHTML += msg + '<br>'; };
+
+info('✅ Leaflet 로드');
+const map = L.map('map').setView([24.843833, 53.655306], 7);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:12}).addTo(map);
+info('✅ Map 초기화');
+
+try {
+  info('📡 Open-Meteo Marine API 호출...');
+  const url = new URL("https://marine-api.open-meteo.com/v1/marine");
+  url.search = new URLSearchParams({
+    latitude: 24.843833, longitude: 53.655306,
+    hourly: "wave_height", timezone: "UTC", forecast_days: 1
+  });
+  
+  const res = await fetch(url);
+  info('✅ API 응답 받음');
+  
+  const data = await res.json();
+  info('✅ JSON 파싱 완료');
+  
+  const wave_h = data.hourly.wave_height[0];
+  const time = data.hourly.time[0];
+  
+  info(`<b>✅ SUCCESS!</b>`);
+  info(`Time: ${time}`);
+  info(`Wave: ${wave_h} m`);
+  
+  L.marker([24.843833, 53.655306]).addTo(map)
+    .bindPopup(`Wave: ${wave_h} m @ ${time}`).openPopup();
+    
+} catch(e) {
+  info('❌ ERROR: ' + e.message);
+}
+})();
+</script>
+</body></html>
+

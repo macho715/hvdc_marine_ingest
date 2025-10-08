@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Marine Viz — Final Working Version (Open-Meteo 100%)</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    :root{
+      --cmo-low:  #2c7fb8;
+      --cmo-mid:  #fdae61;
+      --cmo-high: #d7191c;
+    }
+    html,body,#map{height:100%;margin:0;background:#f3f4f6}
+    .legend{
+      position:absolute;bottom:12px;left:12px;background:#fff;padding:10px 12px;border-radius:8px;
+      box-shadow:0 2px 8px rgba(0,0,0,.15);font:12px/1.5 system-ui;z-index:1000
+    }
+    .legend .sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:middle}
+    code{background:#f6f8fa;padding:0 4px;border-radius:4px}
+  </style>
+</head>
+<body>
+<div id="map"></div>
+<div class="legend">
+  <div><b>🌊 Real-time Marine Data</b></div>
+  <div><small>Source: Open-Meteo API (Live)</small></div>
+  <div style="margin-top:8px"><b>Wind Arrows (kt)</b></div>
+  <div><span class="sw" style="background:var(--cmo-low)"></span>&lt; 10</div>
+  <div><span class="sw" style="background:var(--cmo-mid)"></span>10–20</div>
+  <div><span class="sw" style="background:var(--cmo-high)"></span>&ge; 20</div>
+  <div style="margin-top:8px" id="data-info">로딩 중...</div>
+</div>
+
+<script>
+(async function(){
+  const CENTER = [24.843833, 53.655306]; // AGI
+  const map = L.map('map').setView(CENTER, 8);
+  
+  // OSM 베이스맵 (100% 안정)
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    maxZoom: 13, attribution: '© OpenStreetMap | Data: Open-Meteo'
+  }).addTo(map);
+  
+  // Open-Meteo Marine + Forecast 병렬 호출
+  const marine_url = new URL("https://marine-api.open-meteo.com/v1/marine");
+  marine_url.search = new URLSearchParams({
+    latitude: CENTER[0], longitude: CENTER[1],
+    hourly: "wave_height,wave_direction,wave_period",
+    timezone: "UTC", forecast_days: 1
+  });
+  
+  const wind_url = new URL("https://api.open-meteo.com/v1/forecast");
+  wind_url.search = new URLSearchParams({
+    latitude: CENTER[0], longitude: CENTER[1],
+    hourly: "wind_speed_10m,wind_direction_10m",
+    timezone: "UTC", forecast_days: 1
+  });
+  
+  const [marine_res, wind_res] = await Promise.all([
+    fetch(marine_url), fetch(wind_url)
+  ]);
+  
+  const marine_data = await marine_res.json();
+  const wind_data = await wind_res.json();
+  
+  // 현재 시각 데이터
+  const wave_h = marine_data.hourly.wave_height[0];
+  const wave_d = marine_data.hourly.wave_direction[0];
+  const wave_p = marine_data.hourly.wave_period[0];
+  const wind_s = wind_data.hourly.wind_speed_10m[0];
+  const wind_d = wind_data.hourly.wind_direction_10m[0];
+  const time_str = marine_data.hourly.time[0];
+  
+  // 정보 업데이트
+  document.getElementById('data-info').innerHTML = `
+    <b>Time:</b> ${time_str}<br>
+    <b>Wind:</b> ${wind_s.toFixed(1)} m/s @ ${wind_d}°<br>
+    <b>Wave:</b> ${wave_h.toFixed(2)} m @ ${wave_d}°<br>
+    <b>Period:</b> ${wave_p.toFixed(1)} s
+  `;
+  
+  // u/v 변환
+  const u = -wind_s * Math.sin(wind_d * Math.PI/180);
+  const v = -wind_s * Math.cos(wind_d * Math.PI/180);
+  const spd_kt = wind_s * 1.94384;
+  
+  // 색상 함수
+  function colorFor(kt){
+    if (kt < 10) return getComputedStyle(document.documentElement).getPropertyValue('--cmo-low');
+    if (kt < 20) return getComputedStyle(document.documentElement).getPropertyValue('--cmo-mid');
+    return getComputedStyle(document.documentElement).getPropertyValue('--cmo-high');
+  }
+  
+  // 화살표 렌더링 (픽셀 기반)
+  const arrows = L.layerGroup().addTo(map);
+  const PX_PER_KT = 0.9, MIN=6, MAX=28;
+  
+  function renderArrows(){
+    arrows.clearLayers();
+    const Lpx = Math.min(MAX, Math.max(MIN, PX_PER_KT * spd_kt));
+    const col = colorFor(spd_kt);
+    const speed = Math.hypot(u, v);
+    if(speed < 0.1) return;
+    
+    // 격자 포인트
+    for(let ring=1; ring<=6; ring++){
+      const r_km = ring * 5;
+      for(let deg=0; deg<360; deg+=20){
+        const rad = deg*Math.PI/180;
+        const dlat = (r_km/111.0)*Math.cos(rad);
+        const dlon = (r_km/(111.0*Math.cos(CENTER[0]*Math.PI/180)))*Math.sin(rad);
+        const lat = CENTER[0] + dlat;
+        const lon = CENTER[1] + dlon;
+        
+        const start = map.latLngToLayerPoint([lat, lon]);
+        const ux = u/speed, uy = -v/speed;
+        const endPt = L.point(start.x + Lpx*ux, start.y + Lpx*uy);
+        const endLL = map.layerPointToLatLng(endPt);
+        
+        L.polyline([[lat,lon], endLL], {color: col, weight: 1.7, opacity: 0.9}).addTo(arrows);
+        
+        // 화살촉
+        const back = L.point(start.x + 0.7*(endPt.x-start.x), start.y + 0.7*(endPt.y-start.y));
+        const ortho = L.point(-(endPt.y-start.y), (endPt.x-start.x));
+        const t1 = map.layerPointToLatLng(L.point(back.x + 0.12*ortho.x, back.y + 0.12*ortho.y));
+        const t2 = map.layerPointToLatLng(L.point(back.x - 0.12*ortho.x, back.y - 0.12*ortho.y));
+        L.polyline([t1, endLL, t2], {color: col, weight: 1.1, opacity: 0.9}).addTo(arrows);
+      }
+    }
+    
+    // 파고 원 (중심)
+    const wave_color = wave_h < 1.0 ? '#4caf50' : wave_h < 2.0 ? '#ff9800' : '#f44336';
+    L.circle(CENTER, {
+      radius: wave_h * 200,
+      color: wave_color,
+      fillColor: wave_color,
+      fillOpacity: 0.25,
+      weight: 2
+    }).addTo(arrows).bindPopup(`Wave: ${wave_h} m<br>Period: ${wave_p} s`);
+  }
+  
+  renderArrows();
+  map.on('zoomend moveend', renderArrows);
+  
+  // 중심 마커
+  L.marker(CENTER).addTo(map)
+    .bindPopup(`<b>AGI</b><br>Wind: ${spd_kt.toFixed(1)} kt<br>Wave: ${wave_h} m`)
+    .openPopup();
+  
+  console.log('✅ 100% Open-Meteo 시각화 완료');
+})();
+</script>
+</body>
+</html>
+

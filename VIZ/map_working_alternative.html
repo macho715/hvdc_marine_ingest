@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Marine Viz — Working Alternative (CoastWatch + Open-Meteo)</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/esri-leaflet@3.0.11/dist/esri-leaflet.js"></script>
+  <style>
+    html,body,#map{height:100%;margin:0}
+    .legend{
+      position:absolute;bottom:12px;left:12px;background:#fff;padding:10px;border-radius:8px;
+      box-shadow:0 2px 8px rgba(0,0,0,.15);font:12px/1.5 system-ui;z-index:1000
+    }
+    .info{
+      position:absolute;top:10px;right:10px;background:#fff;padding:10px;border-radius:8px;
+      box-shadow:0 2px 8px rgba(0,0,0,.15);font:12px system-ui;z-index:1000
+    }
+  </style>
+</head>
+<body>
+<div id="map"></div>
+<div class="legend">
+  <div><b>🌊 Marine Data</b></div>
+  <div>• Wind: Arrows (Open-Meteo)</div>
+  <div>• Waves: Circles (Open-Meteo)</div>
+  <div>• SST: CoastWatch WMS (working)</div>
+</div>
+<div class="info" id="status">로딩 중...</div>
+
+<script>
+(async function(){
+  const status = document.getElementById('status');
+  const log = (msg) => { status.innerHTML += '<br>' + msg; };
+  
+  const CENTER = [24.843833, 53.655306];
+  const map = L.map('map').setView(CENTER, 7);
+  
+  // OSM 베이스맵
+  const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    maxZoom: 12
+  });
+  
+  // Esri Oceans with fallback
+  let oceans;
+  try {
+    oceans = L.esri.basemapLayer('Oceans').addTo(map);
+    oceans.on('tileerror', () => {
+      if (map.hasLayer(oceans)) map.removeLayer(oceans);
+      if (!map.hasLayer(osm)) osm.addTo(map);
+      log('⚠️ Esri → OSM 폴백');
+    });
+  } catch(e) {
+    osm.addTo(map);
+  }
+  
+  // CoastWatch SST WMS (작동 확인됨)
+  log('🌡️ SST WMS 추가 중...');
+  const sstWms = L.tileLayer.wms('https://coastwatch.pfeg.noaa.gov/erddap/wms/jplMURSST41/request', {
+    layers: 'jplMURSST41:analysed_sst',
+    format: 'image/png',
+    transparent: true,
+    opacity: 0.5,
+    COLORSCALERANGE: '25,32',
+    PALETTE: 'Rainbow'
+  }).addTo(map);
+  log('✅ SST 레이어 추가');
+  
+  // Open-Meteo Marine + Wind 데이터
+  log('🌊 Open-Meteo 데이터 fetch...');
+  
+  const marine_url = new URL("https://marine-api.open-meteo.com/v1/marine");
+  marine_url.search = new URLSearchParams({
+    latitude: CENTER[0], longitude: CENTER[1],
+    hourly: "wave_height,wave_direction", timezone: "UTC", forecast_days: 1
+  });
+  
+  const wind_url = new URL("https://api.open-meteo.com/v1/forecast");
+  wind_url.search = new URLSearchParams({
+    latitude: CENTER[0], longitude: CENTER[1],
+    hourly: "wind_speed_10m,wind_direction_10m", timezone: "UTC", forecast_days: 1
+  });
+  
+  const [marine_res, wind_res] = await Promise.all([
+    fetch(marine_url),
+    fetch(wind_url)
+  ]);
+  
+  const marine_data = await marine_res.json();
+  const wind_data = await wind_res.json();
+  
+  const wave_h = marine_data.hourly.wave_height[0];
+  const wind_s = wind_data.hourly.wind_speed_10m[0];
+  const wind_d = wind_data.hourly.wind_direction_10m[0];
+  
+  log(`✅ Wind: ${wind_s} m/s @ ${wind_d}°`);
+  log(`✅ Wave: ${wave_h} m`);
+  
+  // 바람 화살표 (픽셀 기반)
+  const u = -wind_s * Math.sin(wind_d * Math.PI/180);
+  const v = -wind_s * Math.cos(wind_d * Math.PI/180);
+  const spd_kt = wind_s * 1.94384;
+  const Lpx = Math.min(28, Math.max(6, 0.9*spd_kt));
+  
+  function drawArrow(lat, lon){
+    const start = map.latLngToLayerPoint([lat, lon]);
+    const speed = Math.hypot(u, v);
+    if(speed < 0.1) return;
+    const ux = u/speed, uy = -v/speed;
+    const endPt = L.point(start.x + Lpx*ux, start.y + Lpx*uy);
+    const endLL = map.layerPointToLatLng(endPt);
+    const col = spd_kt < 10 ? '#2c7fb8' : spd_kt < 20 ? '#fdae61' : '#d7191c';
+    L.polyline([[lat,lon], endLL], {color: col, weight: 2, opacity: 0.9}).addTo(map);
+  }
+  
+  // 격자 포인트에 화살표
+  for(let r=5; r<=20; r+=5){
+    for(let deg=0; deg<360; deg+=30){
+      const rad = deg*Math.PI/180;
+      const dlat = (r/111.0)*Math.cos(rad);
+      const dlon = (r/(111.0*Math.cos(CENTER[0]*Math.PI/180)))*Math.sin(rad);
+      drawArrow(CENTER[0]+dlat, CENTER[1]+dlon);
+    }
+  }
+  
+  // 파고를 원으로
+  const radius_m = wave_h * 100;
+  L.circle(CENTER, {
+    radius: radius_m,
+    color: wave_h < 1 ? '#4caf50' : '#ff9800',
+    fillColor: wave_h < 1 ? '#4caf50' : '#ff9800',
+    fillOpacity: 0.3
+  }).addTo(map).bindPopup(`Wave: ${wave_h} m`);
+  
+  L.marker(CENTER).addTo(map).bindPopup('AGI').openPopup();
+  log('✅ 시각화 완료!');
+  
+  map.on('zoomend moveend', () => {
+    // 줌/이동 시 재렌더링은 생략 (데모용)
+  });
+})();
+</script>
+</body>
+</html>
+

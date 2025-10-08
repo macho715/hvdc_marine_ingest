@@ -1,16 +1,18 @@
 # 🚨 WMS 문제 및 해결책
 
-## 문제: ERDDAP WMS 서버들이 모두 비활성화됨
+## 문제: PacIOOS 서버 일시적 이전 중
 
 ### 테스트 결과
 ```
-❌ pae-paha.pacioos.hawaii.edu/erddap/wms/ww3_global → Error 404
-❌ coastwatch.pfeg.noaa.gov/erddap/wms/erdQSwindmday → Error
-❌ ncei.noaa.gov/erddap/wms/NCEP_Global_Best → Error
-❌ upwell.pfeg.noaa.gov/erddap/wms/hycomGlobalDaily → Error
+❌ pae-paha.pacioos.hawaii.edu → TEMPORARY OUTAGE (서버 이전 중)
+   "MOST GRIDDAP DATASETS TEMPORARILY UNAVAILABLE 
+    WHILE WE MIGRATE OUR MACHINES TO A NEW LOCATION"
+    
+✅ coastwatch.pfeg.noaa.gov/erddap/wms/jplMURSST41 → WMS 작동 (SST 데이터)
+❌ ncei.noaa.gov/erddap/wms → Error
 ```
 
-**원인**: ERDDAP 서버들이 WMS 서비스를 제공하지 않거나 일시적으로 비활성화됨
+**원인**: PacIOOS가 현재 인프라 마이그레이션 중 (일시적)
 
 ---
 
